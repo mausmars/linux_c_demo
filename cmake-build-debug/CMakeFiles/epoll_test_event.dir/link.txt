@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/epoll_test_event.dir/src/epoll_test/epoll_test_event.c.o  -o epoll_test_event -lpthread 

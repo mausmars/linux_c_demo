@@ -1,0 +1,76 @@
+======================================================
+静态库
+$ gcc -Wall -O2 -fPIC -I./  -c -o welcome.o welcome.c
+$ ar crv libwelcome.a welcome.o
+
+ar命令的参数如下:
+
+参数        意义
+-r      将objfile文件插入静态库尾或者替换静态库中同名文件
+-x      从静态库文件中抽取文件objfile
+-t      打印静态库的成员文件列表
+-d      从静态库中删除文件objfile
+-s      重置静态库文件索引
+-v      创建文件冗余信息
+-c      创建静态库文件
+
+//依赖静态库
+$ gcc test-sta.c -o test-sta ./libwelcome.a
+
+======================================================
+动态库
+$ gcc -o2 -fPIC -shared welcome.c -o libwelcome.so
+or
+$ gcc -o2 -fPIC -c welcome.c 
+$ gcc -shared -o libwelcome.so welcome.o 
+
+其中: 
+- fPIC : 产生与位置无关代码,全部使用相对地址. 
+- shared : 生成动态库.
+
+---------------
+编译时加载(隐式)
+和静态库一样,测试代码不需要包含导出函数的头文件.
+
+$ gcc -o2 -Wall -L. -lwelcome test-implicit.c -o test-implicit
+
+查看test-implicit动态段信息,发现已经依赖libwelcome.so:
+$ ldd test-implicit 
+
+若此时直接运行,会提示找不到动态库:
+$ ./test-implicit
+$ ./test-implicit: error while loading shared libraries: libwelcome.so: cannot open shared object file: No such file or directory
+
+可以通过下列三种方法解决:
+# 方法一 修改环境变量
+$ export LD_LIBRARY_PATH=$(pwd):$LD_LIBRARY_PATH
+# 方法二 将库文件链接到系统目录下
+$ ln -s ./libwelcome.so /usr/lib
+# 方法三 修改/etc/ld.so.conf
+$ sudo echo $(pwd) >> /etc/ld.so.conf
+$ sudo ldconfig
+
+再次运行:
+$ ./test-implicit
+$ welcome to my code world!
+
+---------------
+运行时链接(显式)
+
+$ gcc  -ldl test-explicit.c -o test-explicit
+
+$ ldd test-explicit
+查看test-explicit动态段信息,没有发现依赖libwelcome.so:
+
+$ ./test-explicit
+$ welcome to my code world!
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,2 @@
+wrk测试工具
+wrk -t12 -c4000 -d30s --latency http://localhost/ping:8008

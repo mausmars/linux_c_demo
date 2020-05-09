@@ -1,0 +1,79 @@
+#1.cmake verson，指定cmake版本
+cmake_minimum_required(VERSION 3.15)
+
+#2.project name，指定项目的名称，一般和项目的文件夹名称对应
+project(linuxc_demo C)
+
+#3.head file path，头文件目录
+INCLUDE_DIRECTORIES(
+        include
+        /usr/include/mysql
+        /usr/local/jemalloc/include
+)
+
+#设置编译器（可选的有gcc，g++）
+set(CMAKE_CXX_COMPILER "gcc")
+
+# 设置用debug还是release模式。debug允许断点，而release更快
+#set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
+
+# 设置编译选项
+set(CMAKE_C_STANDARD 11)
+
+find_package(Threads)
+#add_executable(demo_linuxc1 src/sync_test/sync_test1.c)
+#add_executable(demo_linuxc1 src/sync_test/account.c src/sync_test/accouotn_test.c src/sync_test/common.h src/sync_test/cal_test.c)
+#add_executable(demo_linuxc1 src/sync_test/sync_test3.c src/sync_test/model.h)
+add_executable(rbtree_test src/algorithm_test/rbtree_test.c src/algorithm_test/rbtree.c)
+add_executable(rbtree_test2 src/algorithm_test/rbtree_test2.c src/algorithm_test/rbtree.c)
+add_executable(threadlocal_test src/thread_test/thread_local_test.c)
+add_executable(sync_test src/sync_test/sync_test2.c src/sync_test/model.h)
+add_executable(jemalloc_demo src/malloc_test/jemalloc_test.c)
+add_executable(malloc_demo src/malloc_test/malloc_test.c)
+add_executable(mysql_test src/mysql_test/mysql_test.c)
+#add_executable(demo_linuxc1 src/protobuf_test/protobuf_test.c src/protobuf_test/student.pb-c.c)
+add_executable(epoll_server src/epoll_test/server.c)
+add_executable(epoll_client src/epoll_test/client.c)
+add_executable(epoll_test_signal src/epoll_test/epoll_test_signal.c)
+add_executable(epoll_test_pipe src/epoll_test/epoll_test_pipe.c)
+add_executable(epoll_test_event src/epoll_test/epoll_test_event.c)
+add_executable(attack_arp src/attack_test/SendAttackArp.c)
+add_executable(attack_sync src/attack_test/SendAttackSync.c)
+add_executable(attack_sync2 src/attack_test/SendAttackSync2.c)
+add_executable(attack_icmp src/attack_test/SendAttackIcmp.c)
+add_executable(sniffer src/attack_test/SimpelSniffer2.c)
+add_executable(semaphore src/thread_test/thread_semaphore_test.c)
+add_executable(httpserver src/httpserver_test/starter.c src/httpserver_test/httpd.h src/httpserver_test/httpd.c)
+
+file(GLOB game_server_src . src/game_server/*.c)
+add_executable(gameserver ${game_server_src})
+
+#ADD_DEFINITIONS(
+#        -DUSE_JEMALLOC
+#)
+
+target_link_libraries(rbtree_test)
+target_link_libraries(rbtree_test2)
+target_link_libraries(threadlocal_test ${CMAKE_THREAD_LIBS_INIT})
+#target_link_libraries(demo_linuxc1 ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(mysql_test /usr/lib64/mysql/libmysqlclient.so.18)
+#target_link_libraries(demo_linuxc1 /usr/local/lib/libprotobuf-c.so)
+target_link_libraries(sync_test)
+target_link_libraries(malloc_demo)
+target_link_libraries(jemalloc_demo /usr/local/jemalloc/lib/libjemalloc.so)
+target_link_libraries(epoll_server)
+target_link_libraries(epoll_client)
+target_link_libraries(epoll_test_signal ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(epoll_test_pipe ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(epoll_test_event ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(attack_arp)
+target_link_libraries(attack_sync)
+target_link_libraries(attack_sync2)
+target_link_libraries(attack_icmp)
+target_link_libraries(sniffer)
+target_link_libraries(semaphore ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(httpserver)
+
+target_link_libraries(gameserver)
+

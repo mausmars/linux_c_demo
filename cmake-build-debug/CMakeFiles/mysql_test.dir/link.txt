@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/mysql_test.dir/src/mysql_test/mysql_test.c.o  -o mysql_test -Wl,-rpath,/usr/lib64/mysql /usr/lib64/mysql/libmysqlclient.so.18 

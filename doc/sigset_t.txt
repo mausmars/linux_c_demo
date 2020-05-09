@@ -1,0 +1,45 @@
+https://blog.csdn.net/halfclear/article/details/72783900
+---------------
+sigset_t
+号集及信号集操作函数：信号集被定义为一种数据类型：
+typedef struct {
+    unsigned long sig[_NSIG_WORDS]；
+} sigset_t
+
+1.信号集
+信号集用来描述信号的集合，linux所支持的所有信号可以全部或部分的出现在信号集中，主要与信号阻塞相关函数配合使用。下面是为信号集操作定义的相关函数：
+int sigemptyset(sigset_t *set)；
+int sigfillset(sigset_t *set)；
+int sigaddset(sigset_t *set, int signum)
+int sigdelset(sigset_t *set, int signum)；
+int sigismember(const sigset_t *set, int signum)；
+
+头文件
+#include <signal.h>
+sigemptyset(sigset_t *set)                      初始化由set指定的信号集，信号集里面的所有信号被清空；
+sigfillset(sigset_t *set)                       调用该函数后，set指向的信号集中将包含linux支持的64种信号；
+sigaddset(sigset_t *set, int signum)            在set指向的信号集中加入signum信号；
+sigdelset(sigset_t *set, int signum)            在set指向的信号集中删除signum信号；
+sigismember(const sigset_t *set, int signum)    判定信号signum是否在set指向的信号集中。
+
+2.sigprocmask ()   函数检测或更改进程的屏蔽字
+  int sigprocmask(int flag,const sigset_t *set,sigset_t *oldset);
+  若set非空指针，则按照flag方式进行设置新的信号屏蔽字
+SIG_BLOCK : 取当前进程的屏蔽字与set的并集   <不影响其它基础上 设置屏蔽>
+SIG_UNBLOCK：取当前进程的屏蔽字与set的补集 的交集  <不影响其它基础上  解除屏蔽>
+SIG_SETMASK:直接设置
+
+3.int sigsuspend(sigset_t *mask)
+把进程信号屏蔽字设成为mask并原子的阻塞等侍一个某信号从捕捉函数返回
+
+int raise(int signo);
+给自身发送一个信号
+
+int kill(pid_t pid,int signo);
+pid > 0  将信号发送给进程ID为pid的进程。
+pid == 0 将信号发送给与发送信号进程同一组的进程，而且发送进程有许可权向其发送信号的权限。 这里用的术语“所有进程”不包括实现定义的系统进程集(包括内核进程以及init)
+pid < 0  将信号发送给其进程组gid等于pid绝对值的进程，而且发送进程有许可权向其发送信号的权限
+pid ==-1 将信号发送给发送进程有权限对其发送信号的系统上的所有进程(不包括系统进程集)
+
+
+

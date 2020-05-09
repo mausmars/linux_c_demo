@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/sniffer.dir/src/attack_test/SimpelSniffer2.c.o  -o sniffer 

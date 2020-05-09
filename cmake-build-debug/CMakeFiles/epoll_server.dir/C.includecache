@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/tmp/tmp.dFz6Z7OdDc/src/epoll_test/server.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+sys/socket.h
+-
+unistd.h
+-
+fcntl.h
+-
+sys/epoll.h
+-
+errno.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+netinet/tcp.h
+-
+

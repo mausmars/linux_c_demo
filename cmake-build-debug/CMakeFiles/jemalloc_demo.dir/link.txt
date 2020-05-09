@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/jemalloc_demo.dir/src/malloc_test/jemalloc_test.c.o  -o jemalloc_demo -Wl,-rpath,/usr/local/jemalloc/lib /usr/local/jemalloc/lib/libjemalloc.so 

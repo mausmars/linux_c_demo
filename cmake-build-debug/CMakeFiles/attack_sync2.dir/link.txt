@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/attack_sync2.dir/src/attack_test/SendAttackSync2.c.o  -o attack_sync2 

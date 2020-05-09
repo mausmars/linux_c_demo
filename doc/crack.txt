@@ -1,0 +1,11 @@
+"Help" -> "Edit Custom VM Options ..."
+
+-javaagent:/custom/software/clion-2019.2.5/JetbrainsCrack.jar
+注册"Help" -> “Register”，选择 License server 方式，地址填入：http://jetbrains-license-server
+看到 Licensed to 用户名，即激活成功
+
+-----------------------------------------------------------------
+C:\Windows\System32\drivers\etc\hosts
+0.0.0.0 account.jetbrains.com
+0.0.0.0 www.jetbrains.com
+

@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/threadlocal_test.dir/src/thread_test/thread_local_test.c.o  -o threadlocal_test -lpthread 

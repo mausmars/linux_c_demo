@@ -1,0 +1,14 @@
+https://github.com/jemalloc/jemalloc/releases
+
+tar -xjvf jemalloc-5.2.1.tar.bz2
+
+./configure --prefix=/usr/local/jemalloc
+make -j8 && make install
+
+
+echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
+ldconfig
+
+
+要查看 ldconfig 可以“看到”的所有共享库
+ldconfig -p | less
