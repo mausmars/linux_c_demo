@@ -45,9 +45,10 @@ add_executable(attack_icmp src/attack_test/SendAttackIcmp.c)
 add_executable(sniffer src/attack_test/SimpelSniffer2.c)
 add_executable(semaphore src/thread_test/thread_semaphore_test.c)
 add_executable(httpserver src/httpserver_test/starter.c src/httpserver_test/httpd.h src/httpserver_test/httpd.c)
-
 file(GLOB game_server_src . src/game_server/*.c)
 add_executable(gameserver ${game_server_src})
+
+add_executable(networkcard1 src/networkcard_test/networkcard_test.c)
 
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
@@ -74,6 +75,5 @@ target_link_libraries(attack_icmp)
 target_link_libraries(sniffer)
 target_link_libraries(semaphore ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(httpserver)
-
 target_link_libraries(gameserver)
-
+target_link_libraries(networkcard1)
