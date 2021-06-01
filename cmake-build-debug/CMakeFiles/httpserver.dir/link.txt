@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/httpserver.dir/src/httpserver_test/starter.c.o CMakeFiles/httpserver.dir/src/httpserver_test/httpd.c.o  -o httpserver 

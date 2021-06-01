@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/epoll_server.dir/src/epoll_test/server.c.o  -o epoll_server 

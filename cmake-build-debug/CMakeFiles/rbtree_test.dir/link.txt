@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/rbtree_test.dir/src/algorithm_test/rbtree_test.c.o CMakeFiles/rbtree_test.dir/src/algorithm_test/rbtree.c.o  -o rbtree_test 
