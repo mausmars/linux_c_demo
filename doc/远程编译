@@ -1,6 +1,14 @@
 https://blog.csdn.net/lovehaihong5401/article/details/86941091
 
 yum -y install gcc gcc-c++
-CentOS 7 安装 CMake 3.15.5
+CentOS 7 安装 CMake 3.17.2
 https://www.24kplus.com/linux/557.html
 
+tar -zxf cmake-3.17.2.tar.gz
+cd cmake-3.17.2
+
+编译安装
+./bootstrap --prefix=/usr --datadir=share/cmake --docdir=doc/cmake && make && make install
+
+检查是否正确安装
+cmake --version

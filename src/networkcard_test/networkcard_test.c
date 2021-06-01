@@ -12,7 +12,7 @@
 #include <arpa/inet.h>
 #include <ifaddrs.h>
 
-int main(int argc, char* argv[]) {
+int main(int argc, char **argv) {
     struct ifaddrs *ifc, *ifc1;
     char ip[64] = {};
     char nm[64] = {};
@@ -37,7 +37,6 @@ int main(int argc, char* argv[]) {
         }
         printf("\n");
     }
-
     freeifaddrs(ifc1);
     return 0;
 }

