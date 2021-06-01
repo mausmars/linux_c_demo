@@ -1,0 +1,17 @@
+CentOS 7 安装/升级 GCC 4.9
+
+下载gcc安装文件(第一个镜像较快，不行可以尝试第二个):
+wget https://mirrors.sjtug.sjtu.edu.cn/gnu/gcc/gcc-4.9.0/gcc-4.9.0.tar.gz
+wget https://ftp.gnu.org/gnu/gcc/gcc-4.9.0/gcc-4.9.0.tar.gz
+
+安装C和C++的静态库：yum install -y glibc-static libstdc++-static
+安装旧版本的gcc、c++编译器：yum install gcc gcc-c++
+解压安装包：tar -zxvf gcc-4.9.0.tar.gz
+切到目录里：cd gcc-4.9.0
+安装需要用的到解压工具：yum install bzip2
+下载一些必备的依赖程序：./contrib/download_prerequisites
+编译和安装
+./configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+make -j4
+make install
+检查是否安装完成：gcc -v
