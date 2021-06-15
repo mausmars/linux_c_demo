@@ -2,6 +2,8 @@ CentOS 7 安装/升级 GCC 4.9
 
 下载gcc安装文件(第一个镜像较快，不行可以尝试第二个):
 wget https://mirrors.sjtug.sjtu.edu.cn/gnu/gcc/gcc-4.9.0/gcc-4.9.0.tar.gz
+wget https://mirrors.sjtug.sjtu.edu.cn/gnu/gcc/gcc-4.9.3/gcc-4.9.3.tar.gz
+
 wget https://ftp.gnu.org/gnu/gcc/gcc-4.9.0/gcc-4.9.0.tar.gz
 
 安装C和C++的静态库：yum install -y glibc-static libstdc++-static
@@ -14,4 +16,20 @@ wget https://ftp.gnu.org/gnu/gcc/gcc-4.9.0/gcc-4.9.0.tar.gz
 ./configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
 make -j4
 make install
+需要重启动一下
 检查是否安装完成：gcc -v
+
+find / -name "CMakeLists.txt"
+
+//-------------------------------------------
+ubuntu gcc安装
+vi /etc/apt/sources.list
+deb http://dk.archive.ubuntu.com/ubuntu/ xenial main
+deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe
+
+apt update
+
+apt install gcc-4.9
+
+
+
