@@ -45,6 +45,17 @@
  }
  */
 
+void printEthhead(struct ethhdr *ethhead) {
+    printf("-------------------------------------------- \n");
+    printf("mac source:0x%x 0x%x 0x%x 0x%x 0x%x 0x%x \n", ethhead->h_source[0], ethhead->h_source[1],
+           ethhead->h_source[2], ethhead->h_source[3], ethhead->h_source[4], ethhead->h_source[5]);
+    printf("mac dest:0x%x 0x%x 0x%x 0x%x 0x%x 0x%x \n", ethhead->h_dest[0], ethhead->h_dest[1],
+           ethhead->h_dest[2], ethhead->h_dest[3], ethhead->h_dest[4], ethhead->h_dest[5]);
+
+    int etherType = ntohs(ethhead->h_proto);
+    printf("proto:0x%2x %s \n", etherType, etherTypeToStr(etherType));
+}
+
 int main(int argc, char *argv[]) {
     int readnum;
     char buffer[BUFFER_MAX];
@@ -56,32 +67,32 @@ int main(int argc, char *argv[]) {
     struct tcphdr *tcphead;
 
     int num = 0;
-
-    int sock = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_IP));
-
+    int sock = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     while (num < 1) {
         readnum = recvfrom(sock, buffer, BUFFER_MAX, 0, NULL, NULL);
-
         if (readnum < 42) {
             fprintf(stdout, "Incomplete header, packet corrupt\n");
             continue;
         }
         ethhead = buffer;
-        printf("mac source:0x%x 0x%x 0x%x 0x%x 0x%x 0x%x \n", ethhead->h_source[0], ethhead->h_source[1],
-               ethhead->h_source[2], ethhead->h_source[3], ethhead->h_source[4], ethhead->h_source[5]);
-        printf("mac dest:0x%x 0x%x 0x%x 0x%x 0x%x 0x%x \n", ethhead->h_dest[0], ethhead->h_dest[1],
-               ethhead->h_dest[2], ethhead->h_dest[3], ethhead->h_dest[4], ethhead->h_dest[5]);
-        printf("proto:0x%2x \n", ntohs(ethhead->h_proto));
-
         //ip:0800,arp:0x0806,rarp:0x0835
         switch (ntohs(ethhead->h_proto)) {
-            case 0x0800:
-                iphead = buffer + sizeof(struct ethhdr);
+            case ETHERTYPE_IPv4:
+//                printEthhead(ethhead);
+//                iphead = buffer + sizeof(struct ethhdr);
                 break;
-            case 0x0806:
-                arppacket = buffer + sizeof(struct ethhdr);
+            case ETHERTYPE_ARP:
+//                printEthhead(ethhead);
+//                arppacket = buffer + sizeof(struct ethhdr);
+                break;
+            case ETHERTYPE_RARP:
+//                printEthhead(ethhead);
+                break;
+            case ETHERTYPE_IPv6:
+//                printEthhead(ethhead);
                 break;
             default:
+                printEthhead(ethhead);
                 break;
         }
     }
