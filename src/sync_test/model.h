@@ -8,6 +8,6 @@
 typedef struct {
     int threadId;
     int *count
-} AhreadParam;
+} AthreadParam;
 
 #endif //DEMO_LINUXC_MODEL_H

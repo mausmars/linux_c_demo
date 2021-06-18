@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     uint8_t buffer[BUFFER_MAX];
     char *otherhead;
     struct ethhdr *ethhead;
-    struct arp *arppacket;
+    Arp *arppacket;
     struct icmp *icmphead;
     struct iphdr *iphead;
     struct tcphdr *tcphead;

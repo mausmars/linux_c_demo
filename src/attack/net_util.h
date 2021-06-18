@@ -6,7 +6,6 @@
 #define LINUXC_DEMO_NET_UTIL_H
 
 #include "model.h"
-#include "memory_mgr.h"
 
 //------------------------------
 //接口

@@ -10,6 +10,72 @@
 #define Route_Path "/proc/net/route"
 #define Arp_Path "/proc/net/arp"
 
+//----------------------------------
+//字符串转int  “0x1b”
+long str16Tolong(string valueStr) {
+//    byte str;
+    long i = strtol(valueStr, 0, 16);
+    return i;
+}
+
+long strTolong(string str) {
+    long i = atol(str);
+    return i;
+}
+
+int strToint(string str) {
+    int i = atoi(str);
+    return i;
+}
+
+float strTofloat(string str) {
+    float i = atof(str);
+    return i;
+}
+
+//---------------------------------------------
+//01134F0A
+u_byte *ipSplit2(string str) {
+    u_byte *ipv4 = cover_malloc(4 * sizeof(u_byte));
+    for (int i = 3; i >= 0; i--) {
+        byte v1[3];
+        memset(&v1, 0, sizeof(v1));
+        strncpy(v1, str + i * 2, 2);
+
+        byte v[5];
+        memset(&v, 0, sizeof(v));
+        strcpy(v, "0x");
+        strcat(v, v1);
+        ipv4[3 - i] = str16Tolong(v);
+    }
+    return ipv4;
+}
+
+//192.168.0.1
+u_byte *ipSplit(string str) {
+    string token;
+    int index = 0;
+    u_byte *ipv4 = cover_malloc(4 * sizeof(u_byte));
+    for (token = strtok(str, IpDelim); token != NULL; token = strtok(NULL, IpDelim)) {
+        ipv4[index] = strToint(token);
+        index++;
+    }
+    return ipv4;
+}
+
+//a4:bb:6d:4c:e3:49
+u_byte *macSplit(string str) {
+    string token;
+    int index = 0;
+    u_byte *mac = cover_malloc(6 * sizeof(u_byte));
+    for (token = strtok(str, MacDelim); token != NULL; token = strtok(NULL, MacDelim)) {
+        mac[index] = str16Tolong(token);
+        index++;
+    }
+    return mac;
+}
+
+//---------------------------------------------
 void ping(string ip) {
     if (execlp("ping", "ping", "-c", "1", ip, (byte *) 0) < 0) {
         printf("ping error\n");
@@ -24,13 +90,6 @@ void arp() {
         exit(1);
     }
     printf("arp -a! \n");
-}
-
-//字符串转int  “0x1b”
-long str2long(string valueStr) {
-    byte str;
-    long i = strtol(valueStr, &str, 16);
-    return i;
 }
 
 string ifaName() {
@@ -81,21 +140,8 @@ u_byte *gateway() {
     }
     //关闭文件
     fclose(fp);
-
     //直接初始化会栈数组逃逸，使用malloc堆内存操作
-    u_byte *ipv4 = cover_malloc(4 * sizeof(u_byte));
-    for (int i = 3; i >= 0; i--) {
-        byte v1[3];
-        memset(&v1, 0, sizeof(v1));
-        strncpy(v1, token + i * 2, 2);
-
-        byte v[5];
-        memset(&v, 0, sizeof(v));
-        strcpy(v, "0x");
-        strcat(v, v1);
-        ipv4[3 - i] = str2long(v);
-    }
-    return ipv4;
+    return ipSplit2(token);
 }
 
 void arpMap() {
@@ -114,19 +160,20 @@ void arpMap() {
         fgets(line, sizeof(line) - 1, fp); // 包含了换行符
         int index = 0;
         string token;
-        ArpMap *arpMap = createArpMap();
+        ArpMap *arpMap = cover_malloc(sizeof(ArpMap));
         for (token = strtok(line, delim); token != NULL; token = strtok(NULL, delim)) {
+            printf("%s\n", token);
+
+            strdup(token);
+
+            byte v[17];
+            memset(&v, 0, sizeof(v));
+            strcpy(v, token);
             if (index == 0) {
-                //ip
-
-
-
+                arpMap->ip = ipSplit(v);
+            } else if (index == 3) {
+                arpMap->mac = macSplit(v);
             }
-            if (index == 3) {
-                //mac
-            }
-
-
             index++;
         }
     }

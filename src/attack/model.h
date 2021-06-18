@@ -8,13 +8,20 @@
 #include "memory_mgr.h"
 
 //-------------------------------
+//变量类型
 typedef char byte;
 typedef unsigned char u_byte;
 typedef long long l_long;
 typedef long double l_double;
 
 typedef char *string;
+//-------------------------------
+//常量
+#define IpDelim "."
+#define MacDelim ":"
 
+//-------------------------------
+//枚举
 //EtherType
 #define ETHERTYPE_IPv4 0x0800
 #define ETHERTYPE_IPv6 0x86DD
@@ -30,24 +37,24 @@ typedef char *string;
 #define ETHERTYPE_MPLS_MULTICAST 0x8848
 
 //-----------------------------
-typedef struct arp {
+typedef struct {
     //28字节arp请求 应答
     u_short hw_type; //硬件类型
     u_short prot_type; //协议类型
-    u_char hw_addr_size; //硬件地址长度
-    u_char prot_addr_size; //协议地址长度
+    u_byte hw_addr_size; //硬件地址长度
+    u_byte prot_addr_size; //协议地址长度
     u_short op; //操作类型
-    u_char sndr_hw_addr[6]; //发送端源mac地址
-    u_char sndr_ip_addr[4]; //发送端源ip地址
-    u_char rcpt_hw_addr[6]; //目的mac地址
-    u_char rcpt_ip_addr[4]; //目的ip地址
-    u_char padding[18];
-};
+    u_byte sndr_hw_addr[6]; //发送端源mac地址
+    u_byte sndr_ip_addr[4]; //发送端源ip地址
+    u_byte rcpt_hw_addr[6]; //目的mac地址
+    u_byte rcpt_ip_addr[4]; //目的ip地址
+    u_byte padding[18];
+} Arp;
 
 typedef struct {
     int threadId;
-    int *count
-} AhreadParam;
+    int *count;
+} AthreadParam;
 
 typedef struct {
     u_byte *ip;        //ip 地址
@@ -56,11 +63,11 @@ typedef struct {
 
 //--------------------------
 //接口
-string etherTypeToStr(int etherType);
-
 ArpMap *createArpMap();
 
 void freeArpMap(ArpMap *arpMap);
+
+string etherTypeToStr(int etherType);
 //--------------------------
 
 #endif //ATTACK_LINUXC_MODEL_H

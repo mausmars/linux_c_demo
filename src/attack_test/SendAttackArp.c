@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     uint8_t dec_ip[] = {0x0a, 0x4f, 0x13, 0x01};
 
     //以太网首部
-    printf("create ethhead, ethhdr size=%d字节\r\n", sizeof(struct ethhdr));
+    printf("create ethhead, ethhdr size=%ld字节\r\n", sizeof(struct ethhdr));
     struct ethhdr *ethhead = (struct ethhdr *) data;
     printf("1.广播mac地址\r\n");
     memcpy(ethhead->h_dest, bro_hw, 6);
@@ -54,10 +54,10 @@ int main(int argc, char *argv[]) {
     //ip:0800,arp:0x0806,rarp:0x0835
     ethhead->h_proto = htons(0x0806);
     //----------------------------------------------------
-    struct arp *arppacket = (struct arp *) (data + sizeof(struct ethhdr));
+    Arp *arppacket = (Arp *) (data + sizeof(struct ethhdr));
 
     printf("4.arp请求 应答\r\n");
-    printf("create arppacket, ArpPacket size=%d字节, 除了padding是28字节\r\n", sizeof(struct arp));
+    printf("create arppacket, ArpPacket size=%ld字节, 除了padding是28字节\r\n", sizeof(Arp));
     arppacket->hw_type = htons(0x0001);     //硬件类型
     arppacket->prot_type = htons(0x0800);   //协议类型
     arppacket->hw_addr_size = 6;               //硬件地址长度

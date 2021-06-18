@@ -5,6 +5,23 @@
 #include "model.h"
 
 //------------------------------------------
+ArpMap *createArpMap() {
+    ArpMap *arpMap = cover_malloc(sizeof(ArpMap));
+
+    return arpMap;
+}
+
+void freeArpMap(ArpMap *arpMap) {
+    if (arpMap->ip != NULL) {
+        cover_free(arpMap->ip);
+    }
+    if (arpMap->mac != NULL) {
+        cover_free(arpMap->mac);
+    }
+    cover_free(arpMap);
+}
+
+//------------------------------------------
 string etherTypeToStr(int etherType) {
     char *et = "";
     switch (etherType) {
@@ -52,19 +69,6 @@ string etherTypeToStr(int etherType) {
     return et;
 }
 
-//------------------------------------------
-ArpMap *createArpMap() {
-    ArpMap *arpMap = cover_malloc(sizeof(ArpMap));
-    arpMap->ip = cover_malloc(4 * sizeof(u_byte));
-    arpMap->mac = cover_malloc(6 * sizeof(u_byte));
-    return arpMap;
-}
-
-void freeArpMap(ArpMap *arpMap) {
-    cover_free(arpMap->ip)
-    cover_free(arpMap->mac)
-    cover_free(arpMap)
-}
 //------------------------------------------
 
 

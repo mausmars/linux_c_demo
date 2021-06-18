@@ -8,14 +8,14 @@ bool __sync_bool_compare_and_swap (type *ptr, type oldval type newval, .
 type __sync_val_compare_and_swap (type *ptr, type oldval type newval, ...)
  */
 void *cleanup(void *param) {
-    AhreadParam *p = (AhreadParam *) param;
+    AthreadParam *p = (AthreadParam *) param;
     printf("cleanup threadid=%d\n", p->threadId);
     free(param);
 }
 
 void *test_func(void *param) {
     pthread_cleanup_push(cleanup, param) ;
-            AhreadParam *p = (AhreadParam *) param;
+            AthreadParam *p = (AthreadParam *) param;
             int temp = __sync_bool_compare_and_swap(p->count, 99, 100);
             printf("threadId=%d, isSuccess=%d\n", p->threadId, temp);
     pthread_cleanup_pop(1);
@@ -28,7 +28,7 @@ int main(int argc, const char *argv[]) {
 
     int count = 99;
     for (int i = 0; i < threadCount; ++i) {
-        AhreadParam *param = (AhreadParam *) malloc(sizeof(AhreadParam));
+        AthreadParam *param = (AthreadParam *) malloc(sizeof(AthreadParam));
         param->threadId = i;
         param->count = &count;
         pthread_create(&id[i], NULL, test_func, param);
