@@ -47,15 +47,15 @@ add_executable(semaphore src/thread_test/thread_semaphore_test.c)
 add_executable(httpserver src/httpserver_test/starter.c src/httpserver_test/httpd.h src/httpserver_test/httpd.c)
 file(GLOB game_server_src . src/game_server/*.c)
 add_executable(gameserver ${game_server_src})
-
 add_executable(networkcard1 src/networkcard_test/test1/networkcard_test1.c)
 add_executable(networkcard2 src/networkcard_test/test2/networkcard_test2.c)
-
 add_executable(coroutine_test src/coroutine/main.c src/coroutine/coroutine.c)
-
 #基础api测试
 add_executable(base_ucontext_test src/base_test/ucontext_test.c)
 add_executable(base_pthread_self_test src/base_test/pthread_self_test.c src/base_test/itimerval_test.c)
+
+file(GLOB attack_src . src/attack/*.c)
+add_executable(net_util ${attack_src})
 
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
@@ -88,5 +88,7 @@ target_link_libraries(networkcard2)
 target_link_libraries(coroutine_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(base_ucontext_test)
 target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
+
+target_link_libraries(net_util)
 
 

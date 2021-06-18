@@ -1,46 +1,13 @@
-#include <string.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <netdb.h>
 #include <sys/file.h>
-#include <sys/time.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <sys/signal.h>
-#include <net/if.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/tcp.h>
 #include <netinet/if_ether.h>
 
 #include<unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 #define BUFFER_MAX 4096
-/*
- int open_fd(int fd) {
- int s;
- struct ifreq ifr;
- //接口名
- strcpy(ifr.ifr_name,"eth0");
- //获取接口标志
- if ((s = ioctl(fd, SIOCGIFFLAGS, &ifr)) < 0) {
- close(fd);
- return (-1);
- }
- //设置接口为混杂模式
- ifr.ifru_flags |= 0x100;  // 关闭  ifr.ifr_flags &= ~IFF_PROMISC;
- //设置接口标志
- if ((s = ioctl(fd, SIOCSIFFLAGS, &ifr)) < 0) {
- return (-1);
- }
- printf("Setting   interface   :::   %s   :::   to   promisc\n\n", intf);
- return (fd);
- }
- */
+
 int main(int argc, char *argv[]) {
     int sock, readnum, proto;
     char buffer[BUFFER_MAX];
@@ -128,3 +95,25 @@ int main(int argc, char *argv[]) {
         close(fd1);
     }
 }
+
+/*
+ int open_fd(int fd) {
+ int s;
+ struct ifreq ifr;
+ //接口名
+ strcpy(ifr.ifr_name,"eth0");
+ //获取接口标志
+ if ((s = ioctl(fd, SIOCGIFFLAGS, &ifr)) < 0) {
+ close(fd);
+ return (-1);
+ }
+ //设置接口为混杂模式
+ ifr.ifru_flags |= 0x100;  // 关闭  ifr.ifr_flags &= ~IFF_PROMISC;
+ //设置接口标志
+ if ((s = ioctl(fd, SIOCSIFFLAGS, &ifr)) < 0) {
+ return (-1);
+ }
+ printf("Setting   interface   :::   %s   :::   to   promisc\n\n", intf);
+ return (fd);
+ }
+ */

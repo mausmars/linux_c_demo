@@ -8,7 +8,7 @@
 #include <linux/if_ether.h>
 #include <linux/if_packet.h>
 //#include <zconf.h>
-#include "model.h"
+#include "../attack/model.h"
 
 #define DEFAULT_DEVICE "ens33"
 
