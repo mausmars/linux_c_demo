@@ -15,8 +15,4 @@ string ifaName();
 //获取网关地址
 u_byte *gateway();
 
-extern ArpMap *createArpMap();
-
-extern Array *createArray(int size);
-
 #endif //LINUXC_DEMO_NET_UTIL_H
