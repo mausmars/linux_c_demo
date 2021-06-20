@@ -5,8 +5,10 @@
 #ifndef LINUXC_DEMO_MEMORY_MGR_H
 #define LINUXC_DEMO_MEMORY_MGR_H
 
-void *cover_malloc(size_t size);
+#include <stdlib.h>
 
-void *cover_free(void *ptr);
+extern void *cover_malloc(size_t size);
+
+extern void *cover_free(void *ptr);
 
 #endif //LINUXC_DEMO_MEMORY_MGR_H

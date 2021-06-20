@@ -11,10 +11,16 @@
 //变量类型
 typedef char byte;
 typedef unsigned char u_byte;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
+typedef unsigned long u_long;
+
 typedef long long l_long;
 typedef long double l_double;
 
 typedef char *string;
+typedef void *any;
+
 //-------------------------------
 //常量
 #define IpDelim "."
@@ -55,19 +61,31 @@ typedef struct {
     int threadId;
     int *count;
 } AthreadParam;
-
+//--------------------------
 typedef struct {
     u_byte *ip;        //ip 地址
     u_byte *mac;       //mac 地址
 } ArpMap;
 
-//--------------------------
-//接口
-ArpMap *createArpMap();
+//-------------------------------
+//数组类型
+typedef struct {
+    void *obj;
+} Node;
 
-void freeArpMap(ArpMap *arpMap);
+typedef struct {
+    int size;
+    Node *node;
+} Array;
 
-string etherTypeToStr(int etherType);
-//--------------------------
+extern string etherTypeToStr(int etherType);
+
+extern ArpMap *createArpMap();
+
+extern void freeArpMap(ArpMap *arpMap);
+
+extern Array *createArray(int size);
+
+extern void *getArrayByIndex(Array *array, int index);
 
 #endif //ATTACK_LINUXC_MODEL_H

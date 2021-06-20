@@ -1,28 +1,6 @@
-//
-// Created by Admin on 2021/6/18.
-//
-
 #include "model.h"
 
-//------------------------------------------
-ArpMap *createArpMap() {
-    ArpMap *arpMap = cover_malloc(sizeof(ArpMap));
-
-    return arpMap;
-}
-
-void freeArpMap(ArpMap *arpMap) {
-    if (arpMap->ip != NULL) {
-        cover_free(arpMap->ip);
-    }
-    if (arpMap->mac != NULL) {
-        cover_free(arpMap->mac);
-    }
-    cover_free(arpMap);
-}
-
-//------------------------------------------
-string etherTypeToStr(int etherType) {
+extern string etherTypeToStr(int etherType) {
     char *et = "";
     switch (etherType) {
         case 0x0800:
@@ -69,6 +47,38 @@ string etherTypeToStr(int etherType) {
     return et;
 }
 
-//------------------------------------------
+//-----------------------------------------------------
+extern ArpMap *createArpMap() {
+    return cover_malloc(sizeof(ArpMap));
+}
+
+extern void freeArpMap(ArpMap *arpMap) {
+    if (arpMap->ip != NULL) {
+        cover_free(arpMap->ip);
+    }
+    if (arpMap->mac != NULL) {
+        cover_free(arpMap->mac);
+    }
+    cover_free(arpMap);
+}
+
+//-----------------------------------------------------
+extern Array *createArray(int size) {
+    Array *a = cover_malloc(sizeof(Array));
+    a->size = size;
+    a->node = cover_malloc(size * sizeof(Node));
+    return a;
+}
+
+extern void *getArrayByIndex(Array *array, int index) {
+    return array->node[index].obj;
+}
+
+
+
+
+
+
+
 
 

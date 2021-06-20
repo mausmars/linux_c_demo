@@ -53,10 +53,9 @@ u_byte *ipSplit2(string str) {
 
 //192.168.0.1
 u_byte *ipSplit(string str) {
-    string token;
     int index = 0;
     u_byte *ipv4 = cover_malloc(4 * sizeof(u_byte));
-    for (token = strtok(str, IpDelim); token != NULL; token = strtok(NULL, IpDelim)) {
+    for (string token = strtok(str, IpDelim); token != NULL; token = strtok(NULL, IpDelim)) {
         ipv4[index] = strToint(token);
         index++;
     }
@@ -65,10 +64,9 @@ u_byte *ipSplit(string str) {
 
 //a4:bb:6d:4c:e3:49
 u_byte *macSplit(string str) {
-    string token;
     int index = 0;
     u_byte *mac = cover_malloc(6 * sizeof(u_byte));
-    for (token = strtok(str, MacDelim); token != NULL; token = strtok(NULL, MacDelim)) {
+    for (string token = strtok(str, MacDelim); token != NULL; token = strtok(NULL, MacDelim)) {
         mac[index] = str16Tolong(token);
         index++;
     }
@@ -159,23 +157,21 @@ void arpMap() {
         memset(line, 0, sizeof(line));
         fgets(line, sizeof(line) - 1, fp); // 包含了换行符
         int index = 0;
-        string token;
-        ArpMap *arpMap = cover_malloc(sizeof(ArpMap));
-        for (token = strtok(line, delim); token != NULL; token = strtok(NULL, delim)) {
-            printf("%s\n", token);
 
-            strdup(token);
-
-            byte v[17];
-            memset(&v, 0, sizeof(v));
-            strcpy(v, token);
+        ArpMap *arpMap = createArpMap();
+        Array *ipmac = createArray(2);
+        for (string token = strtok(line, delim); token != NULL; token = strtok(NULL, delim)) {
             if (index == 0) {
-                arpMap->ip = ipSplit(v);
+                printf("%s\n", token);
+                ipmac->node[0].obj = token;
             } else if (index == 3) {
-                arpMap->mac = macSplit(v);
+                printf("%s\n", token);
+                ipmac->node[1].obj = token;
             }
             index++;
         }
+        arpMap->mac = macSplit(ipmac->node[0].obj);
+        arpMap->ip = ipSplit(ipmac->node[1].obj);
     }
     fclose(fp);
 }

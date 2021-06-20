@@ -12,13 +12,11 @@
 //获取网卡名字
 string ifaName();
 
-//打印网卡信息
-void printIfa();
-
 //获取网关地址
 u_byte *gateway();
 
-//打印网关信息
-void printRoute();
+extern ArpMap *createArpMap();
+
+extern Array *createArray(int size);
 
 #endif //LINUXC_DEMO_NET_UTIL_H

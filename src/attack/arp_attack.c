@@ -16,10 +16,10 @@
 
 void arpAttack(string targetIp) {
     //获取网卡名
-    char ifaname = ifaName();
+//    char ifaname = ifaName();
 
     //获取网关地址
-    int *ipv4 = gateway();
+//    int *ipv4 = gateway();
 
     //通过ip获取mac
 

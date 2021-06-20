@@ -54,7 +54,7 @@ add_executable(coroutine_test src/coroutine/main.c src/coroutine/coroutine.c)
 add_executable(base_ucontext_test src/base_test/ucontext_test.c)
 add_executable(base_pthread_self_test src/base_test/pthread_self_test.c src/base_test/itimerval_test.c)
 
-file(GLOB attack_src . src/attack/*.c)
+file(GLOB attack_src src/attack/*.h src/attack/*.c)
 add_executable(net_util ${attack_src})
 
 #ADD_DEFINITIONS(
