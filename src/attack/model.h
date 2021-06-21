@@ -5,42 +5,45 @@
 #ifndef ATTACK_LINUXC_MODEL_H
 #define ATTACK_LINUXC_MODEL_H
 
-#include "memory_mgr.h"
+#include <stdio.h>
+#include <unistd.h>
 
-//-------------------------------
-//变量类型
-typedef char byte;
-typedef unsigned char u_byte;
-typedef unsigned short u_short;
-typedef unsigned int u_int;
-typedef unsigned long u_long;
+#include "../common/memory.h"
+#include "../common/type.h"
+//#include "../common/exception.h"
 
-typedef long long l_long;
-typedef long double l_double;
-
-typedef char *string;
-typedef void *any;
-
+#include "../common/array.h"
+#include "../common/arraylist.h"
 //-------------------------------
 //常量
 #define IpDelim "."
 #define MacDelim ":"
+#define SpaceDelim " "
+#define TableDelim "\t"
 
+#define Route_Path "/proc/net/route"
+#define Arp_Path "/proc/net/arp"
 //-------------------------------
+enum StateType {
+    StateType_Stop = 0,//停止
+    StateType_Attack = 1,//进攻中
+};
+
 //枚举
-//EtherType
-#define ETHERTYPE_IPv4 0x0800
-#define ETHERTYPE_IPv6 0x86DD
-#define ETHERTYPE_ARP 0x0806
-#define ETHERTYPE_RARP 0x0835
-#define ETHERTYPE_TRILL 0x22F3
-#define ETHERTYPE_L2_ISIS 0x22F4
-#define ETHERTYPE_8021Q_TAG 0x8100
-#define ETHERTYPE_NEXT_HOP_FORWARDING 0x86FF
-#define ETHERTYPE_FLOW_CONTROL 0x8808
-#define ETHERTYPE_8021ad_S_TAG 0x88A8
-#define ETHERTYPE_MPLS_UNICAST 0x8847
-#define ETHERTYPE_MPLS_MULTICAST 0x8848
+enum EtherType {
+    ETHERTYPE_IPv4 = 0x0800,
+    ETHERTYPE_IPv6 = 0x86DD,
+    ETHERTYPE_ARP = 0x0806,
+    ETHERTYPE_RARP = 0x0835,
+    ETHERTYPE_TRILL = 0x22F3,
+    ETHERTYPE_L2_ISIS = 0x22F4,
+    ETHERTYPE_8021Q_TAG = 0x8100,
+    ETHERTYPE_NEXT_HOP_FORWARDING = 0x86FF,
+    ETHERTYPE_FLOW_CONTROL = 0x8808,
+    ETHERTYPE_8021ad_S_TAG = 0x88A8,
+    ETHERTYPE_MPLS_UNICAST = 0x8847,
+    ETHERTYPE_MPLS_MULTICAST = 0x8848,
+};
 
 //-----------------------------
 typedef struct {
@@ -68,24 +71,10 @@ typedef struct {
 } ArpMap;
 
 //-------------------------------
-//数组类型
-typedef struct {
-    void *obj;
-} Node;
-
-typedef struct {
-    int size;
-    Node *node;
-} Array;
-
 extern string etherTypeToStr(int etherType);
 
 extern ArpMap *createArpMap();
 
 extern void freeArpMap(ArpMap *arpMap);
-
-extern Array *createArray(int size);
-
-extern void *getArrayByIndex(Array *array, int index);
 
 #endif //ATTACK_LINUXC_MODEL_H

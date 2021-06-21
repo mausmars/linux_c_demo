@@ -5,3 +5,7 @@ netsh -c "i i" add neighbors 18 "10.79.19.1" "18-3d-5e-76-6b-fc"
 linux 设置
 arp -s 10.79.19.1 18-3d-5e-76-6b-fc
 
+//删除映射
+arp -d 10.79.19.1
+
+ping 10.79.19.1

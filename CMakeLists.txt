@@ -54,8 +54,8 @@ add_executable(coroutine_test src/coroutine/main.c src/coroutine/coroutine.c)
 add_executable(base_ucontext_test src/base_test/ucontext_test.c)
 add_executable(base_pthread_self_test src/base_test/pthread_self_test.c src/base_test/itimerval_test.c)
 
-file(GLOB attack_src src/attack/*.h src/attack/*.c)
-add_executable(net_util ${attack_src})
+file(GLOB attack_src src/common/*.h src/common/*.c src/attack/*.h src/attack/*.c)
+add_executable(arp_attack ${attack_src})
 
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
@@ -89,6 +89,6 @@ target_link_libraries(coroutine_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(base_ucontext_test)
 target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
 
-target_link_libraries(net_util)
+target_link_libraries(arp_attack)
 
 

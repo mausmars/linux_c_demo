@@ -3,40 +3,40 @@
 extern string etherTypeToStr(int etherType) {
     char *et = "";
     switch (etherType) {
-        case 0x0800:
+        case ETHERTYPE_IPv4:
             et = "ETHERTYPE_IPv4";
             break;
-        case 0x86DD:
+        case ETHERTYPE_IPv6:
             et = "ETHERTYPE_IPv6";
             break;
-        case 0x0806:
+        case ETHERTYPE_ARP:
             et = "ETHERTYPE_ARP";
             break;
-        case 0x0835:
+        case ETHERTYPE_RARP:
             et = "ETHERTYPE_RARP";
             break;
-        case 0x22F3:
+        case ETHERTYPE_TRILL:
             et = "ETHERTYPE_TRILL";
             break;
-        case 0x22F4:
+        case ETHERTYPE_L2_ISIS:
             et = "ETHERTYPE_L2_ISIS";
             break;
-        case 0x8100:
+        case ETHERTYPE_8021Q_TAG:
             et = "ETHERTYPE_8021Q_TAG";
             break;
-        case 0x86FF:
+        case ETHERTYPE_NEXT_HOP_FORWARDING:
             et = "ETHERTYPE_NEXT_HOP_FORWARDING";
             break;
-        case 0x8808:
+        case ETHERTYPE_FLOW_CONTROL:
             et = "ETHERTYPE_FLOW_CONTROL";
             break;
-        case 0x88A8:
+        case ETHERTYPE_8021ad_S_TAG:
             et = "ETHERTYPE_8021ad_S_TAG";
             break;
-        case 0x8847:
+        case ETHERTYPE_MPLS_UNICAST:
             et = "ETHERTYPE_MPLS_UNICAST";
             break;
-        case 0x8848:
+        case ETHERTYPE_MPLS_MULTICAST:
             et = "ETHERTYPE_MPLS_MULTICAST";
             break;
         default:
@@ -61,24 +61,3 @@ extern void freeArpMap(ArpMap *arpMap) {
     }
     cover_free(arpMap);
 }
-
-//-----------------------------------------------------
-extern Array *createArray(int size) {
-    Array *a = cover_malloc(sizeof(Array));
-    a->size = size;
-    a->node = cover_malloc(size * sizeof(Node));
-    return a;
-}
-
-extern void *getArrayByIndex(Array *array, int index) {
-    return array->node[index].obj;
-}
-
-
-
-
-
-
-
-
-

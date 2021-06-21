@@ -1,21 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ifaddrs.h>
 #include <arpa/inet.h>
-#include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #include "net_util.h"
 
-#define Route_Path "/proc/net/route"
-#define Arp_Path "/proc/net/arp"
-
 //----------------------------------
+bool compareStr(string str1, string str2) {
+    if (strcmp(str1, str2) == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 //字符串转int  “0x1b”
 long str16Tolong(string valueStr) {
-//    byte str;
-    long i = strtol(valueStr, 0, 16);
-    return i;
+    return (long) strtol(valueStr, 0, 16);
 }
 
 long strTolong(string str) {
@@ -31,6 +35,23 @@ int strToint(string str) {
 float strTofloat(string str) {
     float i = atof(str);
     return i;
+}
+
+string longToStr16(long v) {
+    u_byte *str = cover_malloc(10 * sizeof(u_byte));
+    sprintf(str, "%x", v);
+    return str;
+}
+
+string longToStr(long v) {
+    u_byte *str = cover_malloc(10 * sizeof(u_byte));
+    sprintf(str, "%d", v);
+    return str;
+}
+
+//---------------------------------------------
+u_int cover_sleep(u_int seconds) {
+    return sleep(seconds);
 }
 
 //---------------------------------------------
@@ -73,19 +94,57 @@ u_byte *macSplit(string str) {
     return mac;
 }
 
+string ip2Str(u_byte *ipv4) {
+    u_byte *str = cover_malloc(16 * sizeof(u_byte));
+    for (int i = 0; i < 4; i++) {
+        string s = longToStr(ipv4[i]);
+        if (i == 0) {
+            strcpy(str, s);
+        } else {
+            strcat(str, s);
+        }
+        cover_free(s);
+        if (i != 3) {
+            strcat(str, ".");
+        }
+    }
+    return str;
+}
+
+string mac2Str(u_byte *mac) {
+    u_byte *str = cover_malloc(18 * sizeof(u_byte));
+    for (int i = 0; i < 6; i++) {
+        string s = longToStr16(mac[i]);
+        if (i == 0) {
+            strcpy(str, s);
+        } else {
+            strcat(str, s);
+        }
+        cover_free(s);
+        if (i != 5) {
+            strcat(str, ":");
+        }
+    }
+    return str;
+}
+
 //---------------------------------------------
 void ping(string ip) {
-    if (execlp("ping", "ping", "-c", "1", ip, (byte *) 0) < 0) {
-        printf("ping error\n");
-        exit(1);
+    int childpid;
+    if (fork() == 0) {
+        if (execl("/bin/ping", "ping", "-c", "1", ip, NULL) < 0) {
+            perror("error on exec \n");
+            exit(0);
+        }
+    } else {
+        wait(&childpid);
+        printf("execv done \n");
     }
-    printf("ping over! \n");
 }
 
 void arp() {
     if (execlp("arp", "arp", "-a", (byte *) 0) < 0) {
         printf("arp -a error\n");
-        exit(1);
     }
     printf("arp -a! \n");
 }
@@ -114,7 +173,7 @@ string ifaName() {
 
 u_byte *gateway() {
     string path = Route_Path;
-    string delim = "\t";
+    string delim = TableDelim;
 
     FILE *fp = fopen(path, "r");
     if (fp == NULL) {
@@ -142,38 +201,44 @@ u_byte *gateway() {
     return ipSplit2(token);
 }
 
-void arpMap() {
+ArrayList *arpMap() {
     string path = Arp_Path;
-    string delim = " ";
+    string delim = SpaceDelim;
 
     FILE *fp = fopen(path, "r");
     if (fp == NULL) {
         printf("%s isn't exist! \n", path);
-        return;
+        return NULL;
     }
     byte line[200];
     fgets(line, sizeof(line) - 1, fp); //跳过一行
+
+    ArrayList *arpMaps = createArrayList(1);
     while (!feof(fp)) {
         memset(line, 0, sizeof(line));
         fgets(line, sizeof(line) - 1, fp); // 包含了换行符
         int index = 0;
-
-        ArpMap *arpMap = createArpMap();
-        Array *ipmac = createArray(2);
-        for (string token = strtok(line, delim); token != NULL; token = strtok(NULL, delim)) {
-            if (index == 0) {
-                printf("%s\n", token);
-                ipmac->node[0].obj = token;
-            } else if (index == 3) {
-                printf("%s\n", token);
-                ipmac->node[1].obj = token;
+        string token = strtok(line, delim);
+        if (token != NULL) {
+            Array *ipmac = createArray(2);
+            for (; token != NULL; token = strtok(NULL, delim)) {
+                if (index == 0) {
+//                    printf("%s\n", token);
+                    insertArray(ipmac, token, 0);
+                } else if (index == 3) {
+//                    printf("%s\n", token);
+                    insertArray(ipmac, token, 1);
+                }
+                index++;
             }
-            index++;
+            ArpMap *arpMap = createArpMap();
+            arpMap->ip = ipSplit((string) indexArray(ipmac, 0));
+            arpMap->mac = macSplit((string) indexArray(ipmac, 1));
+            insertArrayListToLast(arpMaps, arpMap);
         }
-        arpMap->mac = macSplit(ipmac->node[0].obj);
-        arpMap->ip = ipSplit(ipmac->node[1].obj);
     }
     fclose(fp);
+    return arpMaps;
 }
 
 void printRoute() {
@@ -220,25 +285,4 @@ void printIfa() {
         }
     }
     freeifaddrs(ifList);
-}
-
-int main(int argc, char *argv[]) {
-//    1.当前网卡名
-//    printIfa();
-//    printf("IfaName = %s", ifaName());
-
-    //2.获取网关ip
-//    u_byte *ipv4 = gateway();
-//    for (int i = 0; i < 4; i++) {
-//        printf("%d", *(ipv4 + i));
-//        if (i == 3) {
-//            printf("\n");
-//        } else {
-//            printf(".");
-//        }
-//    }
-
-//    ping("10.79.19.1");
-    arpMap();
-    return 0;
 }

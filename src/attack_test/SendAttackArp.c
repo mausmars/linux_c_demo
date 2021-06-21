@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <stdio.h>
 #include <net/if.h>
 #include <netinet/in.h>
