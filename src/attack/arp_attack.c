@@ -12,6 +12,8 @@
 
 #include "net_util.h"
 #include "arp_attack.h"
+#include "../common/logger.h"
+#include "../common/interface.h"
 
 enum StateType stateType = StateType_Stop;
 
@@ -222,7 +224,21 @@ void arpAttack(string targetIp) {
     }
 }
 
+void loggerTest() {
+    //日志输出到 var/log/syslog
+    logger_reset_state();
+    log_warning("This message goes to syslog");
+    logger_set_out_stdout();
+    log_status("Hello!");
+    logger_set_log_file("log.txt");
+    log_error("Logger in a file mode!");
+}
+
 int main(int argc, char *argv[]) {
-    arpAttack("10.79.19.58");
+//    arpAttack("10.79.19.58");
+
+//    loggerTest();
+
+    interfaceTest();
     return 0;
 }

@@ -39,13 +39,13 @@ float strTofloat(string str) {
 
 string longToStr16(long v) {
     u_byte *str = cover_malloc(10 * sizeof(u_byte));
-    sprintf(str, "%x", v);
+    sprintf(str, "%lx", v);
     return str;
 }
 
 string longToStr(long v) {
     u_byte *str = cover_malloc(10 * sizeof(u_byte));
-    sprintf(str, "%d", v);
+    sprintf(str, "%ld", v);
     return str;
 }
 
