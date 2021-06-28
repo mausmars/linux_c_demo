@@ -54,6 +54,17 @@ u_int cover_sleep(u_int seconds) {
     return sleep(seconds);
 }
 
+//192.168.0.1
+u_byte *ipSplit(string str) {
+    int index = 0;
+    u_byte *ipv4 = cover_malloc(4 * sizeof(u_byte));
+    for (string token = strtok(str, IpDelim); token != NULL; token = strtok(NULL, IpDelim)) {
+        ipv4[index] = strToint(token);
+        index++;
+    }
+    return ipv4;
+}
+
 //---------------------------------------------
 //01134F0A
 u_byte *ipSplit2(string str) {
@@ -68,17 +79,6 @@ u_byte *ipSplit2(string str) {
         strcpy(v, "0x");
         strcat(v, v1);
         ipv4[3 - i] = str16Tolong(v);
-    }
-    return ipv4;
-}
-
-//192.168.0.1
-u_byte *ipSplit(string str) {
-    int index = 0;
-    u_byte *ipv4 = cover_malloc(4 * sizeof(u_byte));
-    for (string token = strtok(str, IpDelim); token != NULL; token = strtok(NULL, IpDelim)) {
-        ipv4[index] = strToint(token);
-        index++;
     }
     return ipv4;
 }
