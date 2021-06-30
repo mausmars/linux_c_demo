@@ -1,0 +1,11 @@
+// 设置git信息
+git config --global user.name mausmars
+git config --global user.email dalaoshuxxx@gmail.com
+git config --global user.password 123456（token）
+
+
+//添加文件
+git add runoob-test.txt
+git commit -m "注释"
+//推送
+git push origin master
