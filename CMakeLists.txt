@@ -57,6 +57,8 @@ add_executable(base_pthread_self_test src/base_test/pthread_self_test.c src/base
 file(GLOB attack_src src/common/*.h src/common/*.c src/attack/*.h src/attack/*.c)
 add_executable(arp_attack ${attack_src})
 
+add_executable(atomic_test src/atomic_test/atomic_test.c)
+
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
 #)
@@ -91,4 +93,4 @@ target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
 
 target_link_libraries(arp_attack)
 
-
+target_link_libraries(atomic_test ${CMAKE_THREAD_LIBS_INIT})
