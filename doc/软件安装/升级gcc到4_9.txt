@@ -28,8 +28,13 @@ deb http://dk.archive.ubuntu.com/ubuntu/ xenial main
 deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe
 
 apt update
-
 apt install gcc-4.9
+
+//-------------------------------------------
+debian gcc安装
+apt install build-essential
+apt-get install manpages-dev
+
 
 
 

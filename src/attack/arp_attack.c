@@ -235,10 +235,8 @@ void loggerTest() {
 }
 
 int main(int argc, char *argv[]) {
-//    arpAttack("10.79.19.58");
-
+    arpAttack("10.79.19.58");
 //    loggerTest();
-
-    interfaceTest();
+//    interfaceTest();
     return 0;
 }
