@@ -3,29 +3,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "nolock_queue.h"
+#include "../common/nolock_queue.h"
 
 void testcQueue() {
     Queue *queue = createQueue();
-
     int value = 10;
-
     addQueue(queue, &value);
-
     int *data = (int *) pollQueue(queue);
     printf("data=%d", *data);
 }
 
 void testNetServer() {
     NetServer *server = NULL;
-
     char explain[255];
     strcpy(explain, "----------------------------\n");
     strcat(explain, "输入指令序号\n");
     strcat(explain, "0.退出测试\n");
     strcat(explain, "1.启动tcp服务\n");
     strcat(explain, "2.关闭tcp服务");
-
     int i;
     bool isOver = false;
     for (;;) {
@@ -52,7 +47,7 @@ void testNetServer() {
 }
 
 int main(int argc, const char *argv[]) {
-    testNetServer();
-//    testcQueue();
+//    testNetServer();
+    testcQueue();
     return 0;
 }

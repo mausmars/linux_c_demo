@@ -3,6 +3,7 @@
 //
 //https://en.cppreference.com/w/c/atomic
 //http://ericnode.info/post/atomic_in_c11/
+//https://zhuanlan.zhihu.com/p/45566448  Memory Order
 
 #ifdef __STDC_NO_ATOMICS__ // since gcc 4.9
 #error "Do not support C11 atomic"

@@ -28,12 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define zmalloc malloc
-#define zfree   free
-
-#include <stdlib.h>
 #include "timing_wheel.h"
-//#include "zmalloc.h"
 
 /* Create a new list. The created list can be freed with
  * AlFreeList(), but private value of every node need to be freed
@@ -43,7 +38,7 @@
 list *listCreate(void) {
     struct list *list;
 
-    if ((list = zmalloc(sizeof(*list))) == NULL)
+    if ((list = cover_malloc(sizeof(*list))) == NULL)
         return NULL;
     list->head = list->tail = NULL;
     list->len = 0;
@@ -65,10 +60,10 @@ void listRelease(list *list) {
     while (len--) {
         next = current->next;
         if (list->free) list->free(current->value);
-        zfree(current);
+        cover_free(current);
         current = next;
     }
-    zfree(list);
+    cover_free(list);
 }
 
 /* Add a new node to the list, to head, contaning the specified 'value'
@@ -80,7 +75,7 @@ void listRelease(list *list) {
 list *listAddNodeHead(list *list, void *value) {
     listNode *node;
 
-    if ((node = zmalloc(sizeof(*node))) == NULL)
+    if ((node = cover_malloc(sizeof(*node))) == NULL)
         return NULL;
     node->value = value;
     if (list->len == 0) {
@@ -105,7 +100,7 @@ list *listAddNodeHead(list *list, void *value) {
 list *listAddNodeTail(list *list, void *value) {
     listNode *node;
 
-    if ((node = zmalloc(sizeof(*node))) == NULL)
+    if ((node = cover_malloc(sizeof(*node))) == NULL)
         return NULL;
     node->value = value;
     if (list->len == 0) {
@@ -124,7 +119,7 @@ list *listAddNodeTail(list *list, void *value) {
 list *listInsertNode(list *list, listNode *old_node, void *value, int after) {
     listNode *node;
 
-    if ((node = zmalloc(sizeof(*node))) == NULL)
+    if ((node = cover_malloc(sizeof(*node))) == NULL)
         return NULL;
     node->value = value;
     if (after) {
@@ -164,7 +159,7 @@ void listDelNode(list *list, listNode *node) {
     else
         list->tail = node->prev;
     if (list->free) list->free(node->value);
-    zfree(node);
+    cover_free(node);
     list->len--;
 }
 
@@ -175,7 +170,7 @@ void listDelNode(list *list, listNode *node) {
 listIter *listGetIterator(list *list, int direction) {
     listIter *iter;
 
-    if ((iter = zmalloc(sizeof(*iter))) == NULL) return NULL;
+    if ((iter = cover_malloc(sizeof(*iter))) == NULL) return NULL;
     if (direction == AL_START_HEAD)
         iter->next = list->head;
     else
@@ -186,7 +181,7 @@ listIter *listGetIterator(list *list, int direction) {
 
 /* Release the iterator memory */
 void listReleaseIterator(listIter *iter) {
-    zfree(iter);
+    cover_free(iter);
 }
 
 /* Create an iterator in the list private iterator structure */

@@ -5,10 +5,13 @@
 #ifndef DEMO_LINUXC_THREADPOOL_H
 #define DEMO_LINUXC_THREADPOOL_H
 
+#include <stdio.h>
 #include <pthread.h>
-#include <jemalloc/jemalloc.h>
 
 #include "nolock_queue.h"
+
+//线程工作函数
+void *work(void *params);
 
 typedef struct {
     int size;
@@ -16,7 +19,7 @@ typedef struct {
 
 typedef struct {
 
-}Worker;
+} Worker;
 
 typedef struct {
     ThreadPoolConfig *config;
@@ -26,6 +29,7 @@ typedef struct {
 } ThreadPool;
 
 extern ThreadPoolConfig *createThreadPoolConfig();
+
 extern ThreadPool *createThreadPool(ThreadPoolConfig *config);
 
 #endif //DEMO_LINUXC_THREADPOOL_H

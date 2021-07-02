@@ -5,6 +5,10 @@
 #ifndef LINUXC_DEMO_TIMING_WHEEL_H
 #define LINUXC_DEMO_TIMING_WHEEL_H
 
+#include <stdlib.h>
+
+#include "memory.h"
+
 typedef struct listNode {
     struct listNode *prev;
     struct listNode *next;
@@ -60,9 +64,5 @@ void listRewindTail(list *list, listIter *li);
 /* Directions for iterators */
 #define AL_START_HEAD 0
 #define AL_START_TAIL 1
-
-
-
-
 
 #endif //LINUXC_DEMO_TIMING_WHEEL_H

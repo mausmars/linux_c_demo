@@ -45,8 +45,6 @@ add_executable(attack_icmp src/attack_test/SendAttackIcmp.c)
 add_executable(sniffer src/attack_test/SimpelSniffer2.c)
 add_executable(semaphore src/thread_test/thread_semaphore_test.c)
 add_executable(httpserver src/httpserver_test/starter.c src/httpserver_test/httpd.h src/httpserver_test/httpd.c)
-file(GLOB game_server_src . src/game_server/*.c)
-add_executable(gameserver ${game_server_src})
 add_executable(networkcard1 src/networkcard_test/test1/networkcard_test1.c)
 add_executable(networkcard2 src/networkcard_test/test2/networkcard_test2.c)
 add_executable(coroutine_test src/coroutine/main.c src/coroutine/coroutine.c)
@@ -56,6 +54,9 @@ add_executable(base_pthread_self_test src/base_test/pthread_self_test.c src/base
 
 file(GLOB attack_src src/common/*.h src/common/*.c src/attack/*.h src/attack/*.c)
 add_executable(arp_attack ${attack_src})
+
+file(GLOB game_server_src src/common/*.h src/common/*.c src/game_server/*.h src/game_server/*.c)
+add_executable(gameserver ${game_server_src})
 
 add_executable(atomic_test src/atomic_test/atomic_test.c)
 
@@ -84,7 +85,6 @@ target_link_libraries(attack_icmp)
 target_link_libraries(sniffer)
 target_link_libraries(semaphore ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(httpserver)
-target_link_libraries(gameserver)
 target_link_libraries(networkcard1)
 target_link_libraries(networkcard2)
 target_link_libraries(coroutine_test ${CMAKE_THREAD_LIBS_INIT})
@@ -92,5 +92,6 @@ target_link_libraries(base_ucontext_test)
 target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
 
 target_link_libraries(arp_attack)
+target_link_libraries(gameserver  ${CMAKE_THREAD_LIBS_INIT})
 
 target_link_libraries(atomic_test ${CMAKE_THREAD_LIBS_INIT})

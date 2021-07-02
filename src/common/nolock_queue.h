@@ -5,7 +5,8 @@
 #ifndef DEMO_LINUXC_NOLOCK_QUEUE_H
 #define DEMO_LINUXC_NOLOCK_QUEUE_H
 
-#include <jemalloc/jemalloc.h>
+#include "type.h"
+#include "memory.h"
 
 typedef struct QNode QueueNode;
 
@@ -20,8 +21,11 @@ typedef struct {
 } Queue;
 
 extern QueueNode *createQueueNode();
+
 extern Queue *createQueue();
+
 extern void addQueue(Queue *queue, void *data);
+
 extern void *pollQueue(Queue *queue);
 
 #endif //DEMO_LINUXC_NOLOCK_QUEUE_H

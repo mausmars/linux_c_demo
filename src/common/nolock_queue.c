@@ -2,18 +2,14 @@
 // Created by root on 1/16/20.
 //
 #include "nolock_queue.h"
-#include "common.h"
-
-#include <stdio.h>
-#include <stdlib.h>
 
 QueueNode *createQueueNode() {
-    QueueNode *queueNode = (QueueNode *) malloc(sizeof(QueueNode));
+    QueueNode *queueNode = (QueueNode *) cover_malloc(sizeof(QueueNode));
     return queueNode;
 }
 
 Queue *createQueue() {
-    Queue *queue = (Queue *) malloc(sizeof(Queue));
+    Queue *queue = (Queue *) cover_malloc(sizeof(Queue));
     QueueNode *node = createQueueNode();
     queue->head = queue->tail = node;
     return queue;
@@ -78,6 +74,6 @@ void *pollQueue(Queue *queue) {
             break;
         }
     }
-    free(head); //释放老的dummy结点
+    cover_free(head); //释放老的dummy结点
     return data;
 }

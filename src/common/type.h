@@ -29,12 +29,13 @@ typedef long long l_long;   //（32位系统 8字节，64位系统 8字节）
 typedef long double l_double;
 
 typedef char bool;
-#define true 1
-#define false 0
-
 typedef char *string;
 typedef void *any;
 
 typedef char *pointer; //指针类型（32位系统 4字节，64位系统 8字节）
+
+#define true 1
+#define false 0
+#define ErrorReturn -1
 
 #endif //LINUXC_DEMO_TYPE_H

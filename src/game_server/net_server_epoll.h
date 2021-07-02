@@ -7,7 +7,7 @@
 
 #include <assert.h>
 #include <netinet/in.h>
-#include "common.h"
+#include "../common/type.h"
 
 typedef enum {
     ST_Stop = 0,
