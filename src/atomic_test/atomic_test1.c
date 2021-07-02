@@ -1,6 +1,3 @@
-//
-// Created by Admin on 2021/6/30.
-//
 //https://en.cppreference.com/w/c/atomic
 //http://ericnode.info/post/atomic_in_c11/
 //https://zhuanlan.zhihu.com/p/45566448  Memory Order
@@ -42,7 +39,8 @@ static void *worker(void *arg) {
     return NULL;
 }
 
-int main(int argc, char **argv) {
+//测试原子操作和非原子操作，对比结果
+void test1() {
     pthread_t threads[N_THREADS];
     job jobs[N_THREADS];
     atomic_int val = ATOMIC_VAR_INIT(0);
@@ -66,5 +64,9 @@ int main(int argc, char **argv) {
         //值为0
         printf("test pass.\n");
     }
+}
+
+int main(int argc, char **argv) {
+    test1();
     return 0;
 }

@@ -58,7 +58,8 @@ add_executable(arp_attack ${attack_src})
 file(GLOB game_server_src src/common/*.h src/common/*.c src/game_server/*.h src/game_server/*.c)
 add_executable(gameserver ${game_server_src})
 
-add_executable(atomic_test src/atomic_test/atomic_test.c)
+add_executable(atomic_test1 src/atomic_test/atomic_test1.c)
+add_executable(atomic_test2 src/atomic_test/atomic_test2.c)
 
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
@@ -94,4 +95,5 @@ target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(arp_attack)
 target_link_libraries(gameserver  ${CMAKE_THREAD_LIBS_INIT})
 
-target_link_libraries(atomic_test ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(atomic_test1 ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(atomic_test2 ${CMAKE_THREAD_LIBS_INIT})

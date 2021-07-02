@@ -1,0 +1,81 @@
+http://c.biancheng.net/view/431.html
+https://github.com/zenny-chen/C11-atomic-operations-in-detail
+https://www.boost.org/doc/libs/1_55_0/boost/atomic/detail/gcc-cas.hpp
+http://stdatomic.gforge.inria.fr/
+
+栅栏（内存屏障）
+void atomic_thread_fence(memory_order order);
+
+若参数值为 memory_order_release，函数 atomic_thread_fence（）建立一个释放栅栏（releas fence）。
+在这种情况下，原子写操作必须在释放栅栏之后发生。
+
+若参数值为 memory_order_acquire 或 memory_order_consume，函数 atomic_thread_fence（）建立一个捕获栅栏（acquire fence）。
+在这种情况下，原子读操作必须在捕获栅栏之前发生。
+
+//----------------------------------------
+C11标准中的六种存储器次序
+下面我们就来详细谈谈这六种存储器次序。这里先介绍C11标准对这些存储器次序的大概定义，因为有些概念会相互穿插，所以把这些存储器次序都列完再做更深入的描述。
+
+memory_order_relaxed ：对当前操作的其他读写不施加任何同步或排序上的约束。如果用此次序的当前操作为原子操作，那么仅仅保证该操作的原子性。
+memory_order_consume ：带有此存储器次序的一次加载操作在受影响的存储器位置执行了一次消费操作（consume operation）：
+在当前线程中依赖于当前加载值的任何读或写都不能在此加载操作之前重新排序。在其他线程中，释放同一原子变量的对具有数据依赖变量的写在当前线程中是可见的。在大部分平台上，此存储器次序只是影响了编译器优化。另外，消费操作引入了存储器次序依赖性。
+memory_order_acquire ：带有此存储器次序的加载操作在受影响的存储器位置执行获得操作（acquire operation）：
+在当前线程，没有读和写在此加载之前可以被重新排序。在其他线程中，释放同一原子变量的所有写在当前线程中是可见的。
+memory_order_release ：带有此存储器次序的一次存储操作执行释放操作（release operation）：
+在当前线程中，没有读和写可以在此存储之后被重新排序。在当前线程中对原子变量的所有写对其他线程中获得同一原子变量的操作是可见的。并且对原子变量携带依赖的写在其他线程中消费同一原子变量的操作也变为可见的。
+memory_order_acq_rel ：带有此存储器次序的一次读-修改-写操作同时具备了一次获得操作和一次释放操作。在当前线程中，没有存储器读和写可以在此存储之前或之后被重新排序。在其他线程中，释放同一原子变量的所有写在此修改前都是可见的（通过当前线程的此操作的acquire语义）；并且此修改对其他线程中获得同一原子变量的操作是可见的（通过当前线程的此操作的release语义）。
+memory_order_seq_cst ：带有此存储器次序的一次加载操作执行一个获得操作，而一次存储则执行一次释放操作，并且一次读-修改-写操作同时执行一次获得操作和一次释放操作，外加一单个总和次序，在所有线程中均以相同次序观察到对同一原子变量的所有修改。
+
+typedef enum
+  {
+    memory_order_relaxed = __ATOMIC_RELAXED,
+    memory_order_consume = __ATOMIC_CONSUME,
+    memory_order_acquire = __ATOMIC_ACQUIRE,
+    memory_order_release = __ATOMIC_RELEASE,
+    memory_order_acq_rel = __ATOMIC_ACQ_REL,
+    memory_order_seq_cst = __ATOMIC_SEQ_CST
+  } memory_order;
+
+
+//--------------------------------------------------------
+  // 在执行多任务前，原子锁对象初始值为0
+  volatile int g_atomic_lock = 0;
+
+  // 这里是多个线程可能共同的代码
+  void AtomicModify(void) {
+      // SWAP的第一个参数指向某一原子对象的地址。
+      // SWAP操作一般是将第二个实参的值写入到原子对象中去，
+      // 然后返回该原子对象在SWAP操作之前的值。
+      while (SWAP(&g_atomic_lock, 1) == 1) {
+          // 如果SWAP操作返回1，说明之前已经有线程对该对象上了锁，
+          // 此时只能等待该原子对象重新变为0。
+          CPU_PAUSE();    // 这里暗示CPU可以做对其他线程的调度
+      }
+      // SWAP操作成功之后，g_atomic_lock的值变为1了，
+      // 此时对多个线程所共享的对象进行操作
+      DoModificationToSharedObject();
+
+      // 对共享对象操作完之后，释放原子锁
+      SWAP(&g_atomic_lock, 0);
+  }
+
+  void AtomicSumOfSquares(volatile int *atom, int b) {
+      int orgValue, dstValue;
+      do {
+          // 先加载原子对象的当前值
+          orgValue = *atom;
+
+          // 再对原始值做平方和计算，作为最终写入的结果
+          dstValue = orgValue * orgValue + b * b;
+      }
+          // 这里的CAS函数，第一个参数指向一个原子对象；
+          // 第二个参数指向之前加载该原子对象的变量；
+          // 第三个参数则是比较成功后，最后写入到该原子对象的值。
+          // CAS先将原子对象的内容与之前加载它的变量的值进行比较，两者是否相同；
+          // 如果相同，说明在此操作期间没有其他线程对该原子进行修改，
+          // 则将第三个参数的值写到该原子对象中去，然后返回true；
+          // 如果两者不同，说明这期间已经有某个线程对该原子对象进行了修改，返回false。
+      while (!CAS(atom, &orgValue, dstValue);
+
+      return dstValue;
+  }
