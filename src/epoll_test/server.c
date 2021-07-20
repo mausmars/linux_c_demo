@@ -156,13 +156,11 @@ int main(int argc, char *argv[]) {
     while (1) {
         int n, i, new_fd, numbytes;
         n = epoll_wait(epfd, events, MaxEvents, -1);
-
         if (n > 1) {
             printf("epoll_wait 触发! n=%d\n", n);
         }
         for (i = 0; i < n; i++) {
-            /* We have a notification on the listening socket, which
-             means one or more incoming connections. */
+            /* We have a notification on the listening socket, which means one or more incoming connections. */
             if (events[i].data.fd == sockfd) {
                 // accept 有新的连接
                 int sin_size = sizeof(struct sockaddr_in);
@@ -170,12 +168,9 @@ int main(int argc, char *argv[]) {
                     perror("accept error");
                     continue;
                 }
-//                printf("server: got connection from %s\n", inet_ntoa(client_addr.sin_addr));
-
-                // epoll_ctl
+                // printf("server: got connection from %s\n", inet_ntoa(client_addr.sin_addr));
                 event.data.fd = new_fd;
-                //EPOLLIN 连接到达；有数据来临；
-                //EPOLLET 边缘触发
+                //EPOLLIN 连接到达,有数据来临; EPOLLET 边缘触发
                 event.events = EPOLLIN | EPOLLET;
                 //将新的fd添加到epoll的监听队列中
                 if (epoll_ctl(epfd, EPOLL_CTL_ADD, new_fd, &event) == -1) {
@@ -186,7 +181,6 @@ int main(int argc, char *argv[]) {
                 //接收到数据，读socket
                 if ((new_fd = events[i].data.fd) < 0)
                     continue;
-
                 if ((numbytes = read(new_fd, buf, MaxDataSize)) < 0) {
                     if (errno == ECONNRESET) {
                         close(new_fd);
@@ -213,14 +207,12 @@ int main(int argc, char *argv[]) {
                 write(new_fd, buf, numbytes);//发送数据
 //                printf("written data: %s\n", buf);
 //                printf("written numbytes: %d\n", numbytes);
-
                 event.data.fd = new_fd;
                 event.events = EPOLLIN | EPOLLET;
                 //修改标识符，等待下一个循环时接收数据
                 epoll_ctl(epfd, EPOLL_CTL_MOD, new_fd, &event);
             } else if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)) {
-                /* An error has occured on this fd, or the socket is not
-                 ready for reading (why were we notified then?) */
+                /* An error has occured on this fd, or the socket is not ready for reading (why were we notified then?) */
                 fprintf(stderr, "epoll error\n");
                 new_fd = events[i].data.fd;
                 close(new_fd);

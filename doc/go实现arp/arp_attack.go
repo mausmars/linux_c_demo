@@ -80,7 +80,7 @@ func ArpAttack() {
 		return
 	}
 	defer syscall.Close(fd)
-	
+
 	arpPacket := createArpPacket()
 	packet := C.GoBytes(unsafe.Pointer(&arpPacket), C.int(60))
 	i := 1
