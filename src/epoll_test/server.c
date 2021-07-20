@@ -12,7 +12,8 @@
 
 #define MaxDataSize 32*1024
 #define BackLog 10000
-#define MaxEvents 1000000 // Since Linux 2.6.8, the size argument is ignored, but must be greater than zero.
+// Since Linux 2.6.8, the size argument is ignored, but must be greater than zero.
+#define MaxEvents 50000
 #define ServerPort 8000
 
 struct sockaddr_in server_addr;
@@ -114,14 +115,7 @@ static int create_and_bind(int port) {
 int main(int argc, char *argv[]) {
     // 数据缓存区域
     char buf[MaxDataSize];
-
     // 检查是否指定端口
-//	if (argc != 2) {
-//		fprintf(stderr, "Usage: %d [port]\n", SERV_PORT);
-//		exit(EXIT_FAILURE);
-//	}
-//	char *port_argv = argv[1];
-//	int port = atoi(port_argv);
     int port = ServerPort;
 
     // 创建并监听tcp socket
@@ -150,8 +144,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* Buffer where events are returned */
-    struct epoll_event *events;
-    events = calloc(MaxEvents, sizeof event);
+    struct epoll_event *events = calloc(MaxEvents, sizeof event);
 
     // listen
     if (listen(sockfd, BackLog) == -1) {
@@ -163,6 +156,10 @@ int main(int argc, char *argv[]) {
     while (1) {
         int n, i, new_fd, numbytes;
         n = epoll_wait(epfd, events, MaxEvents, -1);
+
+        if (n > 1) {
+            printf("epoll_wait 触发! n=%d\n", n);
+        }
         for (i = 0; i < n; i++) {
             /* We have a notification on the listening socket, which
              means one or more incoming connections. */
@@ -173,7 +170,7 @@ int main(int argc, char *argv[]) {
                     perror("accept error");
                     continue;
                 }
-                printf("server: got connection from %s\n", inet_ntoa(client_addr.sin_addr));
+//                printf("server: got connection from %s\n", inet_ntoa(client_addr.sin_addr));
 
                 // epoll_ctl
                 event.data.fd = new_fd;
@@ -204,7 +201,7 @@ int main(int argc, char *argv[]) {
                     epoll_ctl(epfd, EPOLL_CTL_DEL, new_fd, &event);
                 } else {
                     // numbytes > 0
-                    printf("received data: %s\n", buf);
+//                    printf("received data: %s\n", buf);
                 }
                 event.data.fd = new_fd;
                 event.events = EPOLLOUT | EPOLLET;
@@ -214,9 +211,8 @@ int main(int argc, char *argv[]) {
                 //有数据待发送，写socket
                 new_fd = events[i].data.fd;
                 write(new_fd, buf, numbytes);//发送数据
-
-                printf("written data: %s\n", buf);
-                printf("written numbytes: %d\n", numbytes);
+//                printf("written data: %s\n", buf);
+//                printf("written numbytes: %d\n", numbytes);
 
                 event.data.fd = new_fd;
                 event.events = EPOLLIN | EPOLLET;
@@ -235,4 +231,3 @@ int main(int argc, char *argv[]) {
         }
     }
 }
-

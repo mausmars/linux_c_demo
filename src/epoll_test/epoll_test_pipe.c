@@ -13,7 +13,6 @@ typedef struct {
 
 void *doit(ThreadParam *param);
 
-
 void print_sigset(sigset_t *set) {
     int i;
     for (i = 1; i < NSIG; ++i) {
@@ -39,13 +38,10 @@ int main(int argc, char *argv[]) {
         perror("create pipe fail");
         return -1;
     }
-
     ThreadParam *threadParam = (ThreadParam *) malloc(sizeof(ThreadParam));
     threadParam->fd = pipefd[0];
-
     pthread_t thread;
     pthread_create(&thread, NULL, &doit, threadParam);
-
     puts("sleep 1s");
     sleep(1);
     puts("pip write");

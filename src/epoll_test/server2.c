@@ -116,14 +116,7 @@ static int create_and_bind(int port) {
 int main(int argc, char *argv[]) {
     // 数据缓存区域
     char buf[MaxDataSize];
-
     // 检查是否指定端口
-//	if (argc != 2) {
-//		fprintf(stderr, "Usage: %d [port]\n", SERV_PORT);
-//		exit(EXIT_FAILURE);
-//	}
-//	char *port_argv = argv[1];
-//	int port = atoi(port_argv);
     int port = ServerPort;
 
     // 创建并监听tcp socket

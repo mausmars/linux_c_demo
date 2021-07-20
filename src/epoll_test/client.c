@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <zconf.h>
 #include <netinet/tcp.h>
+#include <pthread.h>
 
 #define MaxDataSize 32*1024
 #define ServerHost "127.0.0.1"
@@ -57,7 +58,7 @@ static int set_sockeopt(int sockfd) {
 
     //SO_CONDITIONAL_ACCEPT ???
 //    if (setsockopt(sockfd, SOL_SOCKET, SO_CONDITIONAL_ACCEPT, (const void *) &sendbuf, sizeof(int)) == -1) {
-    
+
     int is_tcpnodelay = 1;
     if (setsockopt(sockfd, IPPROTO_TCP, TCP_NODELAY, (const void *) &(is_tcpnodelay), sizeof(int)) == -1) {
         //禁止发送合并的Nagle算法
@@ -67,7 +68,7 @@ static int set_sockeopt(int sockfd) {
     return 0;
 }
 
-int main(int argc, char *argv[]) {
+static int testclient() {
     char buf[MaxDataSize];
     int sockfd, numbytes;
     struct sockaddr_in server_addr;
@@ -83,12 +84,11 @@ int main(int argc, char *argv[]) {
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(ServerPort);
     server_addr.sin_addr.s_addr = inet_addr(ServerHost);
-    if (connect(sockfd, (struct sockaddr *) &server_addr,
-                sizeof(struct sockaddr)) == -1) {
+    if (connect(sockfd, (struct sockaddr *) &server_addr, sizeof(struct sockaddr)) == -1) {
         perror("connect error");
         return 1;
     }
-    printf("send: Hello, world!\n");
+//    printf("send: Hello, world!\n");
     if (send(sockfd, "Hello, world!", 14, 0) == -1) {
         perror("send error");
         return 1;
@@ -99,9 +99,27 @@ int main(int argc, char *argv[]) {
     }
     if (numbytes) {
         buf[numbytes] = '\0';
-        printf("received: %s\n", buf);
+//        printf("received: %s\n", buf);
     }
     close(sockfd);
-    return 0;
 }
 
+//批量发送
+static void clientSend() {
+    printf("clientSend\n");
+    for (int i = 0; i < 100; i++) {
+        testclient();
+    }
+}
+
+int main(int argc, char *argv[]) {
+    int threadCount = 100;
+
+    for (int k = 0; k < threadCount; k++) {
+        printf("启动线程: %d\n", k);
+        pthread_t thread;
+        pthread_create(&thread, NULL, &clientSend, NULL);
+        pthread_join(thread, NULL);
+    }
+    return 0;
+}
