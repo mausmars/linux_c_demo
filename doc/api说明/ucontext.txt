@@ -1,0 +1,32 @@
+https://blog.csdn.net/qq910894904/article/details/41911175
+目前看到大概有四种实现协程的方式：
+
+第一种：利用glibc 的 ucontext组件(云风的库)
+第二种：使用汇编代码来切换上下文(实现c协程)
+第三种：利用C语言语法switch-case的奇淫技巧来实现（Protothreads)
+第四种：利用了 C 语言的 setjmp 和 longjmp（ 一种协程的 C/C++ 实现,要求函数里面使用 static local 的变量来保存协程内部的数据）
+
+int getcontext(ucontext_t *ucp);
+初始化ucp结构体，将当前的上下文保存到ucp中
+
+int setcontext(const ucontext_t *ucp);
+设置当前的上下文为ucp，setcontext的上下文ucp应该通过getcontext或者makecontext取得，如果调用成功则不返回。如果上下文是通过调用getcontext()取得,程序会继续执行这个调用。如果上下文是通过调用makecontext取得,程序会调用makecontext函数的第二个参数指向的函数，如果func函数返回,则恢复makecontext第一个参数指向的上下文第一个参数指向的上下文context_t中指向的uc_link.如果uc_link为NULL,则线程退出。
+
+void makecontext(ucontext_t *ucp, void (*func)(), int argc, ...);
+makecontext修改通过getcontext取得的上下文ucp(这意味着调用makecontext前必须先调用getcontext)。然后给该上下文指定一个栈空间ucp->stack，设置后继的上下文ucp->uc_link.
+当上下文通过setcontext或者swapcontext激活后，执行func函数，argc为func的参数个数，后面是func的参数序列。当func执行返回后，继承的上下文被激活，如果继承上下文为NULL时，线程退出。
+
+int swapcontext(ucontext_t *oucp, ucontext_t *ucp);
+保存当前上下文到oucp结构体中，然后激活upc上下文。
+如果执行成功，getcontext返回0，setcontext和swapcontext不返回；如果执行失败，getcontext,setcontext,swapcontext返回-1，并设置对于的errno.
+简单说来，  getcontext获取当前上下文，setcontext设置当前上下文，swapcontext切换上下文，makecontext创建一个新的上下文。
+
+//---------------------------------------------------------------------------------------------------------
+getcontext用于保存当前上下文
+setcontext用于切换上下文
+swapcontext会保存当前上下文并切换到另一个上下文
+makecontext创建一个新的上下文。
+
+实现用户线程的过程是：我们首先调用getcontext获得当前上下文，然后修改ucontext_t指定新的上下文。
+同样的，我们需要开辟栈空间，但是这次实现的线程库要涉及栈生长的方向。
+然后我们调用makecontext切换上下文，并指定用户线程中要执行的函数。
