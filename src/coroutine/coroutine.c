@@ -127,6 +127,7 @@ void coroutine_resume(struct schedule *S, int id) {
     int status = C->status;
     switch (status) {
         case COROUTINE_READY:
+            //获取当前上下文
             getcontext(&C->ctx);
             C->ctx.uc_stack.ss_sp = S->stack;
             C->ctx.uc_stack.ss_size = STACK_SIZE;

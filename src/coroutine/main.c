@@ -22,7 +22,7 @@ static void foo(struct schedule *S, void *ud) {
     for (i = 0; i < 2; i++) {
         pthread_t thread = pthread_self();
         printf("threadId=%d, %lu, coroutine %d : %d \n", gettid(), thread, coroutine_running(S), start + i);
-        //释放
+        //挂起协程
         coroutine_yield(S);
     }
 }
@@ -38,6 +38,7 @@ static void test1() {
     int co2 = coroutine_new(S, foo, &arg2);
     printf("main start\n");
     while (coroutine_status(S, co1) && coroutine_status(S, co2)) {
+        //唤醒
         coroutine_resume(S, co1);
         coroutine_resume(S, co2);
     }

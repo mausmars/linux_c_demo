@@ -62,6 +62,10 @@ add_executable(gameserver ${game_server_src})
 add_executable(atomic_test1 src/atomic_test/atomic_test1.c)
 add_executable(atomic_test2 src/atomic_test/atomic_test2.c)
 
+add_executable(udp_server src/net_test/udp_server.c)
+add_executable(udp_client src/net_test/udp_client.c)
+
+add_executable(porint_test src/base_test/point_test.c)
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
 #)
@@ -99,3 +103,8 @@ target_link_libraries(gameserver ${CMAKE_THREAD_LIBS_INIT})
 
 target_link_libraries(atomic_test1 ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(atomic_test2 ${CMAKE_THREAD_LIBS_INIT})
+
+target_link_libraries(udp_server)
+target_link_libraries(udp_client)
+
+target_link_libraries(porint_test)
