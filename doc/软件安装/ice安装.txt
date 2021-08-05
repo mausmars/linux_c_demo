@@ -1,0 +1,13 @@
+debian 安装yum
+https://zeroc.com/downloads/ice/3.7/cpp#debian
+
+apt-key adv --keyserver keyserver.ubuntu.com --recv B6391CB2CFBA643D
+apt-add-repository "deb http://zeroc.com/download/ice/3.7/debian10 stable main"
+apt-get update
+apt-get install libzeroc-ice-dev libzeroc-ice3.7
+
+--------------------------------------------------
+下载demo
+git clone -b 3.7 https://github.com/zeroc-ice/ice-demos
+
+--------------------------------------------------
