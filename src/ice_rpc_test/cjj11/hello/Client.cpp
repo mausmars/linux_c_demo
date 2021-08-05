@@ -3,7 +3,7 @@
 //
 
 #include <Ice/Ice.h>
-#include <Hello.h>
+#include "Hello.h"
 
 using namespace std;
 using namespace Demo;

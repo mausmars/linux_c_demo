@@ -3,7 +3,7 @@
 //
 
 #include <Ice/Ice.h>
-#include <HelloI.h>
+#include "HelloI.h"
 
 using namespace std;
 

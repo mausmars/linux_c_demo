@@ -5,7 +5,7 @@
 #ifndef HELLO_I_H
 #define HELLO_I_H
 
-#include <Hello.h>
+#include "Hello.h"
 
 class HelloI : public Demo::Hello
 {

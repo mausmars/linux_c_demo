@@ -13,7 +13,7 @@
 // </auto-generated>
 //
 
-#include <Hello.h>
+#include "Hello.h"
 #include <IceUtil/PushDisableWarnings.h>
 #include <Ice/LocalException.h>
 #include <Ice/ValueFactory.h>
