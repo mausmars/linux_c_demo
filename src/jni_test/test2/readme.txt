@@ -19,29 +19,11 @@ $ cp libmemorydemo.so.1.0 libmemorydemo.so
 #环境
 $ export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
 
+编译添加 -XDignore.symbol.file 解决Unsafe问题
 #执行
 javac -XDignore.symbol.file Main.java
 java Main
 
-
-=============================
-执行顺序
-
-export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
-
-javac *.java
-javah HelloWorld
-gcc -fPIC -I $JAVA_HOME/include -I $JAVA_HOME/include/linux -c HelloWorld.c
-gcc -shared -Wl,-soname,libhelloworld.so.1 -o libhelloworld.so.1.0 HelloWorld.o
-cp -f libhelloworld.so.1.0 libhelloworld.so
-
-java HelloWorld
-
-=============================
-//c语言需要(*env)，每个方法第一个参数为env
-	jclass testcls2 = (*env)->FindClass(env, "TestBean");
-//c++语言
-	jclass testcls2 = env->FindClass("TestBean");
 
 =============================
 Java类型	本地类型	描述
