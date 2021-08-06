@@ -1,6 +1,6 @@
 #include <jni.h>
 #include <stdio.h>
-#include "HelloWorld.h"
+#include "../HelloWorld.h"
 
 char* JstringTostr2(JNIEnv* env, jstring jstr) {
 	char* pStr = NULL;
