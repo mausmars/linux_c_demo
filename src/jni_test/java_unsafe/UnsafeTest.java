@@ -82,6 +82,7 @@ public class UnsafeTest {
                         for (long addr : addresses) {
                             unsafe.freeMemory(addr);
                         }
+                        addresses.clear();
                         break;
                     default:
                         break;
