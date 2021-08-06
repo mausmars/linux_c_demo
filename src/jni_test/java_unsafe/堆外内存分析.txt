@@ -11,7 +11,16 @@ jmap -heap 63771
 free 查看试用内存增大了。
 jvm内存变化很小。
 
+---------------------------------
+找问题
+glibc
+https://ftp.gnu.org/old-gnu/Manuals/glibc-2.2.3/html_node/libc_33.html
+
+https://juejin.cn/post/6854573220733911048
 
 
+方法1
+试用malloc hook
+gcc -shared -fPIC -o libmallocfreehook.so malloc_free_hook.c
 
-
+https://blog.csdn.net/whbing1471/article/details/112394403
