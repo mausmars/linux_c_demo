@@ -1,0 +1,8 @@
+Java HotSpot(TM) 64-Bit Server VM (25.261-b12) for linux-amd64 JRE (1.8.0_261-b12), built on Jun 17 2020 23:41:40 by "java_re" with gcc 7.3.0
+Memory: 4k page, physical 4017728k(1852984k free), swap 998396k(998396k free)
+CommandLine flags: -XX:CompressedClassSpaceSize=25165824 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./data_dump -XX:InitialHeapSize=134217728 -XX:MaxDirectMemorySize=33554432 -XX:MaxGCPauseMillis=100 -XX:MaxHeapSize=134217728 -XX:MaxMetaspaceSize=33554432 -XX:MetaspaceSize=33554432 -XX:ParallelGCThreads=8 -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC -XX:SurvivorRatio=8 -XX:ThreadStackSize=512 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC 
+Heap
+ garbage-first heap   total 131072K, used 1024K [0x00000000f8000000, 0x00000000f8100400, 0x0000000100000000)
+  region size 1024K, 2 young (2048K), 0 survivors (0K)
+ Metaspace       used 3440K, capacity 4546K, committed 4864K, reserved 1056768K
+  class space    used 390K, capacity 397K, committed 512K, reserved 1048576K
