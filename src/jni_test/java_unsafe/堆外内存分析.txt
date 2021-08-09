@@ -18,9 +18,21 @@ https://ftp.gnu.org/old-gnu/Manuals/glibc-2.2.3/html_node/libc_33.html
 
 https://juejin.cn/post/6854573220733911048
 
+---------------------------------
+https://blog.csdn.net/whbing1471/article/details/112394403
+---------------------------------
+cd /mnt/hgfs/vm_share/linux_c_demo/src/jni_test/java_unsafe
 
-方法1
-试用malloc hook
+malloc_hook测试
+https://man7.org/linux/man-pages/man3/malloc_hook.3.html
+
+malloc hook
 gcc -shared -fPIC -o libmallocfreehook.so malloc_free_hook.c
 
-https://blog.csdn.net/whbing1471/article/details/112394403
+测试malloc
+gcc -o malloc_demo ./malloc_demo.c
+./malloc_demo
+
+动态库连接后执行
+export LD_PRELOAD=./libmallocfreehook.so
+./malloc_demo

@@ -1,0 +1,52 @@
+https://www.myfreax.com/how-to-install-php-on-debian-10/
+---------------------------------------------------------------
+安装PHP与Apache
+
+sudo apt update
+sudo apt install php libapache2-mod-php
+
+sudo systemctl restart apache2
+sudo systemctl stop apache2
+
+/var/www/html/index.html
+浏览器访问 http://10.79.19.216/index.html
+
+/var/www/html/info.php
+http://10.79.19.216/info.php
+---------------------------------------------------------------
+安装PHP与Nginx
+sudo apt update
+sudo apt install php php-fpm
+
+server {
+    # . . . other code
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+    }
+}
+sudo systemctl restart nginx
+---------------------------------------------------------------
+安装PHP扩展
+sudo apt install php-[extname]
+sudo apt install php-mysql php-gd
+
+测试PHP处理
+
+---------------------------------------------------------------
+PHPUnit 安装
+wget https://phar.phpunit.de/phpunit-6.2.phar
+chmod +x phpunit-6.2.phar
+sudo mv phpunit-6.2.phar /usr/local/bin/phpunit
+phpunit --version
+
+phpunit  --help                                      //查看可用选项
+phpunit  ClassTest                                   //要测试的类
+phpunit  --filter=testFunction                       //要测试的方法
+phpunit  --stop-on-error                             //首次错误出现后停止执行
+phpunit  --stop-on-failure                           //首次错误或失败出现后停止执行
+phpunit  --stop-on-risky                             //首次碰到有风险的测试时停止执行
+
+api方法
+https://github.com/syyongx/php2go
+
