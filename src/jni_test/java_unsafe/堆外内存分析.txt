@@ -21,8 +21,9 @@ https://juejin.cn/post/6854573220733911048
 ---------------------------------
 https://blog.csdn.net/whbing1471/article/details/112394403
 ---------------------------------
-cd /mnt/hgfs/vm_share/linux_c_demo/src/jni_test/java_unsafe
-
+分析 Java 内存泄漏
+https://chenhm.com/post/2018-12-05-debuging-java-memory-leak
+---------------------------------
 malloc_hook测试
 https://man7.org/linux/man-pages/man3/malloc_hook.3.html
 
@@ -36,3 +37,25 @@ gcc -o malloc_demo ./malloc_demo.c
 动态库连接后执行
 export LD_PRELOAD=./libmallocfreehook.so
 ./malloc_demo
+
+试用jemalloc
+export LD_PRELOAD=$JEMALLOC_HOME/lib/libjemalloc.so
+export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17
+
+jeprof --show_bytes --svg /usr/bin/java jeprof*.heap > app-profiling.svg
+
+---------------------------------
+cd /mnt/hgfs/vm_share/linux_c_demo/src/jni_test/java_unsafe
+javac -XDignore.symbol.file UnsafeTest.java
+javac -XDignore.symbol.file UnsafeTest2.java
+javac MallocTest.java
+javac MallocTest2.java
+
+export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
+export LD_PRELOAD=./libmallocfreehook.so
+
+java MallocTest
+
+java UnsafeTest
+java UnsafeTest2 >> 1.log
+java MallocTest2 >> 2.log

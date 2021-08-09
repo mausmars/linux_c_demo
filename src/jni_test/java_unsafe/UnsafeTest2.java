@@ -19,10 +19,10 @@ import java.util.Scanner;
  * }
  * <p>
  * 或
- * javac -XDignore.symbol.file UnsafeTest.java
+ * javac -XDignore.symbol.file UnsafeTest2.java
  */
 
-public class UnsafeTest {
+public class UnsafeTest2 {
     private static Unsafe unsafe;
 
     static {
@@ -55,39 +55,21 @@ public class UnsafeTest {
         int n = 5;
         List<Long> addresses = new LinkedList();
 
-        String readme = "---------------------------------------------\n" +
-                "0:结束\n" +
-                "1:unsafe创建内存\n" +
-                "2:unsafe回收\n";
         try {
-            for (; isRun; ) {
-                System.out.println(readme);
-                Scanner input = new Scanner(System.in);
-                int num = input.nextInt();
-                switch (num) {
-                    case 0:
-                        isRun = false;
-                        break;
-                    case 1:
-                        System.out.println("创建内存");
-                        for (int i = 0; i < n; i++) {
-                            long address = unsafe.allocateMemory(size);
-                            unsafe.setMemory(address, size, (byte) 0);
-                            addresses.add(address);
-                        }
-                        System.out.println("当前内存大小 size=" + addresses.size() + "m");
-                        break;
-                    case 2:
-                        System.out.println("回收全部内存");
-                        for (long addr : addresses) {
-                            unsafe.freeMemory(addr);
-                        }
-                        addresses.clear();
-                        break;
-                    default:
-                        break;
-                }
+            System.out.println("创建内存");
+            for (int i = 0; i < n; i++) {
+                long address = unsafe.allocateMemory(size);
+                unsafe.setMemory(address, size, (byte) 0);
+                addresses.add(address);
             }
+            System.out.println("当前内存大小 size=" + addresses.size() + "m");
+            Thread.sleep(1000);
+
+            System.out.println("回收全部内存");
+            for (long addr : addresses) {
+                unsafe.freeMemory(addr);
+            }
+            addresses.clear();
         } catch (OutOfMemoryError ex) {
             System.err.println(ex);
             ex.printStackTrace();

@@ -5,6 +5,7 @@ wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1
 tar -xjvf jemalloc-5.2.1.tar.bz2
 
 ./configure --prefix=/usr/local/jemalloc
+./configure --prefix=/usr/local/jemalloc --enable-prof
 make -j8 && make install
 
 echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
@@ -13,3 +14,10 @@ ldconfig
 
 要查看 ldconfig 可以“看到”的所有共享库
 ldconfig -p | less
+
+需要prof 编译要加上--enable-prof
+export LD_PRELOAD=/usr/local/jemalloc/lib/libjemalloc.so
+export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17
+
+export JEMALLOC_HOME=/software/jemalloc-5.2.1
+export PATH=$JEMALLOC_HOME/bin:$PATH
