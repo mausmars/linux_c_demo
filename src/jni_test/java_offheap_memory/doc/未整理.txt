@@ -39,7 +39,7 @@ export LD_PRELOAD=./libmallocfreehook.so
 ./malloc_demo
 
 ---------------------------------
-cd /mnt/hgfs/vm_share/linux_c_demo/src/jni_test/java_unsafe
+cd /mnt/hgfs/vm_share/linux_c_demo/src/jni_test/java_offheap_memory
 javac -XDignore.symbol.file UnsafeTest.java
 javac MallocTest.java
 
@@ -68,3 +68,4 @@ export MALLOC_CONF="prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_prefix:
 apt-get install graphviz -y
 /software/jemalloc-5.2.1/bin/jeprof --show_bytes --svg /software/jdk1.8.0_261/bin/java jeprof.out.*.heap > app-profiling.svg
 /software/jemalloc-5.2.1/bin/jeprof --show_bytes --gif /software/jdk1.8.0_261/bin/java jeprof.out.*.heap > app-profiling.gif
+/software/jemalloc-5.2.1/bin/jeprof --show_bytes --pdf /software/jdk1.8.0_261/bin/java jeprof.out.*.heap > app-profiling.pdf

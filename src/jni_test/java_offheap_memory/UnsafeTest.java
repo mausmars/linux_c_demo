@@ -50,16 +50,17 @@ public class UnsafeTest {
 
     public static void main(String[] args) {
         boolean isRun = true;
-        int count=10;
-        int size = count * 1024 * 1024;  //10m
+        int count=1;
+        int size = count * 1024 * 1024;  //count*1m
 
-        int n = 1000;
+        int n = 1;
         List<Long> addresses = new LinkedList();
 
         String readme = "---------------------------------------------\n" +
                 "0:结束\n" +
-                "1:unsafe创建内存\n" +
-                "2:unsafe回收\n";
+                "1:unsafe创建内存 并造成野指针\n" +
+                "2:unsafe创建内存 不造成野指针\n" +
+                "3:unsafe回收\n";
         try {
             for (; isRun; ) {
                 System.out.println(readme);
@@ -70,16 +71,23 @@ public class UnsafeTest {
                         isRun = false;
                         break;
                     case 1:
-                        System.out.println("创建内存");
+                        System.out.println("创建内存 并造成野指针");
                         for (int i = 0; i < n; i++) {
-//                             long address = unsafe.allocateMemory(size);
-//                             unsafe.setMemory(address, size, (byte) 0);
-//                             addresses.add(address);
-                            unsafe.allocateMemory(size);
+                           long address = unsafe.allocateMemory(size);
+                           unsafe.setMemory(address, size, (byte) 0);
                         }
-                        System.out.println("当前内存大小 size=" + addresses.size()*count + "m");
+                        System.out.println("当前内存大小 size=" + addresses.size() * count * n + "m");
                         break;
                     case 2:
+                        System.out.println("创建内存 不造成野指针");
+                        for (int i = 0; i < n; i++) {
+                            long address = unsafe.allocateMemory(size);
+                            unsafe.setMemory(address, size, (byte) 0);
+                            addresses.add(address);
+                        }
+                        System.out.println("当前内存大小 size=" + addresses.size() * count * n + "m");
+                        break;
+                    case 3:
                         System.out.println("回收全部内存");
                         for (long addr : addresses) {
                             unsafe.freeMemory(addr);
