@@ -14,4 +14,8 @@ int main(void) {
     void *p2 = malloc(size);
     free(p2);
     printf("left2 p=%p\n", p2);
+
+    for (int i = 0; i < 1000; i++) {
+        malloc(size);
+    }
 }

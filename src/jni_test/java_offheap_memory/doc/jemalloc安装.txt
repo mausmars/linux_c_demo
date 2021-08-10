@@ -1,0 +1,10 @@
+安装当时最新的jemalloc版本
+
+wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
+tar -xjvf jemalloc-5.2.1.tar.bz2
+
+./configure --prefix=/usr/local/jemalloc --enable-prof
+make -j8 && make install
+
+echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
+

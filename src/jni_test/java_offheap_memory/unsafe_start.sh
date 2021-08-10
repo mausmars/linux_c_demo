@@ -5,7 +5,7 @@ APP_MAIN=UnsafeTest
 
 APP_JAVA_GC_PRINT="-XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC -XX:MaxDirectMemorySize=32m -Dsun.reflect.inflationThreshold=0 -Xloggc:$MODULE_PATH/data_gc.log"
 APP_JAVA_GC="-XX:+UseG1GC -XX:SurvivorRatio=8 -XX:MaxGCPauseMillis=100 -XX:ParallelGCThreads=8 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$MODULE_PATH/data_dump"
-APP_JAVA_OPTS="-server -Xms128m -Xmx128m -Xss512k -XX:MetaspaceSize=32m -XX:MaxMetaspaceSize=32m -XX:NativeMemoryTracking=detail"
+APP_JAVA_OPTS="-server -Xms128m -Xmx128m -Xss512k -XX:MetaspaceSize=32m -XX:MaxMetaspaceSize=32m"
 
 getTradeProtalPID(){
     javaps=`$JAVA_HOME/bin/jps -l | grep $APP_MAIN`

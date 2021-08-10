@@ -11,7 +11,8 @@ public class MallocTest {
 
     public static void main(String[] args) {
         boolean isRun = true;
-        int size = 10 * 1024 * 1024;  //10m
+         int count=10;
+        int size = count * 1024 * 1024;  //10m
 
         int n = 5;
         List<Long> addresses = new LinkedList();
@@ -32,10 +33,11 @@ public class MallocTest {
                     case 1:
                         System.out.println("创建内存");
                         for (int i = 0; i < n; i++) {
-                            long address = memoryDemo.jmalloc(size);
-                            addresses.add(address);
+                            memoryDemo.jmalloc(size);
+                            //long address = memoryDemo.jmalloc(size);
+                            //addresses.add(address);
                         }
-                        System.out.println("当前内存大小 size=" + addresses.size() + "m");
+                        System.out.println("当前内存大小 size=" + addresses.size() * count + "m");
                         break;
                     case 2:
                         System.out.println("回收全部内存");

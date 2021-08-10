@@ -38,24 +38,33 @@ gcc -o malloc_demo ./malloc_demo.c
 export LD_PRELOAD=./libmallocfreehook.so
 ./malloc_demo
 
-试用jemalloc
-export LD_PRELOAD=$JEMALLOC_HOME/lib/libjemalloc.so
-export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17
-
-jeprof --show_bytes --svg /usr/bin/java jeprof*.heap > app-profiling.svg
-
 ---------------------------------
 cd /mnt/hgfs/vm_share/linux_c_demo/src/jni_test/java_unsafe
 javac -XDignore.symbol.file UnsafeTest.java
-javac -XDignore.symbol.file UnsafeTest2.java
 javac MallocTest.java
-javac MallocTest2.java
 
 export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
 export LD_PRELOAD=./libmallocfreehook.so
 
-java MallocTest
-
+java -Djava.library.path=lib MallocTest
 java UnsafeTest
-java UnsafeTest2 >> 1.log
-java MallocTest2 >> 2.log
+
+//----------------------------------------
+// NMT测试
+java -XX:NativeMemoryTracking=detail UnsafeTest
+java -XX:NativeMemoryTracking=detail -Djava.library.path=lib MallocTest
+
+jcmd 34350 VM.native_memory summary scale=MB
+用nmt
+如果用java的unsafe分匹配内存可以监控到。
+如果自己调用动态库调用 malloc 监控不到的。
+
+//----------------------------------------
+试用jemalloc
+export LD_PRELOAD=$JEMALLOC_HOME/lib/libjemalloc.so
+export MALLOC_CONF="prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_prefix:jeprof.out"
+
+安装图形生成软件
+apt-get install graphviz -y
+/software/jemalloc-5.2.1/bin/jeprof --show_bytes --svg /software/jdk1.8.0_261/bin/java jeprof.out.*.heap > app-profiling.svg
+/software/jemalloc-5.2.1/bin/jeprof --show_bytes --gif /software/jdk1.8.0_261/bin/java jeprof.out.*.heap > app-profiling.gif

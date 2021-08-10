@@ -1,0 +1,71 @@
+在debian系统下做测试分析
+分析，堆外内存绕过jvm直接调用系统malloc系列接口。
+
+先写了2个java调用malloc的测试类（UnsafeTest.java 和 MallocTest.java）
+--------------------------------
+UnsafeTest.java 思路调用java的unsafe的allocateMemory去申请内存
+编译添加 -XDignore.symbol.file 解决Unsafe问题
+javac -XDignore.symbol.file UnsafeTest.java
+
+测试
+java UnsafeTest
+--------------------------------
+MallocTest.java 思路利用jni直接调用c动态库去申请内存
+构建思路参看（jni测试构建.txt）生成c动态库
+
+测试
+java -Djava.library.path=lib MallocTest
+--------------------------------
+注意：每次测试使用感觉的终端，避免上次测试的影响。
+--------------------------------
+一、方案利用malloc_hook
+
+测试前执行
+$ export LD_PRELOAD=./libmallochook.so
+
+分别执行一下
+$ java UnsafeTest
+$ java -Djava.library.path=lib MallocTest
+
+另一个终归端执行一下。
+$ free
+$ jmap -heap pid
+结论：发现free的内存被试用了。jvm的并没有。
+但是java的钩子回调并没有生效。。。没有分配内存的打印信息。。。还不知道为什么。。。
+
+-------------------------------------------
+二、利用nmt
+jvm 参数添加 -XX:NativeMemoryTracking=detail
+
+分别执行一下
+$ java -XX:NativeMemoryTracking=detail UnsafeTest
+$ java -XX:NativeMemoryTracking=detail -Djava.library.path=lib MallocTest
+
+另一个终归端执行一下。分配内存的同时观察每次的打印信息
+$ jcmd pid VM.native_memory summary scale=MB
+
+结论：
+如果用java的unsafe分匹配内存可以监控到，内存的变化。
+如果自己调用动态库调用malloc监控不到内存的变化。
+
+-------------------------------------------
+三、利用jemalloc做分析
+安装参考（jemalloc安装.txt）
+安装图形生成软件 apt-get install graphviz -y
+
+测试前执行
+$ export LD_PRELOAD=$JEMALLOC_HOME/lib/libjemalloc.so
+$ export MALLOC_CONF="prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_prefix:jeprof.out"
+
+# 执行以下测试，如果有野指针会生成heap
+java -Djava.library.path=lib MallocTest
+java UnsafeTest
+
+jemalloc的安装目录找到jeprof并给权限
+$ jeprof --show_bytes --svg $JAVA_HOME/bin/java jeprof.out.*.heap > app-profiling.svg
+
+查看 app-profiling.svg 文件，可以显示内存泄露点。
+注意：测试要保证生成的指针变成野指针，不然不会生成heap文件
+结论：
+应该可分析泄露位置，需要进一步测试
+-------------------------------------------

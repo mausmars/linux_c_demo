@@ -1,0 +1,19 @@
+https://zhuanlan.zhihu.com/p/350828180
+
+//------------------------------------------------------------------------------------
+jcmd <pid> VM.native_memory [summary | detail | baseline | summary.diff | detail.diff | shutdown] [scale= KB | MB | GB]
+
+# summary: 分类内存使用情况.
+# detail: 详细内存使用情况，除了summary信息之外还包含了虚拟内存使用情况。
+# baseline: 创建内存使用快照，方便和后面做对比
+# summary.diff: 和上一次baseline的summary对比
+# detail.diff: 和上一次baseline的detail对比
+# shutdown: 关闭NMT
+
+//------------------------------------------------------------------------------------
+-XX:NativeMemoryTracking=detail
+-XX:NativeMemoryTracking=summary
+
+jcmd pid VM.native_memory summary scale=MB
+jcmd 33417 VM.native_memory summary scale=MB
+jcmd 33417 VM.native_memory detail scale=MB

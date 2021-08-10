@@ -1,0 +1,16 @@
+参考linux man
+https://man7.org/linux/man-pages/man3/malloc_hook.3.html
+
+#生成钩子动态库 libmallochook.so
+$ gcc -shared -fPIC -o libmallochook.so malloc_hook.c
+
+#测试 malloc_hook
+编写malloc_demo.c
+gcc -o malloc_demo ./malloc_demo.c
+./malloc_demo
+
+动态库连接后执行
+export LD_PRELOAD=./libmallochook.so
+./malloc_demo
+
+观察2次打印的却别
