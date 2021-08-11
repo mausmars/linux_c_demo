@@ -1,0 +1,12 @@
+https://github.com/btraceio/btrace
+https://github.com/btraceio/btrace/releases/tag/v2.2.0
+
+配置
+export BTRACE_HOME=/software/btrace
+export PATH=$BTRACE_HOME/bin:$PATH
+
+注意：这个java已经是openjdk的包路径
+-------------------------------------------
+使用 将BtracerUnsafeTestDemo 放入 btrace的samples
+btrace <PID> <trace_script>
+btrace -cp ./libs 89989 samples/BtracerUnsafeTestDemo.java
