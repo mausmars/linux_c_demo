@@ -1,0 +1,12 @@
+安装 gperftools
+
+$ wget https://github.com/gperftools/gperftools/releases/download/gperftools-2.9.1/gperftools-2.9.1.tar.gz
+
+$ tar -zxv -f gperftools-2.9.1.tar.gz
+$ cd gperftools-2.9.1
+$ ./configure
+$ make && make install
+
+$ pprof --version
+
+export PPROF_PATH=/usr/local/bin/pprof

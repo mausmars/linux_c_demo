@@ -66,11 +66,11 @@ java -Djava.library.path=lib MallocTest
 java UnsafeTest
 
 jemalloc的安装目录找到jeprof并给权限
-$ jeprof --show_bytes --svg $JAVA_HOME/bin/java jeprof.out.*.heap > app-profiling.svg
-/software/jemalloc-5.2.1/bin/jeprof --show_bytes --pdf /software/jdk1.8.0_261/bin/java jeprof.out.*.heap > app-profiling.pdf
+$ jeprof --show_bytes --svg $JAVA_HOME/bin/java jeprof.*.heap > app-profiling.svg
+$ jeprof --show_bytes --pdf $JAVA_HOME/bin/java jeprof.*.heap > app-profiling.pdf
 
 
-查看 app-profiling.svg 文件，可以显示内存泄露点。
+查看 app-profiling.pdf 文件，可以显示内存泄露点。
 注意：测试要保证生成的指针变成野指针，不然不会生成heap文件
 结论：
 应该可分析泄露位置，需要进一步测试
