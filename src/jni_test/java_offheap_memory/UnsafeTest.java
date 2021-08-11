@@ -48,9 +48,36 @@ public class UnsafeTest {
         System.out.println();
     }
 
+    public static void wildPointerMemory(int n, int size, int count, List<Long> addresses) {
+        System.out.println("创建内存 并造成野指针");
+        for (int i = 0; i < n; i++) {
+            long address = unsafe.allocateMemory(size);
+            unsafe.setMemory(address, size, (byte) 0);
+        }
+        System.out.println("当前内存大小 size=" + addresses.size() * count * n + "m");
+    }
+
+    public static void pointerMemory(int n, int size, int count, List<Long> addresses) {
+        System.out.println("创建内存 不造成野指针");
+        for (int i = 0; i < n; i++) {
+            long address = unsafe.allocateMemory(size);
+            unsafe.setMemory(address, size, (byte) 0);
+            addresses.add(address);
+        }
+        System.out.println("当前内存大小 size=" + addresses.size() * count * n + "m");
+    }
+
+    public static void freeMemory(List<Long> addresses) {
+        System.out.println("回收全部内存");
+        for (long addr : addresses) {
+            unsafe.freeMemory(addr);
+        }
+        addresses.clear();
+    }
+
     public static void main(String[] args) {
         boolean isRun = true;
-        int count=1;
+        int count = 1;
         int size = count * 1024 * 1024;  //count*1m
 
         int n = 1;
@@ -71,28 +98,13 @@ public class UnsafeTest {
                         isRun = false;
                         break;
                     case 1:
-                        System.out.println("创建内存 并造成野指针");
-                        for (int i = 0; i < n; i++) {
-                           long address = unsafe.allocateMemory(size);
-                           unsafe.setMemory(address, size, (byte) 0);
-                        }
-                        System.out.println("当前内存大小 size=" + addresses.size() * count * n + "m");
+                        wildPointerMemory(n, size, count, addresses);
                         break;
                     case 2:
-                        System.out.println("创建内存 不造成野指针");
-                        for (int i = 0; i < n; i++) {
-                            long address = unsafe.allocateMemory(size);
-                            unsafe.setMemory(address, size, (byte) 0);
-                            addresses.add(address);
-                        }
-                        System.out.println("当前内存大小 size=" + addresses.size() * count * n + "m");
+                        pointerMemory(n, size, count, addresses);
                         break;
                     case 3:
-                        System.out.println("回收全部内存");
-                        for (long addr : addresses) {
-                            unsafe.freeMemory(addr);
-                        }
-                        addresses.clear();
+                        freeMemory(addresses);
                         break;
                     default:
                         break;
