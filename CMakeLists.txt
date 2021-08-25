@@ -98,7 +98,7 @@ target_link_libraries(coroutine_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(base_ucontext_test)
 target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
 
-target_link_libraries(arp_attack)
+target_link_libraries(arp_attack ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(gameserver ${CMAKE_THREAD_LIBS_INIT})
 
 target_link_libraries(atomic_test1 ${CMAKE_THREAD_LIBS_INIT})
