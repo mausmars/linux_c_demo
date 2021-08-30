@@ -9,6 +9,8 @@ INCLUDE_DIRECTORIES(
         include
         /usr/include/mysql
         /usr/local/jemalloc/include
+        /software/php-src
+        /software/php-src/Zend
 )
 
 #设置编译器（可选的有gcc，g++）
