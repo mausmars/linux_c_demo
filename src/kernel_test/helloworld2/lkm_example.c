@@ -56,8 +56,7 @@ static ssize_t device_read(struct file *flip, char *buffer, size_t len, loff_t *
 /* Called when a process tries to write to our device */
 static ssize_t device_write(struct file *flip, const char *buffer, size_t len, loff_t *offset) {
     /* This is a read-only device */
-    printk(KERN_ALERT
-    "This operation is not supported.\n");
+    printk(KERN_ALERT "This operation is not supported.\n");
     return -EINVAL;
 }
 
@@ -80,9 +79,7 @@ static int device_release(struct inode *inode, struct file *file) {
     return 0;
 }
 
-static int __init
-
-lkm_example_init(void) {
+static int __init lkm_example_init(void) {
     /* Fill buffer with our message */
     strncpy(msg_buffer, EXAMPLE_MSG, MSG_BUFFER_LEN);
     /* Set the msg_ptr to the buffer */
@@ -90,23 +87,18 @@ lkm_example_init(void) {
     /* Try to register character device */
     major_num = register_chrdev(0, "lkm_example", &file_ops);
     if (major_num < 0) {
-        printk(KERN_ALERT
-        "Could not register device: %d\n", major_num);
+        printk(KERN_ALERT "Could not register device: %d\n", major_num);
         return major_num;
     } else {
-        printk(KERN_INFO
-        "lkm_example module loaded with device major number %d\n", major_num);
+        printk(KERN_INFO "lkm_example module loaded with device major number %d\n", major_num);
         return 0;
     }
 }
 
-static void __exit
-
-lkm_example_exit(void) {
+static void __exit lkm_example_exit(void) {
     /* Remember — we have to clean up after ourselves. Unregister the character device. */
     unregister_chrdev(major_num, DEVICE_NAME);
-    printk(KERN_INFO
-    "Goodbye, World!\n");
+    printk(KERN_INFO "Goodbye, World!\n");
 }
 
 /* Register module functions */
