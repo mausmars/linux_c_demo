@@ -23,6 +23,7 @@ make test
 make clean
 -----------------------------------------------------
 https://www.cnblogs.com/sctb/p/13816110.html
+https://blog.sourcerer.io/writing-a-simple-linux-kernel-module-d9dc3762c234
 
 测试kernel_test目录下的helloworld2
 创建设备文件，以便我们可以从用户空间与内核模块进行通信
