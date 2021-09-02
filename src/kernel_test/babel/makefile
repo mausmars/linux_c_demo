@@ -6,7 +6,8 @@ KBUILD=/lib/modules/$(shell uname -r)/build/
 
 default:
 	$(MAKE) -C $(KBUILD) M=$(PWD) modules
-	cc babel_client.c -o babel_client
+	cc babel_client_w.c -o babel_client_w
+	cc babel_client_r.c -o babel_client_r
 
 clean:
 	$(MAKE) -C $(KBUILD) M=$(PWD) clean
