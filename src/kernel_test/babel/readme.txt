@@ -7,6 +7,7 @@ chmod 755 babel_client_w
 chmod 755 babel_client_r
 
 insmod babel.ko
+查看编号 244
 dmesg
 mknod /dev/lkm_example c 244 0
 
