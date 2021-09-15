@@ -31,12 +31,19 @@ typedef struct {
 } Pre_IO_Context, *LP_Pre_IO_Context;
 
 int init(void);
+
 DWORD WINAPI worker_thread(LPVOID iocp);
+
 int post_accept_ex();
+
 int post_recv(Pre_IO_Context *io_ctx);
+
 int post_send(Pre_IO_Context *io_ctx);
+
 int do_accept(HANDLE iocp, Pre_IO_Context *io_ctx);
+
 int do_recv(Pre_IO_Context *io_ctx);
+
 int do_send(Pre_IO_Context *io_ctx);
 
 int main(void) {
@@ -132,14 +139,11 @@ int main(void) {
     return 0;
 }
 
-
 int init(void) {
     SYSTEM_INFO sys_info;
     WSADATA wsa_data;
-
     DWORD ret;
     SOCKET s;
-
     GetSystemInfo(&sys_info);
 
     printf("System memery page size: %d \n", sys_info.dwPageSize);
@@ -176,15 +180,12 @@ int init(void) {
     return 0;
 }
 
-
 DWORD WINAPI worker_thread(LPVOID lp_iocp) {
     DWORD bytes;
     LP_Pre_IO_Context io_ctx;
-
     DWORD err_no = 0;
     HANDLE iocp = (HANDLE) lp_iocp;
     PULONG_PTR lp_completion_key = NULL;
-
     while (TRUE) {
         if (0 == GetQueuedCompletionStatus(iocp, &bytes, (PULONG_PTR) &lp_completion_key, (LPOVERLAPPED *) &io_ctx,
                                            INFINITE)) {
@@ -209,7 +210,6 @@ DWORD WINAPI worker_thread(LPVOID lp_iocp) {
         printf("IO_Context: %p \n", io_ctx);
         printf("Bytes transferred: %d \n", bytes);
         printf("IO_Context->Action： %d\n", io_ctx->action);
-
         if (0 == bytes && 0 != io_ctx->action) {
             printf("No bytes transferred for the action.");
             GlobalFree(io_ctx);
@@ -234,7 +234,6 @@ DWORD WINAPI worker_thread(LPVOID lp_iocp) {
         }
     }
 }
-
 
 int post_accept_ex() {
     LP_Pre_IO_Context io_ctx;
@@ -274,14 +273,11 @@ int post_accept_ex() {
     return 0;
 }
 
-
 int do_accept(HANDLE iocp, Pre_IO_Context *io_ctx) {
     printf("do_accept. io_ctx: %p \n", io_ctx);
-
     SOCKADDR_IN *local_sock_addr = NULL;
     SOCKADDR_IN *remote_sock_addr = NULL;
     int addr_len = sizeof(SOCKADDR_IN);
-
     if (-1 == setsockopt(io_ctx->accept, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, (char *) &listener, sizeof(SOCKET))) {
         printf("setsockopt(SO_UPDATE_ACCEPT_CONTEXT) failed. error: %d\n", WSAGetLastError());
     }
@@ -293,9 +289,7 @@ int do_accept(HANDLE iocp, Pre_IO_Context *io_ctx) {
             (SOCKADDR **) &local_sock_addr, &addr_len,
             (SOCKADDR **) &remote_sock_addr, &addr_len
     );
-
     printf("do_accept, client socket: %I64d \n", io_ctx->accept);
-
     if (NULL == CreateIoCompletionPort((HANDLE) io_ctx->accept, iocp, 0, 0)) {
         printf("CreateIoCompletionPort() failed. error: %d\n", GetLastError());
         return -1;
@@ -303,30 +297,23 @@ int do_accept(HANDLE iocp, Pre_IO_Context *io_ctx) {
     return 0;
 }
 
-
 int post_recv(Pre_IO_Context *io_ctx) {
     printf("post_recv. io_ctx: %p \n", io_ctx);
-
     DWORD flags = 0;
     DWORD bytes = 0;
     DWORD err_no;
     int ret;
-
     ZeroMemory(&(io_ctx->overlapped), sizeof(OVERLAPPED));
     io_ctx->bytes_recv = 0;
     io_ctx->bytes_send = 0;
     io_ctx->wsa_buf.len = Max_Buffer_Size;
     io_ctx->wsa_buf.buf = io_ctx->buf;
     io_ctx->action = 1;
-
     ret = WSARecv(io_ctx->accept, &(io_ctx->wsa_buf), 1, &bytes, &flags, &(io_ctx->overlapped), NULL);
-
     err_no = WSAGetLastError();
     if (-1 == ret && WSA_IO_PENDING != err_no) {
         if (err_no == WSAEWOULDBLOCK) printf("WSARecv() not ready");
-
         printf("WSARecv() faild. client socket: %I64d, error: %d\n", io_ctx->accept, err_no);
-
         return -1;
     }
     return 0;
@@ -335,47 +322,36 @@ int post_recv(Pre_IO_Context *io_ctx) {
 int do_recv(Pre_IO_Context *io_ctx) {
     printf("do_recv. io_ctx: %p \n", io_ctx);
     printf("do_recv: recv data：\n %s \n", io_ctx->wsa_buf.buf);
-
     ZeroMemory(&(io_ctx->overlapped), sizeof(OVERLAPPED));
     io_ctx->bytes_recv = 0;
     io_ctx->bytes_send = 0;
     io_ctx->wsa_buf.len = Max_Buffer_Size;
     io_ctx->wsa_buf.buf = io_ctx->buf;
     io_ctx->action = 10;
-
     return 0;
 }
 
 int post_send(Pre_IO_Context *io_ctx) {
     printf("post_send. io_ctx: %p \n", io_ctx);
-
     DWORD flags = 0;
     DWORD bytes = 0;
     DWORD err_no;
     int ret;
-
     io_ctx->wsa_buf.buf = &res_bufs;
     io_ctx->wsa_buf.len = sizeof(res_bufs) - 1;
-
     //io_ctx->overlapped.hEvent = WSACreateEvent();
     io_ctx->action = 2;
-
     ret = WSASend(io_ctx->accept, &(io_ctx->wsa_buf), 1, &bytes, 0, &(io_ctx->overlapped), NULL);
     err_no = WSAGetLastError();
-
     if (-1 == ret && err_no != WSA_IO_PENDING) {
         printf("WSASend() faild. error: %d\n", err_no);
-
         //WSAResetEvent(io_ctx->overlapped.hEvent);
         return -1;
     }
-
     if (err_no == WSA_IO_PENDING) {
         printf("WSASend() posted. bytest: %d err: %d\n", bytes, err_no);
     }
-
     printf("WSASend send bytest: %d \n", bytes);
-
     /*
 	WSAWaitForMultipleEvents(1, &io_ctx->overlapped.hEvent, TRUE, INFINITE, TRUE);
 	printf("WSAWaitForMultipleEvents() failed. err: %d\n", WSAGetLastError());
@@ -386,7 +362,6 @@ int post_send(Pre_IO_Context *io_ctx) {
 	*/
     return 0;
 }
-
 
 int do_send(Pre_IO_Context *io_ctx) {
     printf("do_send. io_ctx: %p \n", io_ctx);
