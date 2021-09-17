@@ -1,0 +1,11 @@
+debian 编译ice
+安装
+apt-get install libmcpp-dev libssl-dev libbz2-dev libexpat1-dev liblmdb-dev
+
+https://github.com/zeroc-ice/ice
+
+git clone git@github.com:zeroc-ice/ice.git
+
+clion打开远程编译
+
+
