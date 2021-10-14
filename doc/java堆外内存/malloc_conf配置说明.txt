@@ -1,0 +1,39 @@
+http://jemalloc.net/jemalloc.3.html
+
+测试参数
+export MALLOC_CONF="prof_leak:true,lg_prof_sample:0,prof_final:true,prof_prefix:jeprof.out"
+export MALLOC_CONF="prof:true,lg_prof_sample:0,prof_final:true,prof_prefix:jeprof.out"
+
+export MALLOC_CONF="prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_prefix:jeprof.out"
+export MALLOC_CONF="prof:true,lg_prof_interval:21,lg_prof_sample:28,prof_prefix:/tmp/jemalloc_dump/tsdb"
+
+prof_leak:true
+启用/禁用泄漏报告。如果启用，则使用 atexit (3)函数报告分配采样检测到的内存泄漏。见 opt.prof有关分析堆配置文件输出的信息的选项。默认情况下禁用此选项。
+
+
+lg_prof_sample:N
+分配样本之间的平均间隔（log base 2），以分配活动的字节数衡量。增加采样间隔会降低轮廓保真度，但也会降低计算开销。默认采样间隔为 512 KiB (2^19 B)。
+
+prof_final:true
+使用 atexit (3)函数将最终内存使用情况转储到根据模式命名的文件中 <prefix>.<pid>.<seq>.f.heap，其中<prefix>由opt.prof_prefix 选项。
+请注意，atexit()可能会在应用程序初始化期间分配内存，然后在 jemalloc 依次调用时内部死锁atexit()，因此该选项并非普遍可用（尽管应用程序可以
+注册自己的atexit()具有等效功能的函数）。默认情况下禁用此选项。
+
+prof_prefix:xxx
+配置文件转储的文件名前缀。如果前缀设置为空字符串，则不会发生自动转储；这主要用于禁用自动最终堆转储（如果启用，也会禁用泄漏报告）。默认前缀是 jeprof.
+----------------------------------------------------------
+prof:true       开启监控模块
+prof:false      关闭监控模块
+
+lg_prof_sample:N
+平均每分配出 2^N 个字节 采一次样。当 N = 0 时，意味着每次分配都采样
+
+lg_prof_interval:N
+分配活动中，每流转 1 « N 个字节，将采样统计数据转储到文件。
+内存配置文件转储之间的平均间隔（日志基数 2），以分配活动的字节数衡量。转储之间的实际间隔可能是零星的，因为分散的分配计数器用于避免同步瓶颈。
+配置文件被转储到根据模式命名的文件中 <prefix>.<pid>.<seq>.i<iseq>.heap，其中<prefix>由 opt.prof_prefix 选项。
+默认情况下，禁用间隔触发的配置文件转储（编码为 -1）。
+
+prof_gdump:true
+当总分配量创新高时，将采样统计数据转储到文件。
+

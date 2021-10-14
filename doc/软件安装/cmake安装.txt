@@ -4,13 +4,14 @@ yum -y install gcc gcc-c++
 CentOS 7 安装 CMake 3.17.2
 https://www.24kplus.com/linux/557.html
 
+apt-get install libssl-dev
+
 wget https://github.com/Kitware/CMake/releases/download/v3.19.8/cmake-3.19.8.tar.gz
 tar -zxf cmake-3.19.8.tar.gz
 cd cmake-3.19.8
 编译安装
 ./bootstrap --prefix=/usr --datadir=share/cmake --docdir=doc/cmake
-make
-make install
+make && make install
 
 检查是否正确安装
 cmake --version

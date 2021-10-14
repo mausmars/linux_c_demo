@@ -28,7 +28,7 @@ $ java UnsafeTest
 $ java -Djava.library.path=lib MallocTest
 
 另一个终归端执行一下。
-$ free
+$ free -m
 $ jmap -heap pid
 结论：发现free的内存被试用了。jvm的并没有。
 但是java的钩子回调并没有生效。。。没有分配内存的打印信息。。。还不知道为什么。。。

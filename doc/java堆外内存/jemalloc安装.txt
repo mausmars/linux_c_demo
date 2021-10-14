@@ -4,7 +4,13 @@ wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1
 tar -xjvf jemalloc-5.2.1.tar.bz2
 cd jemalloc-5.2.1
 ./configure --prefix=/usr/local/jemalloc --enable-prof
+./configure --prefix=/usr/local/jemalloc --enable-prof --enable-stats --enable-debug --enable-fill
+
 make -j8 && make install
 
 echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
 
+
+
+
+export JEMALLOC_HOME=/software/jemalloc-5.2.1

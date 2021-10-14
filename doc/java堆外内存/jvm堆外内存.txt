@@ -1,0 +1,80 @@
+https://kkewwei.github.io/elasticsearch_learning/2016/12/15/jvm%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%8E%92%E6%9F%A5%E5%B7%A5%E5%85%B7/
+
+内存泄露排查工具:perftools、pmap、jcmd
+
+--------------------------------------------------------
+jcmd
+-XX:NativeMemoryTracking=detail
+开启该参数将导致jvm进程5-10%性能损耗。
+
+参数	介绍
+summary	        汇总的内存展示
+detail	        详细的内存展示, 不仅包括summary, 还包括每个内存块地址及具体分配者
+baseline	    当前线程拥有的内存块作为基准线, 与调用detail.diff summary.diff时刻的线程比较得出增量情况
+detail.diff	    内存增量的详情
+summary.diff	内存增量的汇总情况
+
+VM.native_memory显示的内存包含堆内内存、Code区域、通过
+unsafe.allocateMemory、DirectByteBuffer实际也是由前者产生，
+但是不包含其他Native Code（C代码）申请的堆外内存
+
+--------------------------------------------------------
+jcmd 3443 help
+
+JFR.stop
+JFR.start
+JFR.dump
+JFR.check
+VM.native_memory
+VM.check_commercial_features
+VM.unlock_commercial_features
+ManagementAgent.stop
+ManagementAgent.start_local
+ManagementAgent.start
+GC.rotate_log
+Thread.print            // 与jstack功能相同
+GC.class_stats
+GC.class_histogram      // 与jmap -histo功能相同
+GC.heap_dump            //与jmap -dump功能相同
+GC.run_finalization
+GC.run
+VM.uptime
+VM.flags                //查看更完整的启动命令, 包括默认的参数, 比如垃圾回收器
+VM.system_properties    //查看系统参数
+VM.command_line         //查看启动命令
+VM.version
+--------------------------------------------------------
+保留内存（reserved）：
+reserved memory 是指JVM 通过mmaped PROT_NONE 申请的虚拟地址空间，在页表中已经存在了记录（entries），保证了其他进程不会被占用，且保证了逻辑地址的连续性，能简化指针运算。
+
+提交内存（commited）：
+committed memory 是JVM向操做系统实际分配的内存（malloc/mmap）,mmaped PROT_READ | PROT_WRITE,仍然会page faults，但是跟 reserved 不同，完全内核处理像什么也没发生一样
+
+--------------------------------------------------------
+jcmd 6098 VM.native_memory detail >> native_memeory_detail.txt
+jcmd 6098 JFR.dump
+
+
+-------------
+作为内存基准
+jcmd 6098 VM.native_memory baseline
+
+根据内存基准来比较增量
+jcmd 6098 VM.native_memory detail.diff >> native_memeory_detail_data_diff1.txt
+jcmd 6098 VM.native_memory detail.diff >> native_memeory_detail_data_diff2.txt
+jcmd 6098 VM.native_memory detail.diff >> native_memeory_detail_data_diff3.txt
+jcmd 6098 VM.native_memory detail.diff >> native_memeory_detail_data_diff4.txt
+-----------
+
+export MALLOC_CONF="prof_leak:true,lg_prof_sample:0,prof_final:true"
+export MALLOC_CONF="prof:true,lg_prof_sample:0,prof_final:true"
+
+jeprof --show_bytes --pdf /software/jdk1.8.0_291/bin/java jeprof.*.heap > app-profiling.pdf
+-----------
+查看系统日志
+cat /var/log/messages
+-----------
+http://www.javaperformancetuning.com/news/newtips105.shtml
+设置参数也没用。。。
+-Dsun.reflect.noInflation=false
+-Dsun.reflect.inflationThreshold=2147483647
