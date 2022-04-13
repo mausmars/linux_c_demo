@@ -5,6 +5,11 @@
 #ifndef LINUXC_DEMO_INTERFACE_H
 #define LINUXC_DEMO_INTERFACE_H
 
+#include <stdio.h>
+
+#include "memory.h"
+#include "type.h"
+
 enum ClassType {
     ClassType_Father = 1,
     ClassType_Child = 2,

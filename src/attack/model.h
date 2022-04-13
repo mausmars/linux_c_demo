@@ -1,7 +1,3 @@
-//
-// Created by root on 11/18/19.
-//
-
 #ifndef ATTACK_LINUXC_MODEL_H
 #define ATTACK_LINUXC_MODEL_H
 
@@ -10,7 +6,6 @@
 
 #include "../common/memory.h"
 #include "../common/type.h"
-//#include "../common/exception.h"
 
 #include "../common/array.h"
 #include "../common/arraylist.h"

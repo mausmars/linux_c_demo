@@ -1,6 +1,3 @@
-//
-// Created by Admin on 2021/6/15.
-//
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,7 +10,6 @@
 #include "net_util.h"
 #include "arp_attack.h"
 #include "../common/logger.h"
-#include "../common/interface.h"
 
 enum StateType stateType = StateType_Stop;
 
@@ -235,7 +231,7 @@ void loggerTest() {
 }
 
 int main(int argc, char *argv[]) {
-    arpAttack("10.79.19.58");
+    arpAttack("10.130.133.78");
 //    loggerTest();
 //    interfaceTest();
     return 0;
