@@ -7,11 +7,12 @@ project(linuxc_demo C)
 #3.head file path，头文件目录
 INCLUDE_DIRECTORIES(
         include
-        /software/lua
         /usr/local/jemalloc/include
         /usr/include/mysql
         /software/php-src
         /software/php-src/Zend
+
+        /mnt/e/work/git_src/lua
 )
 
 #设置编译器（可选的有gcc，g++）
@@ -114,4 +115,5 @@ target_link_libraries(udp_client)
 
 target_link_libraries(porint_test)
 
+#target_link_libraries(luac_test1 /usr/local/lib/lua/5.3/lfs.so)
 target_link_libraries(luac_test1)

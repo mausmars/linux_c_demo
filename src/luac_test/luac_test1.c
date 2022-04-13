@@ -6,7 +6,9 @@
 int main(void) {
     char buff[256];
     int error;
+
     lua_State *L = luaL_newstate();                      /* opens Lua */
+//    luaL_openlibs(L);
 //    luaopen_base(L);                                /* opens the basic library */
 //    luaopen_table(L);                               /* opens the table library */
 //    luaopen_io(L);                                  /* opens the I/O library */
