@@ -14,7 +14,7 @@ void *cleanup(void *param) {
 }
 
 void *test_func(void *param) {
-    pthread_cleanup_push(cleanup, param) ;
+    pthread_cleanup_push(cleanup, param)
             AthreadParam *p = (AthreadParam *) param;
             int temp = __sync_bool_compare_and_swap(p->count, 99, 100);
             printf("threadId=%d, isSuccess=%d\n", p->threadId, temp);

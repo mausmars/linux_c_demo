@@ -7,8 +7,9 @@ project(linuxc_demo C)
 #3.head file path，头文件目录
 INCLUDE_DIRECTORIES(
         include
-        /usr/include/mysql
+        /software/lua
         /usr/local/jemalloc/include
+        /usr/include/mysql
         /software/php-src
         /software/php-src/Zend
 )
@@ -68,6 +69,8 @@ add_executable(udp_server src/net_test/udp_server.c)
 add_executable(udp_client src/net_test/udp_client.c)
 
 add_executable(porint_test src/base_test/point_test.c)
+
+add_executable(luac_test1 src/luac_test/luac_test1.c)
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
 #)
@@ -78,7 +81,7 @@ target_link_libraries(threadlocal_test ${CMAKE_THREAD_LIBS_INIT})
 #target_link_libraries(demo_linuxc1 ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(mysql_test /usr/lib64/mysql/libmysqlclient.so.18)
 #target_link_libraries(demo_linuxc1 /usr/local/lib/libprotobuf-c.so)
-target_link_libraries(sync_test)
+target_link_libraries(sync_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(malloc_demo)
 target_link_libraries(jemalloc_demo /usr/local/jemalloc/lib/libjemalloc.so)
 target_link_libraries(epoll_server ${CMAKE_THREAD_LIBS_INIT})
@@ -110,3 +113,5 @@ target_link_libraries(udp_server)
 target_link_libraries(udp_client)
 
 target_link_libraries(porint_test)
+
+target_link_libraries(luac_test1)

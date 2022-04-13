@@ -1,0 +1,14 @@
+apt update
+apt install build-essential
+
+
+安装多个 GCC 版本
+apt install software-properties-common
+add-apt-repository ppa:ubuntu-toolchain-r/test
+
+apt install gcc-7 gcc-8 gcc-9
+
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80 --slave
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70 --slave
+
