@@ -15,8 +15,3 @@ luarocks install luafilesystem
 生成lua文件系统库
 /usr/local/lib/lua/5.3/lfs.so
 
-
-
-
-
-gcc -I/mnt/e/work/git_src/lua -o luac_test1 luac_test1.c
