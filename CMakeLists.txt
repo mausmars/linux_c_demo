@@ -73,7 +73,7 @@ add_executable(porint_test src/base_test/point_test.c)
 
 #add_executable(luac_test1 src/luac_test/luac_test1.c)
 
-add_executable(jmp_test src/coroutine_test/jmp_test.c)
+add_executable(jmp_test src/jmp_test/jmp_test.c)
 
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
