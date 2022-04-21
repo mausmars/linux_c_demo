@@ -76,6 +76,9 @@ add_executable(luac_test1 src/luac_test/luac_test1.c)
 
 add_executable(jmp_test src/jmp_test/jmp_test.c)
 
+#file(GLOB libdatrie_test_src src/libdatrie_test/utils.h src/libdatrie_test/utils.c src/libdatrie_test/utils.c)
+#add_executable(libdatrie_test_file src/libdatrie_test/test_file.c )
+
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
 #)
