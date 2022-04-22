@@ -30,55 +30,49 @@
 /*---------------------*
  *  Debugging helpers  *
  *---------------------*/
-void
-msg_step (const char *msg)
-{
-    printf ("=> %s...\n", msg);
+void msg_step(const char *msg) {
+    printf("=> %s...\n", msg);
 }
 
 /*-------------------------*
  *  Trie creation helpers  *
  *-------------------------*/
-static AlphaMap *
-en_alpha_map_new (void)
-{
+static AlphaMap *en_alpha_map_new(void) {
     AlphaMap *en_map;
 
-    en_map = alpha_map_new ();
+    en_map = alpha_map_new();
     if (!en_map)
         goto err_map_not_created;
 
-    if (alpha_map_add_range (en_map, 0x0061, 0x007a) != 0)
+    if (alpha_map_add_range(en_map, 0x0061, 0x007a) != 0)
         goto err_map_created;
 
     return en_map;
 
-err_map_created:
-    alpha_map_free (en_map);
-err_map_not_created:
+    err_map_created:
+    alpha_map_free(en_map);
+    err_map_not_created:
     return NULL;
 }
 
-Trie *
-en_trie_new (void)
-{
+Trie *en_trie_new(void) {
     AlphaMap *en_map;
-    Trie     *en_trie;
+    Trie *en_trie;
 
-    en_map = en_alpha_map_new ();
+    en_map = en_alpha_map_new();
     if (!en_map)
         goto err_map_not_created;
 
-    en_trie = trie_new (en_map);
+    en_trie = trie_new(en_map);
     if (!en_trie)
         goto err_map_created;
 
-    alpha_map_free (en_map);
+    alpha_map_free(en_map);
     return en_trie;
 
-err_map_created:
-    alpha_map_free (en_map);
-err_map_not_created:
+    err_map_created:
+    alpha_map_free(en_map);
+    err_map_not_created:
     return NULL;
 }
 
@@ -86,75 +80,66 @@ err_map_not_created:
  *  Dict source for testing  *
  *---------------------------*/
 DictRec dict_src[] = {
-    {(AlphaChar *)L"a",          TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"abacus",     TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"abandon",    TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"accident",   TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"accredit",   TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"algorithm",  TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"ammonia",    TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"angel",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"angle",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"azure",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"bat",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"bet",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"best",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"home",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"house",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"hut",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"king",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"kite",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"name",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"net",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"network",    TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"nut",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"nutshell",   TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"quality",    TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"quantum",    TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"quantity",   TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"quartz",     TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"quick",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"quiz",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"run",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"tape",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"test",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"what",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"when",       TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"where",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"which",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"who",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"why",        TRIE_DATA_UNREAD},
-    {(AlphaChar *)L"zebra",      TRIE_DATA_UNREAD},
-    {(AlphaChar *)NULL,          TRIE_DATA_ERROR},
+        {(AlphaChar *) L"a",         TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"abacus",    TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"abandon",   TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"accident",  TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"accredit",  TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"algorithm", TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"ammonia",   TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"angel",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"angle",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"azure",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"bat",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"bet",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"best",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"home",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"house",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"hut",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"king",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"kite",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"name",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"net",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"network",   TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"nut",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"nutshell",  TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"quality",   TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"quantum",   TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"quantity",  TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"quartz",    TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"quick",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"quiz",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"run",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"tape",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"test",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"what",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"when",      TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"where",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"which",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"who",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"why",       TRIE_DATA_UNREAD},
+        {(AlphaChar *) L"zebra",     TRIE_DATA_UNREAD},
+        {(AlphaChar *) NULL, TRIE_DATA_ERROR},
 };
 
-int
-dict_src_n_entries (void)
-{
-    return sizeof (dict_src) / sizeof (dict_src[0]) - 1;
+int dict_src_n_entries(void) {
+    return sizeof(dict_src) / sizeof(dict_src[0]) - 1;
 }
 
-TrieData
-dict_src_get_data (const AlphaChar *key)
-{
+TrieData dict_src_get_data(const AlphaChar *key) {
     const DictRec *dict_p;
-
     for (dict_p = dict_src; dict_p->key; dict_p++) {
-        if (alpha_char_strcmp (dict_p->key, key) == 0) {
+        if (alpha_char_strcmp(dict_p->key, key) == 0) {
             return dict_p->data;
         }
     }
-
     return TRIE_DATA_ERROR;
 }
 
-int
-dict_src_set_data (const AlphaChar *key, TrieData data)
-{
+int dict_src_set_data(const AlphaChar *key, TrieData data) {
     DictRec *dict_p;
-
     for (dict_p = dict_src; dict_p->key; dict_p++) {
-        if (alpha_char_strcmp (dict_p->key, key) == 0) {
+        if (alpha_char_strcmp(dict_p->key, key) == 0) {
             dict_p->data = data;
             return 0;
         }

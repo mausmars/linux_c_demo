@@ -7,13 +7,15 @@ project(linuxc_demo C)
 #3.head file path，头文件目录
 INCLUDE_DIRECTORIES(
         include
+        /usr/include
+        /usr/local/include
+
         /usr/local/jemalloc/include
         /usr/include/mysql
         /software/php-src
         /software/php-src/Zend
 
         /usr/local/include/luajit-2.1
-        /mnt/e/work/git_src/libdatrie
 )
 #/mnt/e/work/git_src/lua
 

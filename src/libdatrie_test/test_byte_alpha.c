@@ -32,61 +32,61 @@
 #include <stdlib.h>
 
 #define TEST_DATA 255
-int
-main (void)
-{
-    AlphaMap    *alpha_map;
-    Trie        *test_trie;
-    AlphaChar    key[3];
-    TrieData     data;
 
-    msg_step ("Preparing alpha map");
-    alpha_map = alpha_map_new ();
+int
+main(void) {
+    AlphaMap *alpha_map;
+    Trie *test_trie;
+    AlphaChar key[3];
+    TrieData data;
+
+    msg_step("Preparing alpha map");
+    alpha_map = alpha_map_new();
     if (!alpha_map) {
-        printf ("Fail to allocate alpha map\n");
+        printf("Fail to allocate alpha map\n");
         goto err_alpha_map_not_created;
     }
-    if (alpha_map_add_range (alpha_map, 0x00, 0xff) != 0) {
-        printf ("Fail to add full alpha map range\n");
+    if (alpha_map_add_range(alpha_map, 0x00, 0xff) != 0) {
+        printf("Fail to add full alpha map range\n");
         goto err_alpha_map_created;
     }
 
-    msg_step ("Preparing trie");
-    test_trie = trie_new (alpha_map);
-    alpha_map_free (alpha_map);
+    msg_step("Preparing trie");
+    test_trie = trie_new(alpha_map);
+    alpha_map_free(alpha_map);
     if (!test_trie) {
-        printf ("Fail to create test trie\n");
+        printf("Fail to create test trie\n");
         goto err_alpha_map_created;
     }
 
-    msg_step ("Storing key to test trie");
+    msg_step("Storing key to test trie");
     key[0] = 0xff;
     key[1] = 0xff;
     key[2] = 0;
-    if (!trie_store (test_trie, key, TEST_DATA)) {
-        printf ("Fail to store key to test trie\n");
+    if (!trie_store(test_trie, key, TEST_DATA)) {
+        printf("Fail to store key to test trie\n");
         goto err_trie_created;
     }
 
-    msg_step ("Retrieving data from test trie");
-    if (!trie_retrieve (test_trie, key, &data)) {
-        printf ("Fail to retrieve key from test trie\n");
+    msg_step("Retrieving data from test trie");
+    if (!trie_retrieve(test_trie, key, &data)) {
+        printf("Fail to retrieve key from test trie\n");
         goto err_trie_created;
     }
     if (TEST_DATA != data) {
-        printf ("Retrieved data = %d, not %d\n", data, TEST_DATA);
+        printf("Retrieved data = %d, not %d\n", data, TEST_DATA);
         goto err_trie_created;
     }
 
-    msg_step ("Freeing test trie");
-    trie_free (test_trie);
+    msg_step("Freeing test trie");
+    trie_free(test_trie);
     return 0;
 
-err_trie_created:
-    trie_free (test_trie);
-err_alpha_map_created:
-    alpha_map_free (alpha_map);
-err_alpha_map_not_created:
+    err_trie_created:
+    trie_free(test_trie);
+    err_alpha_map_created:
+    alpha_map_free(alpha_map);
+    err_alpha_map_not_created:
     return 1;
 }
 

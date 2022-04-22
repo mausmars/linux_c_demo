@@ -29,101 +29,100 @@
 #include <stdio.h>
 #include <wchar.h>
 
-#define TRIE_FILENAME "test.tri"
+#define TRIE_FILENAME "datrie_file.tri"
 
-static Bool
-trie_enum_mark_rec (const AlphaChar *key, TrieData key_data, void *user_data)
-{
-    Bool *is_failed = (Bool *)user_data;
+static Bool trie_enum_mark_rec(const AlphaChar *key, TrieData key_data, void *user_data) {
+    Bool *is_failed = (Bool *) user_data;
     TrieData src_data;
 
-    src_data = dict_src_get_data (key);
+    src_data = dict_src_get_data(key);
     if (TRIE_DATA_ERROR == src_data) {
-        printf ("Extra entry in file: key '%ls', data %d.\n",
-                (wchar_t *)key, key_data);
+        printf("Extra entry in file: key '%ls', data %d.\n", (wchar_t *) key, key_data);
         *is_failed = TRUE;
     } else if (src_data != key_data) {
-        printf ("Data mismatch for: key '%ls', expected %d, got %d.\n",
-                (wchar_t *)key, src_data, key_data);
+        printf("Data mismatch for: key '%ls', expected %d, got %d.\n", (wchar_t *) key, src_data, key_data);
         *is_failed = TRUE;
     } else {
-        dict_src_set_data (key, TRIE_DATA_READ);
+        dict_src_set_data(key, TRIE_DATA_READ);
     }
-
     return TRUE;
 }
 
-int
-main (void)
-{
-    Trie    *test_trie;
-    DictRec *dict_p;
-    Bool     is_failed;
-
-    msg_step ("Preparing trie");
-    test_trie = en_trie_new ();
+int main(void) {
+    msg_step("Preparing trie");
+    Trie *test_trie = en_trie_new();
     if (!test_trie) {
-        printf ("Failed to allocate test trie.\n");
+        printf("Failed to allocate test trie.\n");
         goto err_trie_not_created;
     }
 
     /* add/remove some words */
+    DictRec *dict_p;
     for (dict_p = dict_src; dict_p->key; dict_p++) {
-        if (!trie_store (test_trie, dict_p->key, dict_p->data)) {
-            printf ("Failed to add key '%ls', data %d.\n",
-                    (wchar_t *)dict_p->key, dict_p->data);
+        if (!trie_store(test_trie, dict_p->key, dict_p->data)) {
+            printf("Failed to add key '%ls', data %d.\n", (wchar_t *) dict_p->key, dict_p->data);
             goto err_trie_created;
+        } else {
+            printf("Success to add key '%ls', data %d.\n", (wchar_t *) dict_p->key, dict_p->data);
         }
     }
 
     /* save & close */
-    msg_step ("Saving trie to file");
-    remove (TRIE_FILENAME);  /* error ignored */
-    if (trie_save (test_trie, TRIE_FILENAME) != 0) {
-        printf ("Failed to save trie to file '%s'.\n", TRIE_FILENAME);
+    msg_step("Saving trie to file");
+    remove(TRIE_FILENAME);  /* error ignored */
+    if (trie_save(test_trie, TRIE_FILENAME) != 0) {
+        printf("Failed to save trie to file '%s'.\n", TRIE_FILENAME);
         goto err_trie_created;
+    } else {
+        printf("Success to save trie to file '%s'.\n", TRIE_FILENAME);
     }
-    trie_free (test_trie);
+    trie_free(test_trie);
 
     /* reload from file */
-    msg_step ("Reloading trie from the saved file");
-    test_trie = trie_new_from_file (TRIE_FILENAME);
+    msg_step("Reloading trie from the saved file");
+    test_trie = trie_new_from_file(TRIE_FILENAME);
     if (!test_trie) {
-        printf ("Failed to reload saved trie from '%s'.\n",
-                 TRIE_FILENAME);
+        printf("Failed to reload saved trie from '%s'.\n", TRIE_FILENAME);
         goto err_trie_saved;
+    } else {
+        printf("Success to reload saved trie from '%s'.\n", TRIE_FILENAME);
     }
 
     /* enumerate & check */
-    msg_step ("Checking trie contents");
-    is_failed = FALSE;
+    msg_step("Checking trie contents");
+    Bool is_failed = FALSE;
     /* mark entries found in file */
-    if (!trie_enumerate (test_trie, trie_enum_mark_rec, (void *)&is_failed)) {
-        printf ("Failed to enumerate trie file contents.\n");
+    if (!trie_enumerate(test_trie, trie_enum_mark_rec, (void *) &is_failed)) {
+        printf("Failed to enumerate trie file contents.\n");
         goto err_trie_saved;
+    } else {
+//        printf("Success to enumerate trie file contents.\n");
     }
     /* check for unmarked entries, (i.e. missed in file) */
     for (dict_p = dict_src; dict_p->key; dict_p++) {
         if (dict_p->data != TRIE_DATA_READ) {
-            printf ("Entry missed in file: key '%ls', data %d.\n",
-                    (wchar_t *)dict_p->key, dict_p->data);
+            printf("Entry missed in file: key '%ls', data %d.\n", (wchar_t *) dict_p->key, dict_p->data);
             is_failed = TRUE;
+        }else{
+            printf("Entry Success in file: key '%ls', data %d.\n", (wchar_t *) dict_p->key, dict_p->data);
         }
     }
     if (is_failed) {
-        printf ("Errors found in trie saved contents.\n");
+        printf("Errors found in trie saved contents.\n");
         goto err_trie_saved;
+    } else {
+        printf("Success found in trie saved contents.\n");
     }
 
-    remove (TRIE_FILENAME);
-    trie_free (test_trie);
+//    remove(TRIE_FILENAME);
+    trie_free(test_trie);
     return 0;
 
-err_trie_saved:
-    remove (TRIE_FILENAME);
-err_trie_created:
-    trie_free (test_trie);
-err_trie_not_created:
+    err_trie_saved:
+//    remove(TRIE_FILENAME);
+    err_trie_created:
+    trie_free(test_trie);
+    err_trie_not_created:
     return 1;
 }
 

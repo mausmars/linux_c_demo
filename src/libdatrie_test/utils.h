@@ -29,20 +29,21 @@
 /*---------------------*
  *  Debugging helpers  *
  *---------------------*/
-void msg_step (const char *msg);
+void msg_step(const char *msg);
 
 /*-------------------------*
  *  Trie creation helpers  *
  *-------------------------*/
-Trie * en_trie_new (void);
+Trie *en_trie_new(void);
 
 /*---------------------------*
  *  Dict source for testing  *
  *---------------------------*/
 typedef struct _DictRec DictRec;
+
 struct _DictRec {
     AlphaChar *key;
-    TrieData   data;
+    TrieData data;
 };
 
 #define TRIE_DATA_UNREAD    1
@@ -50,9 +51,11 @@ struct _DictRec {
 
 extern DictRec dict_src[];
 
-int      dict_src_n_entries (void);
-TrieData dict_src_get_data (const AlphaChar *key);
-int      dict_src_set_data (const AlphaChar *key, TrieData data);
+int dict_src_n_entries(void);
+
+TrieData dict_src_get_data(const AlphaChar *key);
+
+int dict_src_set_data(const AlphaChar *key, TrieData data);
 
 /*
 vi:ts=4:ai:expandtab
