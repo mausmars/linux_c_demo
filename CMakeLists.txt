@@ -13,6 +13,7 @@ INCLUDE_DIRECTORIES(
         /software/php-src/Zend
 
         /usr/local/include/luajit-2.1
+        /mnt/e/work/git_src/libdatrie
 )
 #/mnt/e/work/git_src/lua
 
@@ -76,8 +77,7 @@ add_executable(luac_test1 src/luac_test/luac_test1.c)
 
 add_executable(jmp_test src/jmp_test/jmp_test.c)
 
-#file(GLOB libdatrie_test_src src/libdatrie_test/utils.h src/libdatrie_test/utils.c src/libdatrie_test/utils.c)
-#add_executable(libdatrie_test_file src/libdatrie_test/test_file.c )
+add_executable(libdatrie_test_file src/libdatrie_test/test_file.c src/libdatrie_test/utils.h src/libdatrie_test/utils.c)
 
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
@@ -126,3 +126,5 @@ target_link_libraries(luac_test1 /usr/local/lib/libluajit-5.1.so)
 #target_link_libraries(luac_test1)
 
 target_link_libraries(jmp_test)
+
+target_link_libraries(libdatrie_test_file /mnt/e/work/git_src/libdatrie/datrie/.libs/libdatrie.so)
