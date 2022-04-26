@@ -1,0 +1,27 @@
+服务器CPU负载高问题查询
+上线新代码后，发现cpu负载过高，下面我们来一步步查找问题。
+首先先来看看需要用到的两个命令：
+1. ps -mp $PID -o THREAD,tid,time，查看某个进程下所有线程的CPU使用情况，输出内容大致如下，其中有两个字段需要注意%CPU表示线程使用cpu的情况，TID表示线程id
+USER     %CPU PRI SCNT WCHAN  USER SYSTEM   TID     TIME
+root      258   -    - -         -      -     - 2-02:33:06
+root      0.0  21    - futex_    -      -  3025 00:00:00
+root      0.0  24    - -         -      -  3026 00:00:04
+root      0.3  24    - 184466    -      -  3027 00:04:12
+root      0.3  23    - 184466    -      -  3028 00:04:12
+root      0.3  23    - 184466    -      -  3029 00:04:13
+root      0.3  23    - 184466    -      -  3030 00:04:12
+root      0.3  23    - 184466    -      -  3031 00:04:12
+
+2. jstack $PID，打印jvm的所有线程栈，输出内容大致如下，注意其中的nid=0x6669，nid表示是线程id，0x6669是一个16进制的数
+"resin-tcp-connection-*:8010-15775" daemon prio=10 tid=0x00002afbc1356800 nid=0x6669 runnable [0x00002afb83d91000..0x00002afb83d92c90]
+   java.lang.Thread.State: RUNNABLE
+        at java.net.SocketInputStream.socketRead0(Native Method)
+        at java.net.SocketInputStream.read(SocketInputStream.java:129)
+        at com.mysql.jdbc.util.ReadAheadInputStream.fill(ReadAheadInputStream.java:113)
+        at com.mysql.jdbc.util.ReadAheadInputStream.readFromUnderlyingStreamIfNecessary(ReadAheadInputStream.java:160)
+
+将这两行命令添加在shell脚本中，在cpu负载高的服务器上运行
+ps -mp ${PID} -o THREAD,tid,time > threadcpu.log
+jstack ${PID} > jstack.log
+
+从threadcpu.log中找出cpu高的线程id，然后在jstack.log中查找对应的线程栈信息，就能知道什么代码在耗费cpu资源了。

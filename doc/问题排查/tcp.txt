@@ -1,0 +1,20 @@
+服务器故障分析—tcp连接非正常断开导致resin重启
+故障描述
+resin容器不定期自动重启。
+故障分析
+1. 查看resin容器重启前后的日志与ganglia
+  1. 业务日志trace.log：重启前后没有任何异常
+  2. resin的stderr.log：重启前后没有任何异常
+  3. resin的stdout.log：重启前出现“java.net.SocketTimeoutException: Read timed out”异常，连续出现3次后，resin重启
+  4. nginx的error.log：重启前出现很多“time out”异常
+  5. 重启前后，ganglia一切正常
+2. 分析上面的日志信息，首先可以排除掉内存泄漏（OOM），因为如果出现OOM，日志中会有体现；其次可以排除低层db或cache有问题，因为如果db或cache有问题，将会抛出大量的业务异常；最后可以排除web服务器压力大的问题，因为如果web压力大，ganglia上会有详细记录。注意到resin与nginx的time out异常，可以初步断定resin容器由于不知名的原因，所有的线程都被堵住了，这时任何请求发送到resin，都会由于没有线程来处理请求，而发生time out异常。
+3. 由于resin重启的不定期性（1天或几天才会重启一次），所以使用crontab每隔1分钟运行脚本，curl到resin服务器，如果发现http状态码不为200，则使用jstack打印jvm所有的线程栈。
+4. 查看jstack的log，业务线程只有一个是RUNNABLE，其他所有的都是BLOCKED，这就是resin发生time out重启的原因。
+5. 为什么1个业务线程会阻塞所有其他业务线程？问题的原因是，dbcp连接池在取connection时，使用了syncronized关键字，同时在syncronized关键字中会使用“select 1”向db发请求用于判断connection是否可用，如果1个线程在执行“select 1”时TCP连接突然非正常断开，该线程由于不知道发生了错误就会一直阻塞不动，其他业务线程都会由于syncronized而全部阻塞。
+解决方案
+1. 检查硬件，防止tcp连接非正常断开。
+2. 设置tcp超时时间（当发生非正常断开时，不会无限挂起），这里可以在jdbc的url上添加socketTimeout参数设置。
+3. 强烈推荐阅读jdbc超时配置。
+
+
