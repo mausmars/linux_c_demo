@@ -1,0 +1,16 @@
+查看系统程序栈大小
+ulimit -s
+-----------------------------------------------
+定位segment fault
+ulimit -c
+可以查看core file大小的配置情况，如果为0，则表示系统关闭了dump core
+
+打开dump core
+ulimit -c unlimited　　（只对当前shell进程有效）
+
+发生core dump之后, 用gdb进行查看core文件的内容, 以定位文件中引发core dump的行.
+gdb [exec file] [core file]
+
+gdb ./test test.core
+
+-----------------------------------------------

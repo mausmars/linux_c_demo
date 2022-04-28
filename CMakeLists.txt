@@ -60,6 +60,7 @@ add_executable(coroutine_test src/coroutine/main.c src/coroutine/coroutine.c)
 #基础api测试
 add_executable(base_ucontext_test src/base_test/ucontext_test.c)
 add_executable(base_pthread_self_test src/base_test/pthread_self_test.c src/base_test/itimerval_test.c)
+add_executable(segment_fault_test src/base_test/segment_fault_test.c)
 
 file(GLOB attack_src src/common/*.h src/common/*.c src/attack/*.h src/attack/*.c)
 add_executable(arp_attack ${attack_src})
@@ -112,6 +113,7 @@ target_link_libraries(networkcard2)
 target_link_libraries(coroutine_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(base_ucontext_test)
 target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(segment_fault_test)
 
 target_link_libraries(arp_attack ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(gameserver ${CMAKE_THREAD_LIBS_INIT})
@@ -130,3 +132,6 @@ target_link_libraries(luac_test1 /usr/local/lib/libluajit-5.1.so)
 target_link_libraries(jmp_test)
 
 target_link_libraries(libdatrie_test_file /mnt/e/work/git_src/libdatrie/datrie/.libs/libdatrie.so)
+
+
+
