@@ -1,0 +1,1 @@
+__asm__ __volatile__ GCC的内嵌汇编语法 AT&T汇编语言语法
