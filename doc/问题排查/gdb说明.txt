@@ -1,0 +1,20 @@
+--------------------------
+编译带 -g 才能gdb调试
+$ gcc -g gdb_test.c -o gdb_test
+--------------------------
+查看文件是否可以调试
+$ readelf -S gdb_test|grep debug
+
+打印以下
+  [26] .debug_aranges    PROGBITS         0000000000000000  00001039
+  [27] .debug_info       PROGBITS         0000000000000000  00001069
+  [28] .debug_abbrev     PROGBITS         0000000000000000  000013df
+  [29] .debug_line       PROGBITS         0000000000000000  00001508
+  [30] .debug_str        PROGBITS         0000000000000000  000015f3
+--------------------------
+$ gdb ./gdb_test gdb_test.core
+出现(no debugging symbols found) 表示不能调试
+
+
+
+
