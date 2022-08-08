@@ -5,16 +5,14 @@
  * gdb ./gdb_test gdb_test.core
  */
 
-#include <stdio.h>
+//输入34 导致出错生成 .core文件
 
-void Print(int i) {
-    printf("hello,程序猿编码 %d\n", i);
-}
+#include <stdio.h>
 
 int main(int argc, char const *argv[]) {
     int i = 0;
-    for (i = 1; i < 3; i++) {
-        Print(i);
-    }
+
+    scanf("%d", i);
+    printf("hello,程序猿编码 %d\n", i);
     return 0;
 }

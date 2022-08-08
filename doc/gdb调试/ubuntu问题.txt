@@ -1,0 +1,24 @@
+查看ubuntu的内核版本和发行版本号
+sudo lsb_release -a
+
+查看内核版本号
+uname -r
+----------------------------------------------
+Ubuntu18.04 产生不了core文件
+
+service apport start
+ * Starting automatic crash report generation: apport
+/etc/init.d/apport: 53: /etc/init.d/apport: cannot create /proc/sys/kernel/core_pattern: Operation not permitted
+/etc/init.d/apport: 54: /etc/init.d/apport: cannot create /proc/sys/fs/suid_dumpable: Operation not permitted
+
+
+sudo vi /etc/sysctl.conf
+kernel.core_pattern = /tmp/core.%e.%p.%h.%t
+
+vi /etc/security/limits.conf
+root             -       core            unlimited
+*                -       core            unlimited
+
+vi /etc/default/apport
+#enabled=1
+enabled=0

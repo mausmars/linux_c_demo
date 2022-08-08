@@ -1,3 +1,4 @@
+https://blog.csdn.net/chen1415886044/article/details/105094688
 --------------------------
 编译带 -g 才能gdb调试
 $ gcc -g gdb_test.c -o gdb_test
@@ -11,6 +12,15 @@ $ readelf -S gdb_test|grep debug
   [28] .debug_abbrev     PROGBITS         0000000000000000  000013df
   [29] .debug_line       PROGBITS         0000000000000000  00001508
   [30] .debug_str        PROGBITS         0000000000000000  000015f3
+
+--------------------------
+生成Core方法
+ulimit -a
+ulimit –c
+可以查看core file大小的配置情况，如果为0，则表示系统关闭了dump core
+
+ulimit -c unlimited　　（只对当前shell进程有效）
+
 --------------------------
 $ gdb ./gdb_test gdb_test.core
 出现(no debugging symbols found) 表示不能调试
@@ -18,3 +28,20 @@ $ gdb ./gdb_test gdb_test.core
 
 
 
+--------------------------
+执行
+$ gdb
+gdb> file gdb_test
+gdb> r
+gdb> r 参数
+
+gdb调试core
+$ gdb ./core.test.3591
+
+
+
+find / -name "core.*"
+
+
+vi /etc/sysctl.conf
+cat /etc/init/apport.conf
