@@ -1,0 +1,14 @@
+centos7 安装curl
+yum install wget gcc openssl-devel -y
+wget https://curl.haxx.se/download/curl-7.67.0.tar.gz
+tar -zxvf curl-7.67.0.tar.gz
+cd curl-7.67.0
+
+./configure --with-ssl --prefix=/usr/local/curl
+make
+make install
+
+echo "export PATH=/usr/local/curl/bin:$PATH" >> /etc/profile
+source /etc/profile
+curl --version
+

@@ -1,0 +1,45 @@
+git clone git@github.com:openssl/openssl.git
+git checkout OpenSSL_1_1_1
+
+-------------------------------------------
+centos 安装
+wget https://www.openssl.org/source/openssl-1.1.1d.tar.gz
+tar xf openssl-1.1.1d.tar.gz
+
+cd openssl-1.1.1d
+./config
+make && make install
+
+echo "/usr/local/lib64/" >> /etc/ld.so.conf
+ldconfig
+mv /usr/bin/openssl /usr/bin/openssl.old
+ln -sv /usr/local/bin/openssl /usr/bin/openssl
+
+-------------------------------------------
+ldd 命令来确定某一特定可执行程序是否为静态链接的
+# ldd /bin/ln
+
+动态装入器
+动态装入器找到共享库要依靠两个文件 — /etc/ld.so.conf 和 /etc/ld.so.cache
+
+ld.so.conf 文件包含一个所有目录（/lib 和 /usr/lib 除外，它们会自动包含在其中）的清单，动态装入器将在其中查找共享库
+cat /etc/ld.so.conf
+
+ld.so.cache
+但是在动态装入器能“看到”这一信息之前，必须将它转换到 ld.so.cache 文件中。可以通过运行 ldconfig 命令做到这一点：
+# ldconfig
+
+# ldconfig -p | less
+
+LD_LIBRARY_PATH
+要指示动态装入器首先检查某个目录，请将 LD_LIBRARY_PATH 变量设置成您希望搜索的目录。多个路径之间用冒号分隔；例如：
+# export LD_LIBRARY_PATH="/usr/lib/old:/opt/lib"
+
+-------------------------------------------
+cd /lib64/
+ls -l libcrypto.*
+ln -sf libssl.so.1.0.2k libssl.so.10
+ln -sf libcrypto.so.1.0.2k libcrypto.so.10
+
+可以看到程序链接的位置
+ldd /usr/bin/wget

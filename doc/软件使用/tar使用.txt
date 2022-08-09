@@ -1,0 +1,10 @@
+
+
+
+压缩
+tar –czf server.tar.gz server
+
+
+
+
+

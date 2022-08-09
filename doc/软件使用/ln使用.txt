@@ -1,0 +1,28 @@
+检查映射关系
+ls -l libcrypto.*
+ls -l libssl.*
+
+ln -sf libssl.so.1.0.2k libssl.so.10
+ln -sf libcrypto.so.1.0.2k libcrypto.so.10
+
+之前的映射
+ln -sf libcrypto.so.1.0.2k libcrypto.so
+ln -sf libssl.so.1.0.2k libssl.so
+ln -sf libcurl.so.4.3.0 libcurl.so
+
+ln -sf libcrypto.so.1.0.2k libcrypto.so.10
+ln -sf libssl.so.1.0.2k libssl.so.10
+
+libssl.so.10 => /lib64/libssl.so.10 (0x00007f4c26015000)
+libcrypto.so.10 => /lib64/libcrypto.so.10 (0x00007f4c25bb2000)
+
+
+修改映射到 1.1版本
+ln -sf libcurl.so.4.6.0 libcurl.so
+ln -sf libcrypto.so.1.1 libcrypto.so
+ln -sf libssl.so.1.1 libssl.so
+
+ln -sf libcrypto.so.1.1 libcrypto.so.10
+ln -sf libssl.so.1.1 libssl.so.10
+
+ls -l libcrypto.so.10 libssl.so.10

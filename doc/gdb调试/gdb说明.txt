@@ -25,9 +25,6 @@ ulimit -c unlimited　　（只对当前shell进程有效）
 $ gdb ./gdb_test gdb_test.core
 出现(no debugging symbols found) 表示不能调试
 
-
-
-
 --------------------------
 执行
 $ gdb

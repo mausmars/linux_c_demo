@@ -14,3 +14,28 @@ gdb [exec file] [core file]
 gdb ./test test.core
 
 -----------------------------------------------
+例子
+openssl version
+
+判断是下边版本导致的问题，升级到1.1.1
+openssl-libs-1.0.2k
+
+gdb skynet/skynet core.4039
+
+#0  0x00007fc47a432794 in sha1_block_data_order_shaext () from /lib64/libcrypto.so.10
+Missing separate debuginfos, use: debuginfo-install glibc-2.17-325.el7_9.x86_64 keyutils-libs-1.5.8-3.el7.x86_64 krb5-libs-1.15.1-51.el7_9.x86_64 libcom_err-1.42.9-19.el7.x86_64 libgcc-4.8.5-44.el7.x86_64 libselinux-2.5-15.el7.x86_64 openssl-libs-1.0.2k-25.el7_9.x86_64 pcre-8.32-17.el7.x86_64 zlib-1.2.7-20.el7_9.x86_64
+(gdb) bt full
+#0  0x00007fc47a432794 in sha1_block_data_order_shaext () from /lib64/libcrypto.so.10
+No symbol table info available.
+#1  0x00007fc47a43050f in SHA1_Update () from /lib64/libcrypto.so.10
+No symbol table info available.
+#2  0x00007fc47a4e1537 in ssleay_rand_add.part.0 () from /lib64/libcrypto.so.10
+No symbol table info available.
+#3  0x00007fc47b1afafe in ssl3_connect () from /lib64/libssl.so.10
+No symbol table info available.
+#4  0x00007fc47b3fe211 in _ltls_context_handshake (L=0x7fc47ea182a8) at lualib-src/ltls.c:180
+        ret = <optimized out>
+        tls_p = 0x7fc480e076a8
+
+
+
