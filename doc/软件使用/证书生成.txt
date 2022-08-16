@@ -1,0 +1,16 @@
+生成https证书
+openssl genrsa -des3 -out test.key 1024
+生成test.key
+
+创建 csr 证书
+openssl req -new -key test.key -out test.csr
+生成test.csr
+
+test.key 并重命名 test.key.org
+openssl rsa -in test.key.org -out test.key
+重新生成test.key
+
+生成crt证书
+openssl req -x509 -in test.csr -key test.key -days 365 -out test.crt
+
+
