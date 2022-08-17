@@ -1,0 +1,63 @@
+问题描述：
+bi发送日志使用了skynet中的httpc的代码做发送，发送量大的情况会发生崩溃。
+
+发生错误如下：
+segmentation fault(core dumped)
+gdb skynet/skynet core.4039
+(gdb) bt full
+#0  0x00007fc47a432794 in sha1_block_data_order_shaext () from /lib64/libcrypto.so.10
+No symbol table info available.
+#1  0x00007fc47a43050f in SHA1_Update () from /lib64/libcrypto.so.10
+No symbol table info available.
+#2  0x00007fc47a4e1537 in ssleay_rand_add.part.0 () from /lib64/libcrypto.so.10
+No symbol table info available.
+#3  0x00007fc47b1afafe in ssl3_connect () from /lib64/libssl.so.10
+No symbol table info available.
+#4  0x00007fc47b3fe211 in _ltls_context_handshake (L=0x7fc47ea182a8) at lualib-src/ltls.c:180
+        ret = <optimized out>
+        tls_p = 0x7fc480e076a8
+
+腾讯云测试：
+service	协程	个数	时间(秒)	单位时间个数	状态
+1	200	12846	45	285.46
+1	150	12033	45	267.4
+1	100	11993	50	239.68
+5	30	2650	10	239.86	崩溃
+3	50				瞬间崩溃
+2	150				瞬间崩溃
+多service会导致崩溃，必崩溃。搜索ssl多线程相关。
+OpenSSL and Threads
+https://www.openssl.org/blog/blog/2017/02/21/threads/
+在OpenSSL 1.0.2（及更低版本）中，应用程序必须提供自己的与锁和线程的集成，如threads.pod文件中所述。
+从文章看升级ssl貌似就可以解决问题。
+
+项目中依赖ssl的地方有2个。
+1、server/skynet/luaclib/ltls.so
+2、server/luaclib/luna.so
+
+分别执行一下指令
+ldd ltls.so
+ldd luna.so
+libssl.so.10 => /lib64/libssl.so.10 (0x00007fcfaba96000)
+libcrypto.so.10 => /lib64/libcrypto.so.10 (0x00007fcfab633000)
+发现依赖的低版本的ssl  1.0.2k
+
+升级安装ssl
+wget https://www.openssl.org/source/openssl-1.1.1d.tar.gz
+tar xf openssl-1.1.1d.tar.gz
+cd openssl-1.1.1d
+./config
+make && make install
+
+修改
+server/skynet/Makefile   23行
+TLS_LIB=自己的路径/openssl-1.1.1d
+TLS_INC=自己的路径/openssl-1.1.1d/include
+
+重新编译再查看
+ldd ltls.so
+libssl.so.1.1 => /usr/local/lib64/libssl.so.1.1 (0x00007f1dee71d000)
+libcrypto.so.1.1 => /usr/local/lib64/libcrypto.so.1.1 (0x00007f1dede6c000)
+
+如果需要用到luna.so 需要升级curl，修改luna.so编译文件
+

@@ -1,0 +1,149 @@
+https://langzi989.github.io/2017/12/03/Linux%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7%E4%B9%8Breadelf/
+
+readelf命令可以用来查看elf格式文件的信息，与objdump相比,该工具显示的信息较为详细
+
+elf文件
+ELF(excutable and linking format)是一种对象文件格式，用于定义不同类型的对象文件中存放了那些东西，以及以什么格式存放。ELF文件可分为三种：
+1.可重定位对象文件(relocatable file)
+2.可执行对象文件(excutable file)
+3.可被共享的对象文件(shared object file)
+
+可重定位对象文件
+可重定位对象文件中包含适合于与其他目标文件链接来创建可执行文件或者共享目标文件的代码和数据。一般包括如汇编器汇编生成的.o文件
+
+可执行文件
+可执行文件是一个可执行文件，此文件规定了exec()如何创建一个程序的进程映像
+
+可被共享的对象文件
+可被共享的对象文件中包含可在两种上下文中链接的代码和数据。首先链接编辑器可将它与其他可重定位文件和目标文件和可共享目标文件一起处理，生成另外一个目标文件，
+其次，动态链接器可以将它与某个可执行文件以及其他可共享目标一起组合，创建进程映像。
+
+----------------------------------------------------
+readelf -h
+readelf -h参数的作用是读取指定elf文件的头信息。
+
+$ readelf -h
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x400800
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          7344 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         9
+  Size of section headers:           64 (bytes)
+  Number of section headers:         31
+  Section header string table index: 28
+重要参数解释:
+
+Class : 该elf文件的类型，这里是64位的elf格式
+Data : 该参数指明了文件中数据的组织方式是大端规则还是小端规则，此处为二进制存储的小端规则
+OS/ABI :　生成该文件的操作系统类型,ABI(Application Binary Interface)
+Type : 当前文件的类型,EXEC(可执行文件), REL(可重定位文件)，DYN(可被共享文件)
+Machine : 处理器类型
+Entry point address : 程序的虚拟地址入口点，可执行文件之外的类型该值为0x0
+Start of program headers : 程序头的开始处，从程序入口地址偏移地址开始。程序头table中记录elf文件中段的信息
+Start of section headers : 段头的开始处，从程序入口地址偏移地址开始
+----------------------------------------------------
+readelf -s
+readelf的作用是用来查看当前elf文件的符号表，符号表中的信息只包括全局变量和函数名。
+动态符号表(.synsym)用来保存与动态链接相关的导入导出符号，不包括模块内的符号;而sy,tab表则保存所有的符号,包括.dynsym中的符号。
+动态符号表所包含的符号的符号名保存在动态符号字符串表.dynstr中。
+
+如下所示程序：
+#include <stdio.h>
+//main.c
+int g_data;
+static int gs_data;
+void hello() {
+  printf("hello world");
+}
+int main() {
+  static int a = 0;
+  char l_data =0;
+  hello();
+  return 0;
+}
+
+将上述文件编译汇编成目标文件main.o文件，使用readelf -s main.o，结果如下:
+
+Symbol table '.symtab' contains 15 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS main.cpp
+     2: 0000000000000000     0 SECTION LOCAL  DEFAULT    1
+     3: 0000000000000000     0 SECTION LOCAL  DEFAULT    3
+     4: 0000000000000000     0 SECTION LOCAL  DEFAULT    4
+     5: 0000000000000004     4 OBJECT  LOCAL  DEFAULT    4 _ZL7gs_data
+     6: 0000000000000000     0 SECTION LOCAL  DEFAULT    5
+     7: 0000000000000008     4 OBJECT  LOCAL  DEFAULT    4 _ZZ4mainE7ls_data
+     8: 0000000000000000     0 SECTION LOCAL  DEFAULT    7
+     9: 0000000000000000     0 SECTION LOCAL  DEFAULT    8
+    10: 0000000000000000     0 SECTION LOCAL  DEFAULT    6
+    11: 0000000000000000     4 OBJECT  GLOBAL DEFAULT    4 g_data
+    12: 0000000000000000    22 FUNC    GLOBAL DEFAULT    1 _Z5hellov
+    13: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND printf
+    14: 0000000000000016    24 FUNC    GLOBAL DEFAULT    1 main
+
+可以看出全局变量,静态全局变量，静态局部变量，全局函数名都会出现在符号表中,而局部变量不会被保存在符号表中。
+
+----------------------------------------------------
+readelf: option requires an argument -- 'p'
+Usage: readelf <option(s)> elf-file(s)
+ Display information about the contents of ELF format files
+ Options are:
+  -a --all               Equivalent to: -h -l -S -s -r -d -V -A -I
+  -h --file-header       Display the ELF file header
+  -l --program-headers   Display the program headers
+     --segments          An alias for --program-headers
+  -S --section-headers   Display the sections' header
+     --sections          An alias for --section-headers
+  -g --section-groups    Display the section groups
+  -t --section-details   Display the section details
+  -e --headers           Equivalent to: -h -l -S
+  -s --syms              Display the symbol table
+     --symbols           An alias for --syms
+  --dyn-syms             Display the dynamic symbol table
+  -n --notes             Display the core notes (if present)
+  -r --relocs            Display the relocations (if present)
+  -u --unwind            Display the unwind info (if present)
+  -d --dynamic           Display the dynamic section (if present)
+  -V --version-info      Display the version sections (if present)
+  -A --arch-specific     Display architecture specific information (if any)
+  -c --archive-index     Display the symbol/file index in an archive
+  -D --use-dynamic       Use the dynamic section info when displaying symbols
+  -x --hex-dump=<number|name>
+                         Dump the contents of section <number|name> as bytes
+  -p --string-dump=<number|name>
+                         Dump the contents of section <number|name> as strings
+  -R --relocated-dump=<number|name>
+                         Dump the contents of section <number|name> as relocated bytes
+  -z --decompress        Decompress section before dumping it
+  -w[lLiaprmfFsoRt] or
+  --debug-dump[=rawline,=decodedline,=info,=abbrev,=pubnames,=aranges,=macro,=frames,
+               =frames-interp,=str,=loc,=Ranges,=pubtypes,
+               =gdb_index,=trace_info,=trace_abbrev,=trace_aranges,
+               =addr,=cu_index]
+                         Display the contents of DWARF2 debug sections
+  --dwarf-depth=N        Do not display DIEs at depth N or greater
+  --dwarf-start=N        Display DIEs starting with N, at the same depth
+                         or deeper
+  -I --histogram         Display histogram of bucket list lengths
+  -W --wide              Allow output width to exceed 80 characters
+  -U --unicode=[locale|escape|hex|highlight|invalid]
+                         Display unicode characters as determined by the current locale
+                          (default), escape sequences, "<hex sequences>", highlighted
+                          escape sequences, or treat them as invalid and display as
+                          "{hex sequences}"
+  @<file>                Read options from <file>
+  -H --help              Display this information
+  -v --version           Display the version number of readelf

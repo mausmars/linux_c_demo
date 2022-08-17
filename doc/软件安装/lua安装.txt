@@ -1,0 +1,12 @@
+安装5.3
+
+wget http://www.lua.org/ftp/lua-5.3.2.tar.gz
+
+tar zxf lua-5.3.2.tar.gz
+cd lua-5.3.2
+make linux
+mv /usr/bin/lua /usr/bin/lua5.1
+mv /usr/bin/luac /usr/bin/luac5.1
+ln -s /data/software/lua-5.3.2/src/lua /usr/bin/lua
+ln -s /data/software/lua-5.3.2/src/luac /usr/bin/luac
+
