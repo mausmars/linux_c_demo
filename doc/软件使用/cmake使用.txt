@@ -1,0 +1,17 @@
+CMAKE_C_COMPILER：指定C编译器
+CMAKE_CXX_COMPILER：指定C++编译器
+CMAKE_C_FLAGS：指定编译C文件时编译选项，也可以通过add_definitions命令添加编译选项
+
+在cmake脚本中，设置编译选项（配置编译器）有如下三种方法：
+1.add_compile_options命令
+add_compile_options(-Wall -Werror -Wstrict-prototypes -Wmissing-prototypes)
+
+2.add_definitions命令
+ADD_DEFINITIONS("-Wall -Werror -Wstrict-prototypes -Wmissing-prototypes)
+
+3.set命令修改CMAKE_CXX_FLAGS或CMAKE_C_FLAGS
+set(CMAKE_C_FLAGS "-Wall -Werror -Wstrict-prototypes -Wmissing-prototypes)
+
+使用这三种方式在有的情况下效果是一样的，但请注意它们还是有区别的：
+add_compile_options命令和add_definitions添加的编译选项是针对所有编译器的(包括c和c++编译器)
+set命令设置CMAKE_C_FLAGS或CMAKE_CXX_FLAGS变量则是分别只针对c和c++编译器的。

@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES(
         /software/php-src/Zend
 
         /usr/local/include/luajit-2.1
+        /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/.libs
 )
 #/mnt/e/work/git_src/lua
 
@@ -28,6 +29,8 @@ set(CMAKE_BUILD_TYPE Debug)
 
 # 设置编译选项
 set(CMAKE_C_STANDARD 11)
+
+add_definitions("-DTHREADED")
 
 find_package(Threads)
 #add_executable(demo_linuxc1 src/sync_test/sync_test1.c)
@@ -61,27 +64,20 @@ add_executable(coroutine_test src/coroutine/main.c src/coroutine/coroutine.c)
 add_executable(base_ucontext_test src/base_test/ucontext_test.c)
 add_executable(base_pthread_self_test src/base_test/pthread_self_test.c src/base_test/itimerval_test.c)
 add_executable(segment_fault_test src/base_test/segment_fault_test.c)
-
 file(GLOB attack_src src/common/*.h src/common/*.c src/attack/*.h src/attack/*.c)
 add_executable(arp_attack ${attack_src})
-
 file(GLOB game_server_src src/common/*.h src/common/*.c src/game_server/*.h src/game_server/*.c)
 add_executable(gameserver ${game_server_src})
-
 add_executable(atomic_test1 src/atomic_test/atomic_test1.c)
 add_executable(atomic_test2 src/atomic_test/atomic_test2.c)
-
 add_executable(udp_server src/net_test/udp_server.c)
 add_executable(udp_client src/net_test/udp_client.c)
-
 add_executable(porint_test src/base_test/point_test.c)
-
 add_executable(luac_test1 src/luac_test/luac_test1.c)
-
 add_executable(jmp_test src/jmp_test/jmp_test.c)
-
 add_executable(libdatrie_test_file src/libdatrie_test/test_file.c src/libdatrie_test/utils.h src/libdatrie_test/utils.c)
-
+add_executable(zookeeper_test1 src/zookeeper_test/zookeeper_test1.c)
+add_executable(zookeeper_test2 src/zookeeper_test/zookeeper_test2.c)
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
 #)
@@ -114,24 +110,17 @@ target_link_libraries(coroutine_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(base_ucontext_test)
 target_link_libraries(base_pthread_self_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(segment_fault_test)
-
 target_link_libraries(arp_attack ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(gameserver ${CMAKE_THREAD_LIBS_INIT})
-
 target_link_libraries(atomic_test1 ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(atomic_test2 ${CMAKE_THREAD_LIBS_INIT})
-
 target_link_libraries(udp_server)
 target_link_libraries(udp_client)
-
 target_link_libraries(porint_test)
-
 target_link_libraries(luac_test1 /usr/local/lib/libluajit-5.1.so)
 #target_link_libraries(luac_test1)
-
 target_link_libraries(jmp_test)
-
 target_link_libraries(libdatrie_test_file /mnt/e/work/git_src/libdatrie/datrie/.libs/libdatrie.so)
 
-
-
+target_link_libraries(zookeeper_test2  -DTHREADED)
+target_link_libraries(zookeeper_test1  -DTHREADED)

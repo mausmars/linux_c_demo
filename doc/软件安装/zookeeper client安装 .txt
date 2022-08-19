@@ -29,6 +29,16 @@ make
 sudo make install
 
 ------------------------------------------------------
+执行./configure 以生成makefile。 options如下：
+–enable-debug：启用优化和调试信息编译器选项（默认：禁用）；
+–without-syncapi：禁用同步API支持; 不会构建 zookeeper_mt 库（默认：启用）；
+–disable-static：不构建静态库（默认：启用）；
+–disable-shared：不构建共享库（默认：启用）；
+------------------------------------------------------
+
+使用多线程编译加 -DTHREADED  使用zookeeper_mt 库支持多线程
+
+------------------------------------------------------
 4) do a "./configure [OPTIONS]" to generate the makefile. See INSTALL
    for general information about running configure. Additionally, the
    configure supports the following options:

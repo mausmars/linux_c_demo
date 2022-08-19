@@ -27,6 +27,8 @@ make && make install
 apt install cmake  # version 3.19.8
 apt install cmake  # version 3.16.9
 
+apt-get install cmake=3.19.8
+
 卸载
 apt-get --purge remove cmake
 
