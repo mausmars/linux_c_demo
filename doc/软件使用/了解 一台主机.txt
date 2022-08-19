@@ -1,0 +1,26 @@
+操作系统
+cat /etc/os-release
+cat /proc/version
+
+
+网络带宽
+
+
+
+cpu信息
+lscpu | grep -E '^Thread|^Core|^Socket|^CPU\('
+
+cat /proc/cpuinfo      # 查看CPU信息
+
+高速缓存
+
+
+内存
+cat /proc/meminfo
+
+
+
+硬盘
+
+
+

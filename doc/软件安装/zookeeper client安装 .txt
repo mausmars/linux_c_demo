@@ -1,0 +1,41 @@
+ubuntu安装 zookeeper c client 
+https://github.com/apache/zookeeper/tree/master/zookeeper-client/zookeeper-client-c
+
+autoconf version 2.59 or greater installed
+apt-get install -y libcppunit-dev
+apt-get install -y libcppunit-doc
+apt-get install -y ant
+apt-get install -y automake autoconf libtool
+apt-get install -y doxygen
+apt-get install -y perl
+apt-get install -y shtool
+apt-get install -y graphviz
+apt-get install -y maven
+
+git clone git@github.com:apache/zookeeper.git
+git checkout tags/release-3.8.0-1
+//失败了可以回滚
+git reset --hard HEAD
+
+cd zookeeper-jute
+mvn compile
+
+cd zookeeper-client/zookeeper-client-c
+ACLOCAL="aclocal -I /usr/share/aclocal-1.15" autoreconf -if
+ACLOCAL="aclocal -I /usr/share/aclocal" autoreconf -if
+
+./configure
+make
+sudo make install
+
+------------------------------------------------------
+4) do a "./configure [OPTIONS]" to generate the makefile. See INSTALL
+   for general information about running configure. Additionally, the
+   configure supports the following options:
+   --enable-debug     enables optimization and enables debug info compiler
+                      options, disabled by default
+   --without-syncapi  disables Sync API support; zookeeper_mt library won't
+                      be built, enabled by default
+   --disable-static   do not build static libraries, enabled by default
+   --disable-shared   do not build shared libraries, enabled by default
+   --without-cppunit  do not build the test library, enabled by default.

@@ -16,7 +16,18 @@ make && make install
 检查是否正确安装
 cmake --version
 
+wget https://github.com/Kitware/CMake/releases/download/v3.16.9/cmake-3.16.9.tar.gz
+tar -zxvf cmake-3.16.9.tar.gz
+cd cmake-3.16.9
+编译安装
+./bootstrap --prefix=/usr --datadir=share/cmake --docdir=doc/cmake
+make && make install
+
 ----------------------------------------------------------------------
 apt install cmake  # version 3.19.8
+apt install cmake  # version 3.16.9
 
+卸载
 apt-get --purge remove cmake
+
+

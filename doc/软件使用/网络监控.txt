@@ -1,0 +1,61 @@
+查看总流量
+------------------
+ip 命令来自 iproute2util 包，是查看、配置网络/路由的工具。作为 ifconfig 的替代品，ip 命令功能更强大，用法更语义化
+yum install -y iproute 安装
+
+查看各网卡的总流量
+ip -s -h link
+------------------
+nload 命令可以查看各个网络设备的当前网络速率，也会展示流经设备的总流量
+yum install -y epel-release
+yum install -y nload
+
+nload eth0
+
+PS：netstat -s 和 ifconfig -s 都可以查看收发的总包(netstat分协议给出)，但不会给出字节数据。
+
+============================================================
+查看实时网速网速
+------------------
+dstat 是一个用来替换vmstat、iostat、netstat、nfsstat和ifstat的全能系统信息统计工具，支持数据实时刷新，输出直观易懂。
+yum install -y dstat
+
+输出接下来10秒内每秒的网络数据：
+dstat -tnf 1 10
+------------------
+sar 是System Activity Report的缩写，是一款全面的Linux系统运行状态统计和性能分析工具，可从磁盘IO、CPU负载、内存使用等多个维度对系统活动进行报告
+yum install -y sysstat
+
+可查看接下来10秒内的tcp数据
+sar -n TCP 1 10
+
+============================================================
+查看连接/进程流量
+------------------
+ss 和 netstat 是查看活动链接/监听端口的常用命令。ss 是 netstat 的替代，性能更好，建议使用。
+ss 是 iproute2util 包的一部分
+netstat 来自 net-tools 包
+
+yum install -y iproute
+yum install -y net-tools
+
+ss -nt
+
+------------------
+iftop 是一款实时流量监控工具，可以查看每个连接的实时速率。iftop 来自EPEL软件库
+yum install -y epel-release
+yum install -y iftop
+
+实时查看eth0网卡的各个连接和网速
+iftop -nN -i eth0
+------------------
+nethogs 是为了查看单个进程流量而设计的工具，按照进程进行带宽分组。来自EPEL软件库
+yum install -y epel-release
+yum install -y nethogs
+
+每2秒刷新流经eth0网卡的进程流量信息：
+nethogs -d 2 eth0
+------------------
+tcpdump可以用来抓包，保存的数据可以用wireshark打开和查看
+
+------------------
