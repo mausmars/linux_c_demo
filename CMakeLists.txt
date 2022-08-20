@@ -120,6 +120,6 @@ target_link_libraries(luac_test1 /usr/local/lib/libluajit-5.1.so)
 target_link_libraries(jmp_test)
 target_link_libraries(libdatrie_test_file /mnt/e/work/git_src/libdatrie/datrie/.libs/libdatrie.so)
 
-target_link_libraries(zookeeper_test1 THREADED /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/.libs/libzookeeper_mt.so)
+target_link_libraries(zookeeper_test1 ${CMAKE_THREAD_LIBS_INIT} /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/.libs/libzookeeper_mt.so)
 target_link_libraries(zookeeper_test2 ${CMAKE_THREAD_LIBS_INIT} /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/.libs/libzookeeper_st.so)
 
