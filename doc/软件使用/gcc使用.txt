@@ -19,6 +19,10 @@ xxx又称为共享库的链接名(link name)。不同的库可能具有同样的
 如果链接时采用-lxxx，那么链接器会根据输出文件的情况(动态/静态)选择合适的版本。比如如果ld采用了-static参数，就会使用静态版本，
 如果使用了-Bdynamic(这也是默认情况)，就会使用动态版本。
 
+-Dmacro 相当于 C 语言中的 #define macro
+-Umacro 相当于 C 语言中的 #undef macro
+-undef 取消对任何非标准宏的定义
+
 --as-needed     就是忽略链接时没有用到的动态库
 --no-as-needed  就是不忽略链接时没有用到的动态库
 
