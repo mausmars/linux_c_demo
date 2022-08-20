@@ -44,7 +44,6 @@ void zookeeper_watcher_g(zhandle_t *zh, int type, int state, const char *path, v
         printf("[%s %d] znode %s changed.\n", __FUNCTION__, __LINE__, path);
     } else if (type == ZOO_CHILD_EVENT) {
         printf("[%s %d] znode %s children changed.\n", __FUNCTION__, __LINE__, path);
-         
     } else if (type == ZOO_SESSION_EVENT) {
         if (state == ZOO_EXPIRED_SESSION_STATE) {
             printf("[%s %d] zookeeper session expired\n", __FUNCTION__, __LINE__);
@@ -83,8 +82,6 @@ void exists(zhandle_t *zkhandle, char *path) {
     if (flag) { printf("%s node already exist\n", path); } else { printf("%s node not exist\n", path); }
 }
 
- 
-
 void getACL(zhandle_t *zkhandle, char *str) {
     struct ACL_vector acl;
     struct Stat stat;
@@ -104,11 +101,7 @@ void delete(zhandle_t *zkhandle, char *str) {
 }
 
 int main(int argc, const char *argv[]) {
-    if (argc != 2) {
-        printf("usage: zookeeper_m_test  server_address\n");
-        exit(-1);
-    }
-    const char *host = argv[1];
+    const char *host = "localhost:2181";
     int timeout = 30000;
     char buffer[512];
     int *bufferlen;

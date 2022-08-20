@@ -16,7 +16,7 @@ INCLUDE_DIRECTORIES(
         /software/php-src/Zend
 
         /usr/local/include/luajit-2.1
-        /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/.libs
+        /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/include
 )
 #/mnt/e/work/git_src/lua
 
@@ -29,8 +29,6 @@ set(CMAKE_BUILD_TYPE Debug)
 
 # 设置编译选项
 set(CMAKE_C_STANDARD 11)
-
-add_definitions("-DTHREADED")
 
 find_package(Threads)
 #add_executable(demo_linuxc1 src/sync_test/sync_test1.c)
@@ -76,8 +74,8 @@ add_executable(porint_test src/base_test/point_test.c)
 add_executable(luac_test1 src/luac_test/luac_test1.c)
 add_executable(jmp_test src/jmp_test/jmp_test.c)
 add_executable(libdatrie_test_file src/libdatrie_test/test_file.c src/libdatrie_test/utils.h src/libdatrie_test/utils.c)
-add_executable(zookeeper_test1 src/zookeeper_test/zookeeper_test1.c)
-add_executable(zookeeper_test2 src/zookeeper_test/zookeeper_test2.c)
+add_executable(zookeeper_test1 src/zookeeper_test/zookeeper_m_test.c)
+add_executable(zookeeper_test2 src/zookeeper_test/zookeeper_s_test.c)
 #ADD_DEFINITIONS(
 #        -DUSE_JEMALLOC
 #)
@@ -122,5 +120,6 @@ target_link_libraries(luac_test1 /usr/local/lib/libluajit-5.1.so)
 target_link_libraries(jmp_test)
 target_link_libraries(libdatrie_test_file /mnt/e/work/git_src/libdatrie/datrie/.libs/libdatrie.so)
 
-target_link_libraries(zookeeper_test2  -DTHREADED)
-target_link_libraries(zookeeper_test1  -DTHREADED)
+target_link_libraries(zookeeper_test1 ${CMAKE_THREAD_LIBS_INIT} /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/.libs/libzookeeper_mt.so)
+target_link_libraries(zookeeper_test2 ${CMAKE_THREAD_LIBS_INIT} /mnt/e/work/git_src/zookeeper/zookeeper-client/zookeeper-client-c/.libs/libzookeeper_st.so)
+
