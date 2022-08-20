@@ -1,3 +1,6 @@
+#include <lua.h>
+#include <lauxlib.h>
+
 #include<stdio.h>
 #include<string.h>
 #include <zookeeper/zookeeper.h>
@@ -7,6 +10,8 @@
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <errno.h>
+
+static int lua_watch = LUA_REFNIL;
 
 static const char *state2String(int state) {
     if (state == 0) return "CLOSED_STATE";
@@ -26,6 +31,19 @@ static const char *type2String(int state) {
     if (state == ZOO_SESSION_EVENT) return "SESSION_EVENT";
     if (state == ZOO_NOTWATCHING_EVENT) return "NOTWATCHING_EVENT";
     return "UNKNOWN_EVENT_TYPE";
+}
+
+static int call_lua_watch(int type, int state, const char *path) {
+    printf("call_lua_watch: type=%d state=%d path=%s \n", type, state, path);
+
+    lua_State *L = luaL_newstate();
+    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_watch);
+//    lua_pushinteger(L, type);
+//    lua_pushinteger(L, state);
+//    lua_pushstring(L, path);
+    lua_pcall(L, 0, 0, 0);
+
+    printf("call_lua_watch: over \n");
 }
 
 void zookeeper_watcher_g(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx) {
@@ -64,12 +82,13 @@ void zookeeper_watcher_g(zhandle_t *zh, int type, int state, const char *path, v
                    (char *) watcherCtx);
         }
     }
+    call_lua_watch(type, state, path);
 }
 
 void create(zhandle_t *zkhandle, char *str) {
     char path_buffer[64] = "abc";
     int bufferlen = sizeof(path_buffer);
-    printf("create node in synchronous mode-----------------------\n");
+    printf("create node in synchronous mode \n");
     int flag = zoo_create(zkhandle, str, "syn-node", 9, &ZOO_OPEN_ACL_UNSAFE, 0, path_buffer, bufferlen);
     if (flag != ZOK) {
         printf("create syn-node failed\n");
@@ -79,7 +98,11 @@ void create(zhandle_t *zkhandle, char *str) {
 
 void exists(zhandle_t *zkhandle, char *path) {
     int flag = zoo_exists(zkhandle, path, 1, NULL);
-    if (flag) { printf("%s node already exist\n", path); } else { printf("%s node not exist\n", path); }
+    if (flag) {
+        printf("%s node already exist\n", path);
+    } else {
+        printf("%s node not exist\n", path);
+    }
 }
 
 void getACL(zhandle_t *zkhandle, char *str) {
@@ -87,7 +110,7 @@ void getACL(zhandle_t *zkhandle, char *str) {
     struct Stat stat;
     int flag = zoo_get_acl(zkhandle, str, &acl, &stat);
     if (flag == ZOK && acl.count > 0) {
-        printf("-----------------the ACL of %s:\n------------", str);
+        printf("-----------------the ACL of %s: ------------ \n", str);
         printf("%d\n", acl.count);
         printf("%d\n", acl.data->perms);
         printf("%s\n", acl.data->id.scheme);
@@ -100,21 +123,42 @@ void delete(zhandle_t *zkhandle, char *str) {
     if (flag == ZOK) { printf("delete node %s success\n", str); }
 }
 
-int main(int argc, const char *argv[]) {
-    const char *host = "localhost:2181";
-    int timeout = 30000;
-    char buffer[512];
-    int *bufferlen;
-//    zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
-    zhandle_t *zkhandle = zookeeper_init(host, zookeeper_watcher_g, timeout, 0, NULL, 0);
+static int lregister_watch(lua_State *L) {
+    lua_watch = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (lua_watch == NULL) {
+        printf("lua_watch == NULL \n");
+    }
+    return 0;
+}
+
+static int lzookeeper_init(lua_State *L) {
+    size_t host_sz = 0;
+    const char *host = luaL_checklstring(L, 1, &host_sz);
+    int recv_timeout = luaL_checkinteger(L, 2);
+    const clientid_t *clientid = lua_touserdata(L, 3);
+    void *context = lua_touserdata(L, 4);
+    int flags = luaL_checkinteger(L, 5);
+    zhandle_t *zkhandle = zookeeper_init(host, zookeeper_watcher_g, recv_timeout, clientid, context, flags);
     if (zkhandle == NULL) {
-        fprintf(stderr, "Error when connecting to zookeeper servers...\n");
+        fprintf(stderr, "Error when connecting to zookeeper servers... \n");
         exit(EXIT_FAILURE);
     }
     create(zkhandle, "/abc");
     exists(zkhandle, "/abc");
     getACL(zkhandle, "/abc");
     delete(zkhandle, "/abc");
-    while (1);
-    zookeeper_close(zkhandle);
+
+    //轻量级用户数据，返回c指针
+    lua_pushlightuserdata(L, zkhandle);
+    return 1;
+}
+
+int luaopen_zk_client(lua_State *L) {
+    luaL_Reg l[] = {
+            {"register_watch", lregister_watch},
+            {"zookeeper_init", lzookeeper_init},
+            {NULL, NULL},
+    };
+    luaL_newlib(L, l);
+    return 1;
 }
