@@ -11,8 +11,6 @@
 #include <arpa/inet.h>
 #include <errno.h>
 
-static int lua_watch = LUA_REFNIL;
-
 static const char *state2String(int state) {
     if (state == 0) return "CLOSED_STATE";
     if (state == ZOO_CONNECTING_STATE) return "CONNECTING_STATE";
@@ -31,58 +29,6 @@ static const char *type2String(int state) {
     if (state == ZOO_SESSION_EVENT) return "SESSION_EVENT";
     if (state == ZOO_NOTWATCHING_EVENT) return "NOTWATCHING_EVENT";
     return "UNKNOWN_EVENT_TYPE";
-}
-
-static int call_lua_watch(int type, int state, const char *path) {
-    printf("call_lua_watch: type=%d state=%d path=%s \n", type, state, path);
-
-    lua_State *L = luaL_newstate();
-    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_watch);
-//    lua_pushinteger(L, type);
-//    lua_pushinteger(L, state);
-//    lua_pushstring(L, path);
-    lua_pcall(L, 0, 0, 0);
-
-    printf("call_lua_watch: over \n");
-}
-
-void zookeeper_watcher_g(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx) {
-    printf("\nSomething happened.\n");
-    printf("type: %s\n", type2String(type));
-    printf("state: %s\n", state2String(state));
-    printf("path: %s\n", path);
-    printf("watcherCtx: %s\n", (char *) watcherCtx);
-    const clientid_t *zk_clientid;
-    int rc;
-    if (type == ZOO_CREATED_EVENT) {
-        printf("[%s %d] znode %s created.\n", __FUNCTION__, __LINE__, path);
-    } else if (type == ZOO_DELETED_EVENT) {
-        printf("[%s %d] znode %s deleted.\n", __FUNCTION__, __LINE__, path);
-    } else if (type == ZOO_CHANGED_EVENT) {
-        printf("[%s %d] znode %s changed.\n", __FUNCTION__, __LINE__, path);
-    } else if (type == ZOO_CHILD_EVENT) {
-        printf("[%s %d] znode %s children changed.\n", __FUNCTION__, __LINE__, path);
-    } else if (type == ZOO_SESSION_EVENT) {
-        if (state == ZOO_EXPIRED_SESSION_STATE) {
-            printf("[%s %d] zookeeper session expired\n", __FUNCTION__, __LINE__);
-        } else if (state == ZOO_AUTH_FAILED_STATE) {
-            printf("[%s %d] zookeeper session auth failed\n", __FUNCTION__, __LINE__);
-        } else if (state == ZOO_CONNECTING_STATE) {
-            printf("[%s %d] zookeeper session is connecting\n", __FUNCTION__, __LINE__);
-        } else if (state == ZOO_ASSOCIATING_STATE) {
-            printf("[%s %d] zookeeper session is associating state\n", __FUNCTION__, __LINE__);
-        } else if (state == ZOO_CONNECTED_STATE) {
-            zk_clientid = zoo_client_id(zh);
-            printf("[%s %d] connected to zookeeper server with clientid=%lu\n", __FUNCTION__, __LINE__,
-                   zk_clientid->client_id);
-        } else if (state == ZOO_NOTWATCHING_EVENT) {
-            printf("[%s %d] zookeeper session remove watch\n", __FUNCTION__, __LINE__);
-        } else {
-            printf("unknown session event state = %s, path = %s, ctxt=%s\n", state2String(state), path,
-                   (char *) watcherCtx);
-        }
-    }
-    call_lua_watch(type, state, path);
 }
 
 void create(zhandle_t *zkhandle, char *str) {
@@ -123,11 +69,78 @@ void delete(zhandle_t *zkhandle, char *str) {
     if (flag == ZOK) { printf("delete node %s success\n", str); }
 }
 
-static int lregister_watch(lua_State *L) {
-    lua_watch = luaL_ref(L, LUA_REGISTRYINDEX);
-    if (lua_watch == NULL) {
-        printf("lua_watch == NULL \n");
+static int call_lua_watch(int type, int state, const char *path);
+
+void zookeeper_watcher_g(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx) {
+    printf(">>> zookeeper_watcher_g \n");
+    printf("type: %s\n", type2String(type));
+    printf("state: %s\n", state2String(state));
+    printf("path: %s\n", path);
+    printf("watcherCtx: %s\n", (char *) watcherCtx);
+
+    const clientid_t *zk_clientid;
+    int rc;
+    if (type == ZOO_CREATED_EVENT) {
+        printf("[%s %d] znode %s created.\n", __FUNCTION__, __LINE__, path);
+    } else if (type == ZOO_DELETED_EVENT) {
+        printf("[%s %d] znode %s deleted.\n", __FUNCTION__, __LINE__, path);
+    } else if (type == ZOO_CHANGED_EVENT) {
+        printf("[%s %d] znode %s changed.\n", __FUNCTION__, __LINE__, path);
+    } else if (type == ZOO_CHILD_EVENT) {
+        printf("[%s %d] znode %s children changed.\n", __FUNCTION__, __LINE__, path);
+    } else if (type == ZOO_SESSION_EVENT) {
+        if (state == ZOO_EXPIRED_SESSION_STATE) {
+            printf("[%s %d] zookeeper session expired\n", __FUNCTION__, __LINE__);
+        } else if (state == ZOO_AUTH_FAILED_STATE) {
+            printf("[%s %d] zookeeper session auth failed\n", __FUNCTION__, __LINE__);
+        } else if (state == ZOO_CONNECTING_STATE) {
+            printf("[%s %d] zookeeper session is connecting\n", __FUNCTION__, __LINE__);
+        } else if (state == ZOO_ASSOCIATING_STATE) {
+            printf("[%s %d] zookeeper session is associating state\n", __FUNCTION__, __LINE__);
+        } else if (state == ZOO_CONNECTED_STATE) {
+            zk_clientid = zoo_client_id(zh);
+            printf("[%s %d] connected to zookeeper server with clientid=%lu\n", __FUNCTION__, __LINE__,
+                   zk_clientid->client_id);
+        } else if (state == ZOO_NOTWATCHING_EVENT) {
+            printf("[%s %d] zookeeper session remove watch\n", __FUNCTION__, __LINE__);
+        } else {
+            printf("unknown session event state = %s, path = %s, ctxt=%s\n", state2String(state), path,
+                   (char *) watcherCtx);
+        }
     }
+    call_lua_watch(type, state, path);
+}
+
+static int _cb() {
+    printf(">>> _cb \n");
+    return 0;
+}
+
+static lua_State *ud = NULL;
+
+static int call_lua_watch(int type, int state, const char *path) {
+    printf(">>> call_lua_watch: type=%d state=%d path=%s \n", type, state, path);
+    lua_State *L = ud;
+
+    int top = lua_gettop(L);
+    printf(">>> top=%d \n", top);
+//    lua_pushvalue(L,1);
+//    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_watch);
+//    lua_pushinteger(L, type);
+//    lua_pushinteger(L, state);
+//    lua_pushstring(L, path);
+    lua_pcall(L, 0, 0, 0);
+    printf(">>> call_lua_watch: over \n");
+}
+
+static int lregister_watch(lua_State *L) {
+    printf(">>> register_watch \n");
+    luaL_checktype(L, 1, LUA_TFUNCTION);
+    lua_settop(L, 1);                        //设置栈大小
+//    lua_rawsetp(L, LUA_REGISTRYINDEX, _cb);
+    lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_MAINTHREAD);
+    ud = lua_tothread(L, -1);
+    lua_pop(L, 1);
     return 0;
 }
 
