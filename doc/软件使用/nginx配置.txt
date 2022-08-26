@@ -1,0 +1,80 @@
+nginx限制
+
+http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout
+
+nginx.conf
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    charset utf-8;
+
+    #######
+    ## http setting
+    #######
+    sendfile       on;
+    tcp_nopush     on;
+    tcp_nodelay    on;
+    keepalive_timeout  100;           #这个参数表示http连接超时时间，默认是65s。要是上传文件比较大，在规定时间内没有上传完成，就会自动断开连接！所以适当调大这个时间。
+    fastcgi_connect_timeout 6000;
+    fastcgi_send_timeout 6000;
+    fastcgi_read_timeout 6000;
+    fastcgi_buffer_size 256k;
+    fastcgi_buffers 8 256k;
+    fastcgi_busy_buffers_size 256k;
+    fastcgi_temp_file_write_size 256k;
+    ##
+    client_header_timeout 120s;        #调大点
+    client_body_timeout 120s;          #调大点
+    client_max_body_size 100m;         #主要是这个参数，限制了上传文件大大小
+    client_body_buffer_size 256k;
+
+    ## support more than 15 test environments
+    server_names_hash_max_size 512;
+    server_names_hash_bucket_size 128;
+
+    gzip  on;
+    gzip_min_length  1k;
+    gzip_buffers     4 16k;
+    gzip_http_version 1.1;
+    gzip_comp_level 9;
+    gzip_types       text/plain application/x-javascript text/css application/xml text/javascript application/x-httpd-php;
+    gzip_vary on;
+
+
+
+[root@dev-huanqiu ~]#  cat /Data/app/nginx/conf/vhosts/admin.wangshibo.conf
+server {
+        listen       80;
+
+        server_name  admin.wangshibo.com;
+
+
+        #if ($http_x_forwarded_for !~ ^(14.165.97.54|123.110.186.128|123.110.186.68)) {
+        #   rewrite ^.*$  /maintence.php last;
+        #}
+
+        access_log  /var/log/wangshibo.log  main;
+
+
+       location   / {
+          proxy_pass http://127.0.0.1:8484/;
+          proxy_connect_timeout   300;         #这三个超时时间适量调大点
+          proxy_send_timeout      600;
+          proxy_read_timeout      600;
+          proxy_set_header X-Real-IP $remote_addr;    # 获取客户端真实IP
+          proxy_set_header REMOTE-HOST $remote_addr;
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;   # 获取代理者的真实ip
+          proxy_set_header X-Forwarded-Scheme  $scheme;    # 解决getScheme，isSecure，sendRedirect
+          proxy_buffer_size       32k;
+          proxy_buffers           32 256k;
+          proxy_busy_buffers_size 512k;
+          proxy_temp_file_write_size 512k;
+        }
+
+      location   /static/video {
+         root  /Data/app/tomcat-7-admin-wls/static/video;
+        }
+
+    } ##end server
