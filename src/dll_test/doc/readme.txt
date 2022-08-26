@@ -21,13 +21,15 @@ rpath和-rpath-link都可以在链接时指定库的路径；但是运行可执�
 -rpath指定的路径还有效(因为链接器已经将库的路径包含在可执行文件中了。)
 不管使用了-rpath还是-rpath-link，LD_LIBRARY_PATH还是有效的。
 ----------------------------------------------------------
-生成maxtest.so  动态库
+测试过程
+
+1.生成maxtest.so  动态库
 gcc -fPIC -shared -o libmaxtest.so max_test.c
 
-生成mathtest.so  动态库
+2.生成mathtest.so  动态库
 gcc -fPIC -shared -L../max -I../max -o libmathtest.so math_test.c -lmaxtest -Wl,--rpath=/mnt/e/work/demo/linux_c_demo/src/dll_test/max
 
-编译test 生成执行文件
+3.编译test 生成执行文件
 gcc -Lmath -Imath test.c -lmathtest -Wl,--rpath=math
 
 ---------------------------------------
