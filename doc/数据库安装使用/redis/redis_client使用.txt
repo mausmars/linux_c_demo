@@ -1,0 +1,17 @@
+apt install redis-tools
+
+在远程服务上执行命令
+redis-cli -h host -p port -a password
+
+redis-cli -h 127.0.0.1 -p 10001 -a Windward_2021@redis --raw
+redis-cli -h 127.0.0.1 -p 10001 --raw
+退出
+exit
+
+
+避免中文乱码
+redis-cli --raw
+
+
+
+

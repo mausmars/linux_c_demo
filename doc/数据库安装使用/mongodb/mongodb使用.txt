@@ -1,0 +1,15 @@
+
+进入数据库
+mongod
+
+查看库
+show dbs
+
+使用库
+use combo
+
+查找表
+                where
+db.表名.find({},{'字段名' : '值'}); 
+
+db.player.find({},{'player_id' : '3174224'}); 

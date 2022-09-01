@@ -54,6 +54,10 @@ openssl req -x509 -in test.csr -key test.key -days 365 -out test.crt
          }
     }
 
+cd /usr/local/nginx/sbin
+检查语法
+nginx -t
+
 重启nginx
 nginx -s reload
 
