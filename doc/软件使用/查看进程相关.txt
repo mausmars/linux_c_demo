@@ -1,0 +1,11 @@
+根据端口查看进程
+lsof -i:port
+netstat -nap | grep port
+
+根据进程ID查看端口
+lsof -i | grep pid
+netstat -nap | grep pid
+
+
+
+
