@@ -1,0 +1,147 @@
+jemalloc 官方文档
+https://github.com/jemalloc/jemalloc/blob/dev/INSTALL.md
+
+查看官方文档
+注意：
+--with-jemalloc-prefix=<prefix>
+所有公共 API 的前缀为 . 例如，如果是“prefix_”，则会发生如下 API 更改：
+malloc()         --> prefix_malloc()
+malloc_conf      --> prefix_malloc_conf
+/etc/malloc.conf --> /etc/prefix_malloc.conf
+MALLOC_CONF      --> PREFIX_MALLOC_CONF
+
+一直不生成文件，坑了一下午
+-----------------------------------------------------------------
+skynet 3rd下有jemalloc相关依赖，当前游戏使用的 5.2.1版本
+查看makefile 使用的静态库依赖编译，前缀je_
+
+/etc/profile
+JE_MALLOC_CONF="prof:true,prof_active:false,prof_prefix:combo"
+我在本地装了一个malloc测试用的，用skynet下的也ok
+LD_PRELOAD=/usr/local/jemalloc/lib/libjemalloc.so.2
+
+prof:true
+启动服务
+prof_active:false
+初始不激活
+
+--------------------
+skynet 启动 debug_console 服务
+profactive = "profactive [on|off] : active/deactive jemalloc heap profilling",
+dumpheap = "dumpheap : dump heap profilling",
+
+新版新加的 jmem
+stats.active       15347712     14.64 Mb
+stats.allocated    14923576     14.23 Mb
+stats.mapped       34344960     32.75 Mb
+stats.resident     20246528     19.31 Mb
+stats.retained      9695232      9.25 Mb
+对应
+je_mallctl("stats.active", NULL, NULL, &active, sizeof(bool));
+
+nc 127.0.0.1 33101
+profactive on
+激活
+对应c代码
+bool active = true;
+je_mallctl("prof.active", NULL, NULL, &active, sizeof(bool));
+
+dumpheap
+打印内存信息，生成.heap文件
+对应c代码
+je_mallctl("prof.dump", NULL, NULL, NULL, 0);
+
+--------------------
+查看内存细节
+jeprof skynet test_base/debug_console_test/jeprof.18179.0.i0.heap
+(jeprof) top
+
+生成pdf
+jeprof --show_bytes --pdf skynet test_base/debug_console_test/jeprof.18179.0.i0.heap > test_base/debug_console_test/show.pdf
+
+对比2个文件
+jeprof --dot mem_leak_test1 -base=jeprof.17853.2.m2.heap jeprof.17853.3.m3.heap
+
+pdf依赖
+apt update
+apt -y install ghostscript
+apt install graphviz
+
+-------------------------------------------------------------------
+自己测试
+wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
+静态库需要 --with-jemalloc-prefix 避免重名
+./configure --prefix=/usr/local/jemalloc --enable-prof --with-jemalloc-prefix=je_
+无法生成 heap文件。。。？？
+./configure --prefix=/usr/local/jemalloc --enable-prof
+make -j4 && make install
+
+如果不设置--with-jemalloc-prefix=je_ 选项
+环境变量为 MALLOC_CONF  （坑）
+
+echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
+ldconfig
+
+/etc/profile
+JE_MALLOC_CONF="prof:true,prof_active:false,prof_prefix:test"
+LD_PRELOAD=/usr/local/jemalloc/lib/libjemalloc.so.2
+
+--静态编译
+gcc -DJEMALLOC_NO_DEMANGLE -static -o jemalloc_test_static jemalloc_test.c -I/usr/local/jemalloc/include -L/usr/local/jemalloc/lib  -ljemalloc -lpthread -ldl -lm
+--动态编译
+gcc -o jemalloc_test_dynamic jemalloc_test.c -I/usr/local/jemalloc/include -L/usr/local/jemalloc/lib -ljemalloc
+
+代码例子
+#include <stdio.h>
+#include <stdlib.h>
+#include <jemalloc/jemalloc.h>
+
+void do_something(size_t i) {
+    // Leak some memory.
+    je_malloc(i * 1024);
+}
+
+void do_something_else(size_t i) {
+    // Leak some memory.
+    je_malloc(i * 4096);
+}
+
+size_t *do_something_2048(size_t i) {
+    // Leak some memory.
+    size_t *point = je_malloc(i * 2048);
+    return point;
+}
+
+int main(int argc, char **argv) {
+    size_t i, sz;
+    for (i = 0; i < 80; i++) {
+        do_something(i);
+    }
+    je_mallctl("prof.dump", NULL, NULL, NULL, 0);
+
+    bool active = true;
+    je_mallctl("prof.active", NULL, NULL, &active, sizeof(bool));
+
+    for (i = 0; i < 40; i++) {
+        do_something_else(i);
+    }
+    je_mallctl("prof.dump", NULL, NULL, NULL, 0);
+
+    int count = 40;
+    int *points[count];
+    for (i = 0; i < count; i++) {
+        size_t *point = do_something_2048(i);
+        points[i] = point;
+    }
+    je_mallctl("prof.dump", NULL, NULL, NULL, 0);
+    //free points
+    for (i = 0; i < count; i++) {
+        je_free(points[i]);
+    }
+    const char *fileName = "heap_info.out";
+    je_mallctl("prof.dump", NULL, NULL, &fileName, sizeof(const char *));
+    return 0;
+}
+
+
+

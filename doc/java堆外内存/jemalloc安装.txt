@@ -10,7 +10,4 @@ make -j8 && make install
 
 echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
 
-
-
-
 export JEMALLOC_HOME=/software/jemalloc-5.2.1

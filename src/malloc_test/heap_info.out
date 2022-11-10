@@ -1,0 +1,16 @@
+heap_v2/524288
+  t*: 3: 425984 [0: 0]
+  t0: 3: 425984 [0: 0]
+@ 0x46ef9d 0x4083db 0x400ca8 0x400d78 0x4b63d9 0x400b7a
+  t*: 3: 425984 [0: 0]
+  t0: 3: 425984 [0: 0]
+
+MAPPED_LIBRARIES:
+00400000-005a7000 r-xp 00000000 00:00 100975                     /mnt/e/work/demo/linux_c_demo/src/malloc_test/mem_leak_test3_static
+005a7000-005a8000 r-xp 001a7000 00:00 100975                     /mnt/e/work/demo/linux_c_demo/src/malloc_test/mem_leak_test3_static
+007a8000-007b3000 rw-p 001a8000 00:00 100975                     /mnt/e/work/demo/linux_c_demo/src/malloc_test/mem_leak_test3_static
+007b3000-009de000 rw-p 00000000 00:00 0
+024ba000-024de000 rw-p 00000000 00:00 0                          [heap]
+7f3a4b300000-7f3a4c400000 rw-p 00000000 00:00 0
+7fffe0663000-7fffe0e63000 rw-p 00000000 00:00 0                  [stack]
+7fffe0fe1000-7fffe0fe2000 r-xp 00000000 00:00 0                  [vdso]

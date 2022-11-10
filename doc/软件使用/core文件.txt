@@ -1,0 +1,22 @@
+ulimit -c
+
+dmesg命令是用来在Unix-like系统中显示内核的相关信息的。dmesg全称是display message (or display driver)，即显示信息。
+
+dmesg命令是从内核环形缓冲区中获取数据的
+dmesg
+或者
+tail -n 100 /var/log/message
+
+dmesg | grep -i memory
+dmesg | grep -i dma
+dmesg | grep -i usb
+dmesg | grep -i tty
+
+dmesg | grep -E "memory|dma|usb|tty"
+
+
+
+
+
+
+

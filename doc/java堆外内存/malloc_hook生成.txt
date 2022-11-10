@@ -13,4 +13,4 @@ gcc -o malloc_demo ./malloc_demo.c
 export LD_PRELOAD=./libmallochook.so
 ./malloc_demo
 
-观察2次打印的却别
+观察2次打印的区别

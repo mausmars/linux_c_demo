@@ -1,11 +1,27 @@
 https://github.com/jemalloc/jemalloc/releases
 
+-------------------------------------------------------
+注意：******************
+--with-jemalloc-prefix=<prefix>
+所有公共 API 的前缀为 . 例如，如果是“prefix_”，则会发生如下 API 更改：
+malloc()         --> prefix_malloc()
+malloc_conf      --> prefix_malloc_conf
+/etc/malloc.conf --> /etc/prefix_malloc.conf
+MALLOC_CONF      --> PREFIX_MALLOC_CONF
+-------------------------------------------------------
 wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
 tar -xjvf jemalloc-5.2.1.tar.bz2
 
-./configure --prefix=/usr/local/jemalloc
+
+https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
+tar -xjvf jemalloc-5.3.0.tar.bz2
+
+静态库需要 --with-jemalloc-prefix
+./configure --prefix=/usr/local/jemalloc --enable-prof --with-jemalloc-prefix=je_
+无法生成 heap文件。。。？？
+静态库编译
 ./configure --prefix=/usr/local/jemalloc --enable-prof
-make -j8 && make install
+make -j4 && make install
 
 echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
 ldconfig
@@ -17,5 +33,12 @@ ldconfig -p | less
 export LD_PRELOAD=/usr/local/jemalloc/lib/libjemalloc.so
 export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17
 
+export MALLOC_CONF="prof:true,lg_prof_sample:1,prof_accum:false,prof_prefix:jeprof.out"
+
+export PATH=/usr/local/jemalloc/bin:$PATH
+
 export JEMALLOC_HOME=/software/jemalloc-5.2.1
 export PATH=$JEMALLOC_HOME/bin:$PATH
+
+export MALLOC_CONF="prof:true,prof_active:false"
+export JE_MALLOC_CONF="prof:true,prof_active:false"

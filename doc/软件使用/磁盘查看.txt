@@ -1,0 +1,11 @@
+统一磁盘整体情况，包括磁盘大小，已使用，可用
+df -h
+df -h /usr
+
+查看当前目录每个文件夹的情况
+du --max-depth=1 -h
+du --max-depth=1 -h  /usr
+
+计算文件夹大小
+du -sh /usr
+
