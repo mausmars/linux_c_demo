@@ -1,0 +1,6 @@
+/usr/lib/ld: cannot find
+
+ldconfig -p | grep libcurl
+ libcurl.so.4 (libc6,x86-64) => /usr/lib64/libcurl.so.4
+
+ln -s /usr/lib64/libcurl.so.4 /usr/lib/libcurl.so
