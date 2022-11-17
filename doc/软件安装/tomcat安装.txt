@@ -1,0 +1,35 @@
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.69/bin/apache-tomcat-9.0.69.tar.gz
+
+export CATALINA_HOME=/software/tomcat-9.0.69
+export PATH=$PATH:$CATALINA_HOME/bin
+
+./startup.sh
+./shutdown.sh
+
+访问
+http://10.130.134.38:8080/
+
+---------------------------------------
+解决 问题 403 Access Denied
+conf/tomcat-users.xml加入
+
+<role rolename="admin-gui"/>
+<role rolename="manager-gui"/>
+<user username="mali" password="123" roles="admin-gui,manager-gui"/>
+
+
+webapps/manager/META-INF/context.xml
+<Context antiResourceLocking="false" privileged="true" >
+    <CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor" sameSiteCookies="strict" />
+    <Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1|10.130.*" />
+</Context>
+
+---------------------------------------
+
+
+
+
+
+
+
+

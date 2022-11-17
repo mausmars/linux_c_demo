@@ -1,0 +1,8 @@
+apt -y install dwarfdump
+
+dwarfdump -help
+
+
+dwarfdump 二进制文件
+
+

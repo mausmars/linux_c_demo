@@ -1,0 +1,54 @@
+yum install git -y
+
+git clone https://github.com/cnpm/nvm.git ~/.nvm && cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`
+
+echo ". ~/.nvm/nvm.sh" >> /etc/profile
+source /etc/profile
+
+查看Node.js版本
+nvm list-remote
+
+安装
+nvm install v18.12.1
+nvm install 16
+nvm install 14
+
+安装vue-cli
+npm install -g @vue/cli
+npm install -g @vue/cli@4.5.13
+cnpm install -g @vue/cli@4.5.13
+
+npm uninstall -g @vue/cli
+
+vue --version
+
+查看已安装的Node.js版本
+nvm ls
+
+
+问题
+npm install
+node: /usr/lib64/libm.so.6: version `GLIBC_2.27' not found (required by node)
+node: /usr/lib64/libc.so.6: version `GLIBC_2.25' not found (required by node)
+node: /usr/lib64/libc.so.6: version `GLIBC_2.28' not found (required by node)
+node: /usr/lib64/libstdc++.so.6: version `CXXABI_1.3.9' not found (required by node)
+node: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by node)
+使用 16版本
+
+------------------------
+npm notice New major version of npm available! 8.19.2 -> 9.1.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v9.1.1
+npm notice Run npm install -g npm@9.1.1 to update!
+------------------------
+
+
+
+
+------------------------------
+node ~/example.js &
+
+netstat -tpln
+
+
+
+

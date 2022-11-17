@@ -1,4 +1,5 @@
 https://github.com/jemalloc/jemalloc/releases
+https://github.com/dcreager/jemalloc/blob/master/INSTALL
 
 -------------------------------------------------------
 注意：******************
@@ -11,7 +12,6 @@ MALLOC_CONF      --> PREFIX_MALLOC_CONF
 -------------------------------------------------------
 wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
 tar -xjvf jemalloc-5.2.1.tar.bz2
-
 
 https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 tar -xjvf jemalloc-5.3.0.tar.bz2
@@ -29,6 +29,11 @@ ldconfig
 要查看 ldconfig 可以“看到”的所有共享库
 ldconfig -p | less
 
+yum -y install libunwind libunwind-devel
+./configure --prefix=/usr/local/jemalloc --enable-prof --enable-prof-libunwind --with-jemalloc-prefix=je_
+显示参数为
+prof-libunwind     : 1
+
 需要prof 编译要加上--enable-prof
 export LD_PRELOAD=/usr/local/jemalloc/lib/libjemalloc.so
 export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17
@@ -42,3 +47,7 @@ export PATH=$JEMALLOC_HOME/bin:$PATH
 
 export MALLOC_CONF="prof:true,prof_active:false"
 export JE_MALLOC_CONF="prof:true,prof_active:false"
+
+-------------------------------------------------------------
+
+

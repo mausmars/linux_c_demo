@@ -1,6 +1,6 @@
 https://langzi989.github.io/2017/12/03/Linux%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7%E4%B9%8Breadelf/
 
-readelf命令可以用来查看elf格式文件的信息，与objdump相比,该工具显示的信息较为详细
+readelf 命令可以用来查看elf格式文件的信息，与objdump相比,该工具显示的信息较为详细
 
 elf文件
 ELF(excutable and linking format)是一种对象文件格式，用于定义不同类型的对象文件中存放了那些东西，以及以什么格式存放。ELF文件可分为三种：

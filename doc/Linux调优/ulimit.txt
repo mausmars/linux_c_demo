@@ -22,8 +22,8 @@ vi /etc/security/limits.conf
 # 添加如下的行
 * soft noproc 11000
 * hard noproc 11000
-* soft nofile 4100
-* hard nofile 4100
+* soft nofile 20000
+* hard nofile 20000
 说明：* 代表针对所有用户
 noproc 是代表最大进程数
 nofile 是代表最大文件打开数
@@ -37,7 +37,7 @@ b、重启 sshd 服务：
 3)、修改所有 linux 用户的环境变量文件：
 vi /etc/profile
 ulimit -u 10000
-ulimit -n 4096
+ulimit -n 20000
 ulimit -d unlimited
 ulimit -m unlimited
 ulimit -s unlimited

@@ -1,0 +1,32 @@
+yum -y install libunwind libunwind-devel
+
+
+wget http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.4.0.tar.gz
+tar -zxvf libunwind-1.4.0.tar.gz
+
+wget https://github.com/libunwind/libunwind/releases/download/v1.6.2/libunwind-1.6.2.tar.gz
+tar -zxvf libunwind-1.6.2.tar.gz
+
+./configure --prefix=/usr/local/libunwind
+make -j4 && make install
+
+echo /usr/local/libunwind/lib >> /etc/ld.so.conf
+ldconfig
+
+------------------------------------------------
+jemalloc 安装
+
+wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
+tar -xjvf jemalloc-5.2.1.tar.bz2
+
+./configure --prefix=/usr/local/jemalloc --enable-prof --enable-prof-libunwind --with-jemalloc-prefix=je_ --with-rpath=/usr/local/libunwind/lib
+显示参数为
+prof-libunwind     : 1
+
+make -j4 && make install
+
+echo /usr/local/jemalloc/lib >> /etc/ld.so.conf
+ldconfig
+
+要查看 ldconfig 可以“看到”的所有共享库
+ldconfig -p | less

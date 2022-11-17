@@ -1,0 +1,59 @@
+https://cksite.cn/article/225.html
+
+wget https://repo.mongodb.org/yum/redhat/7/mongodb-org/5.0/x86_64/RPMS/mongodb-org-server-5.0.6-1.el7.x86_64.rpm
+wget https://repo.mongodb.org/yum/redhat/7/mongodb-org/5.0/x86_64/RPMS/mongodb-org-shell-5.0.6-1.el7.x86_64.rpm
+
+mkdir /usr/local/mongodb5.0.6
+mv mongodb-org-server-5.0.6-1.el7.x86_64.rpm /usr/local/mongodb5.0.6/
+mv mongodb-org-shell-5.0.6-1.el7.x86_64.rpm /usr/local/mongodb5.0.6/
+
+cd /usr/local/mongodb5.0.6/
+rpm -ivh mongodb-org-server-5.0.6-1.el7.x86_64.rpm
+rpm -ivh mongodb-org-shell-5.0.6-1.el7.x86_64.rpm
+
+查看当前安装的相关包：rpm -qa | grep -i mongodb
+查看当前安装的相关目录：find / -name mongodb
+
+systemctl start mongod        启动服务
+systemctl status mongod       查看服务状态
+systemctl stop mongod         停止服务
+systemctl restart mongod      重启服务
+systemctl disable mongod      禁止开启启动
+systemctl enable mongod       加入开启启动
+查看版本：mongo --version
+
+mongo
+show databases 或show dbs
+> show databases
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+
+使用admin数据库、查看表
+> use admin
+switched to db admin
+> show tables
+system.version
+使用admin数据库、查看表
+> use config
+switched to db config
+> show tables
+system.sessions
+使用admin数据库、查看表
+> use local
+switched to db local
+> show tables
+startup_log
+
+
+mongo --host 192.168.142.131:27017
+netstat -nltp|grep mongod
+
+
+mongod --shutdown --dbpath --logpath /var/log/mongodb/mongod.log
+pkill mongod
+

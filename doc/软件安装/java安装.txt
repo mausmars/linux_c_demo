@@ -1,0 +1,11 @@
+https://www.oracle.com/java/technologies/downloads/#java11
+
+vi /etc/profile
+
+追加
+export JAVA_HOME=/software/jdk-11.0.17
+export PATH=$JAVA_HOME/bin:$PATH
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+
+source /etc/profile
+
