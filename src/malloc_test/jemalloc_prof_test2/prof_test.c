@@ -2,12 +2,6 @@
 #include <stdlib.h>
 #include <jemalloc/jemalloc.h>
 #include <unistd.h>
-#include <string.h>
-
-// 静态编译
-// gcc -DJEMALLOC_NO_DEMANGLE -static -o prof_test prof_test.c -I/usr/local/jemalloc/include -L/usr/local/jemalloc/lib  -ljemalloc -lpthread -ldl -lm
-
-//内存一个页 4k
 
 size_t *malloc_1b(size_t i) {
     size_t *point = je_malloc(i);    // 1b
@@ -36,37 +30,28 @@ int create_heap_file(const char *fileName) {
     je_mallctl("prof.dump", NULL, NULL, &fileName, sizeof(const char *));
 }
 
-int ddd(char *str1, char *str2) {
-    int len = strlen(str1) + strlen(str2);
-    char str[len] = "";
-
-    strncpy(str, str1, strlen(str1));
-    strncpy(str + strlen(str1), str2, strlen(str2));
-    return str;
-}
-
 
 int main(int argc, char **argv) {
 //    setenv("MALLOC_CONF", "prof:true,prof_gdump:true", 1);
 //    setenv("MALLOC_CONF", "prof:true,prof_active:false,prof_prefix:jeprof.out", 1);
 //    setenv("MALLOC_CONF", "prof:true,prof_active:false,prof_prefix:test1", 1);
-    char *heap_file = getenv("heap_file_path");
 
     active_heap();
 
     size_t *point1 = malloc_1b(1);
-    create_heap_file("heap_file/test_1.heap");
+//    create_heap_file("test_1.heap");
     printf("------------------------\r\n");
     printf("point1=%p \r\n", point1);
     printf("------------------------\r\n");
     size_t *point2 = malloc_1k(4);
-    create_heap_file("heap_file/test_2.heap");
+//    je_free(point2);
+//    create_heap_file("test_2.heap");
     printf("point2=%p \r\n", point2);
     printf("------------------------\r\n");
     size_t *point3 = malloc_1m(1);
-//    je_free(point3);
+    je_free(point3);
     printf("point3=%p \r\n", point3);
-    create_heap_file("heap_file/test_3.heap");
+//    create_heap_file("test_3.heap");
     printf("------------------------\r\n");
 //    int count = 10;
 //    int *points[count];

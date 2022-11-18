@@ -1,0 +1,27 @@
+
+
+lg_prof_interval:20中的20表示1MB(2^20),每分配(大约)1MB就会dump产生一个文件
+
+export MALLOC_CONF="prof:true,lg_prof_interval:20"
+
+
+
+
+内存使用达到新高时，dump一次内存
+export MALLOC_CONF="prof:true,prof_gdump:true"
+
+export MALLOC_CONF="prof:true,lg_prof_sample:1,prof_accum:false
+
+
+MALLOC_CONF=prof_leak:true,lg_prof_sample:0,prof_final:true
+
+<jemalloc>: Leak approximation summary: ~54755672 bytes, ~1001 objects, >= 2 contexts
+<jemalloc>: Run jeprof on dump output for leak detail
+
+
+setenv("MALLOC_CONF", "prof:true,prof_active:false,prof_prefix:jeprof.out", 1);
+
+mallctl("prof.dump", NULL, NULL, NULL, 0);
+
+active = true;
+mallctl("prof.active", NULL, NULL, &active, sizeof(bool));

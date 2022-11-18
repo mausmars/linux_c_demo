@@ -170,8 +170,8 @@ void arpAttack(string targetIp) {
     printf("2.gateway ip %s %s \n", gatewayIp, Route_Path);
 
     //ping目标ip
-//    printf("3.ping %s \n", targetIp);
-//    ping(targetIp);
+    printf("3.ping %s \n", targetIp);
+    ping(targetIp);
 
     //通过ip获取mac
     printf("4.show arp table %s\n", Arp_Path);
@@ -231,7 +231,7 @@ void loggerTest() {
 }
 
 int main(int argc, char *argv[]) {
-    arpAttack("10.130.134.72");
+    arpAttack("10.130.134.49");
 //    loggerTest();
 //    interfaceTest();
     return 0;

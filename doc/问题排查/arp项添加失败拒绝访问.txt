@@ -1,0 +1,16 @@
+解决 绑定ARP 保存ARP ARP 项添加失败: 拒绝访问
+
+windows arp绑定
+
+netsh i i show in
+Idx     Met         MTU          状态                名称
+---  ----------  ----------  ------------  ---------------------------
+  1          75  4294967295  connected     Loopback Pseudo-Interface 1
+  3          25        1500  connected     以太网 3
+  6          35        1500  connected     VMware Network Adapter VMnet1
+ 11          35        1500  connected     VMware Network Adapter VMnet8
+
+netsh -c "i i" add neighbors 3 "10.130.132.1" "90-e7-10-57-38-48"
+
+arp -a -n 10.130.133.238
+
