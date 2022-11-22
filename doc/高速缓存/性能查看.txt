@@ -5,6 +5,6 @@ On CentOS and Fedora
 sudo yum install perf gawk
 
 
-perf stat -e cache-references -e cache-misses 
+perf stat -e cache-references -e cache-misses
 
 

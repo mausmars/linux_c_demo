@@ -36,16 +36,6 @@ int create_heap_file(const char *fileName) {
     je_mallctl("prof.dump", NULL, NULL, &fileName, sizeof(const char *));
 }
 
-int ddd(char *str1, char *str2) {
-    int len = strlen(str1) + strlen(str2);
-    char str[len] = "";
-
-    strncpy(str, str1, strlen(str1));
-    strncpy(str + strlen(str1), str2, strlen(str2));
-    return str;
-}
-
-
 int main(int argc, char **argv) {
 //    setenv("MALLOC_CONF", "prof:true,prof_gdump:true", 1);
 //    setenv("MALLOC_CONF", "prof:true,prof_active:false,prof_prefix:jeprof.out", 1);
