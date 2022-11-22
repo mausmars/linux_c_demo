@@ -1,0 +1,10 @@
+On Ubuntu type
+sudo apt install linux-tools-common gawk
+
+On CentOS and Fedora
+sudo yum install perf gawk
+
+
+perf stat -e cache-references -e cache-misses 
+
+
