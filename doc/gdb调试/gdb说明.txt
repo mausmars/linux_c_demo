@@ -2,6 +2,13 @@ https://blog.csdn.net/chen1415886044/article/details/105094688
 --------------------------
 编译带 -g 才能gdb调试
 $ gcc -g gdb_test.c -o gdb_test
+
+级别1（-g1）：不包含局部变量和与行号有关的调试信息，因此只能够用于回溯跟踪和堆栈转储，回溯跟踪指的是监视程序在运行过程中的函数调用历史，堆栈转储则是一种以原始的十六进制格式保存程序执行环境的方法，两者都是经常用到的调试手段。
+级别2（-g2）：此时产生的调试信息包括扩展的符号表、行号、局部或外部变量信息。
+级别3（-g3）：包含级别2中的所有调试信息，以及源代码中定义的宏。
+
+gcc -ggdb2 square.c -o square
+
 --------------------------
 查看文件是否可以调试
 $ readelf -S gdb_test|grep debug
@@ -33,9 +40,8 @@ gdb> r
 gdb> r 参数
 
 gdb调试core
-$ gdb ./core.test.3591
-
-
+$ gdb 执行文件 ./core.test.3591
+(gdb) bt full
 
 find / -name "core.*"
 
