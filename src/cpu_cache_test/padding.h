@@ -20,7 +20,7 @@ typedef struct {
 
 typedef struct {
     int a;
-    char padding[64];
+    char padding[CACHE_LINE_SIZE - sizeof(int)];
     int b;
 } PaddingData;
 

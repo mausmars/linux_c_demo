@@ -1,0 +1,57 @@
+------------------------------
+ /etc/redis/redis.conf
+文件中，有个配置项 databases = 16 //默认有16个数据库
+redis
+redis-cli -h 指定ip -p 指定端口 -a 指定密码
+
+./redis-cli -p 10001 -a Windward_2021@redis
+选db
+select 2
+select 9
+keys *
+清除
+flushdb
+flushall
+------------------------------
+http://doc.redisfans.com/
+Redis 命令参考
+
+ZADD test_rank 10 test1 20 test2 30 test3 40 test4 50 test5 60 test6 70 test7 80 test8 90 test9 100 test10
+
+以 0 表示有序集第一个成员，以 1 表示有序集第二个成员，以此类推。 你也可以使用负数下标，以 -1 表示最后一个成员， -2 表示倒数第二个成员
+ZRANGE test_rank 0 -1 WITHSCORES
+
+ZCOUNT test_rank 2 5
+
+ZINCRBY test_rank 1 test10
+
+ZRANGEBYSCORE test_rank -inf +inf
+ZRANGEBYSCORE test_rank -inf +inf WITHSCORES
+ZRANGEBYSCORE test_rank (3 5
+
+ZREVRANGEBYSCORE test_rank +inf -inf
+
+ZRANGE test_rank 0 -1 WITHSCORES
+ZRANK test_rank test6
+ZREVRANGE test_rank 0 -1 WITHSCORES
+ZREVRANK test_rank test6
+
+ZSCORE test_rank test6
+
+ZREM test_rank test10
+ZREMRANGEBYRANK test_rank 0 -1
+ZREMRANGEBYSCORE test_rank 5 6
+
+
+
+ZRANK test_rank test6
+5
+ZCOUNT test_rank 45 75
+ZCOUNT test_rank 75 +inf
+
+
+
+
+
+
+
