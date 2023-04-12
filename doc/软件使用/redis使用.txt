@@ -21,6 +21,17 @@ ZADD test_rank 10 test1 20 test2 30 test3 40 test4 50 test5 60 test6 70 test7 80
 以 0 表示有序集第一个成员，以 1 表示有序集第二个成员，以此类推。 你也可以使用负数下标，以 -1 表示最后一个成员， -2 表示倒数第二个成员
 ZRANGE test_rank 0 -1 WITHSCORES
 
+ZRANGE test_rank 0 1 WITHSCORES
+ZRANGE test_rank 0 1 WITHSCORES
+
+ZREVRANGE test_rank 0 -1 WITHSCORES
+ZREVRANGE test_rank 0 1 WITHSCORES
+ZREVRANGE test_rank -2 -1 WITHSCORES
+ZREVRANGE test_rank -11 -1 WITHSCORES
+
+ZREVRANGE test_rank -5 5 WITHSCORES
+
+
 ZCOUNT test_rank 2 5
 
 ZINCRBY test_rank 1 test10
